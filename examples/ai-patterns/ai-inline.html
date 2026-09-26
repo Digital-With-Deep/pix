@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Assistant — inline patterns</title>
+<link rel="stylesheet" href="../../packages/css/dist/pix.css">
+<style>
+body{margin:0;padding:20px;background:var(--stone-50);font-family:var(--font-sans);color:var(--fg1)}
+.cap{display:block;font:600 10px var(--font-sans);text-transform:uppercase;letter-spacing:.08em;color:var(--fg3);margin:0 0 8px}
+.section{margin-bottom:22px}
+.note{font:400 11px var(--font-sans);color:var(--fg3);margin-top:8px}
+.hero{background:#fff;border:1px solid var(--border);border-radius:4px;padding:32px 28px;text-align:center}
+.hero .mark{width:34px;height:34px;border-radius:3px;background:var(--zinc-900);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+.hero .mark svg{width:18px;height:18px}
+.hero h2{font:700 19px var(--font-sans);letter-spacing:-.015em;margin:0}
+.hero p{font:400 13px var(--font-sans);color:var(--fg3);margin:6px 0 20px;line-height:1.55}
+.hero .composer{max-width:620px;margin:0 auto;text-align:left}
+.starters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.starter{padding:7px 11px;border:1px solid var(--border);border-radius:3px;background:#fff;font:500 12px var(--font-sans);color:var(--fg2)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.card{background:#fff;border:1px solid var(--border);border-radius:4px}
+.card-h{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--divider)}
+.card-t{font:600 13px var(--font-sans)}
+.spacer{flex:1}
+.trigger{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--border);border-radius:3px;background:#fff;font:500 11px var(--font-sans);color:var(--fg2)}
+.trigger svg{width:12px;height:12px}
+.rows{padding:4px 0}
+.row{display:flex;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid var(--divider)}
+.row:first-child{border-top:0}
+.rt{font:500 12px var(--font-mono);color:var(--fg1);flex:1;min-width:0}
+.rm{font:400 10px var(--font-sans);color:var(--fg3)}
+.rn{font:600 12px var(--font-mono);color:var(--fg1)}
+.inline-slot{padding:12px 14px;border-top:1px solid var(--divider);background:var(--stone-50)}
+.bar{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:9px 12px}
+.bar .m{width:20px;height:20px;border-radius:2px;background:var(--zinc-900);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bar .m svg{width:12px;height:12px}
+.bar .txt{flex:1;font:400 12px var(--font-sans);color:var(--fg-muted)}
+.bar kbd{font:500 10px ui-monospace,monospace;color:var(--fg3);background:var(--stone-50);border:1px solid var(--border);border-radius:2px;padding:2px 5px}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="../../packages/react/dist/pix.global.js"></script>
+</head>
+<body>
+<div class="section">
+  <span class="cap">First run — empty conversation</span>
+  <div class="hero">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg></span>
+    <h2>What should we look at?</h2>
+    <p>The assistant reads your runs, traces, objectives, and findings.<br>Attach a trace to compare it against a passing run.</p>
+    <div class="composer" id="hero"></div>
+    <div class="starters">
+      <span class="starter">Which runs pass on amount only?</span>
+      <span class="starter">Uncalled tools this quarter</span>
+      <span class="starter">Cost per exception</span>
+      <span class="starter">Draft a change report</span>
+    </div>
+  </div>
+  <div class="note">Use when a dedicated page opens with no thread selected. The composer is the page's primary action.</div>
+</div>
+
+<div class="section two">
+  <div>
+    <span class="cap">In-card answer</span>
+    <div class="card">
+      <div class="card-h">
+        <span class="card-t">Failed with the right number</span>
+        <span class="spacer"></span>
+        <span class="trigger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg>Explain</span>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="rt">wht-treaty-003<div class="rm">O-WHT-01 · tier 2 · AP-Resolver 1.2</div></span><span class="rn">$4,820.00</span></div>
+        <div class="row"><span class="rt">wht-treaty-004<div class="rm">O-WHT-01 · tier 2 · AP-Resolver 1.2</div></span><span class="rn">$3,150.00</span></div>
+        <div class="row"><span class="rt">gr-mismatch-007<div class="rm">O-GRM-02 · tier 3 · AP-Resolver 1.2</div></span><span class="rn">$812.40</span></div>
+      </div>
+      <div class="inline-slot" id="incard"></div>
+    </div>
+    <div class="note">The answer appears inside the card that raised the question, scoped to its rows. No panel, no navigation.</div>
+  </div>
+  <div>
+    <span class="cap">Compact trigger</span>
+    <div class="bar">
+      <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg></span>
+      <span class="txt">Ask about this run…</span>
+      <kbd>⌘J</kbd>
+    </div>
+    <div class="note">A one-line affordance for page headers and toolbars. Clicking it opens the sidebar panel with the page already in scope — it is not a composer itself, so it never competes with the page's own inputs.</div>
+    <span class="cap" style="margin-top:18px">Generating, inline</span>
+    <div id="inline-gen"></div>
+    <div class="note">Inline generation keeps the skeleton short — two or three lines — so the surrounding layout does not jump when the answer lands.</div>
+  </div>
+</div>
+<script>
+const { PromptInput, AIResponse } = window.PIX;
+const h = React.createElement;
+
+ReactDOM.createRoot(document.getElementById("hero")).render(
+  h(PromptInput, { placeholder: "Ask about a run, an agent, or a finding…", rows: 3,
+    tools: ["Replay run", "Compare runs"], activeTools: [],
+    hint: "Enter to send · Shift+Enter for a new line" })
+);
+
+ReactDOM.createRoot(document.getElementById("incard")).render(
+  h(AIResponse, {
+    text: "All three produced the expected amount and still failed the objective. Each skipped a precondition read the objective requires — two skipped get_treaty_certificate, one skipped read_goods_receipt.",
+    thinking: "Filtered 42 runs to those with an exact amount match and a failed verdict — 14 of them.\nGrouped by the tool call each trace omits.\n003 and 004 omit get_treaty_certificate; 007 omits read_goods_receipt.",
+    model: "gpt-5.2", duration: "1.4s", showActions: false,
+  })
+);
+
+ReactDOM.createRoot(document.getElementById("inline-gen")).render(
+  h(AIResponse, { status: "generating", stage: "Checking 42 runs…", model: "gpt-5.2" })
+);
+</script>
+</body></html>

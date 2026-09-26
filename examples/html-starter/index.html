@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PIX · HTML starter</title>
+  <!-- From npm: https://cdn.jsdelivr.net/npm/@pix-ui/css/dist/pix.css -->
+  <link rel="stylesheet" href="../../packages/css/dist/pix.css">
+  <style>main{max-width:760px;margin:0 auto;padding:32px 16px;display:flex;flex-direction:column;gap:16px}</style>
+</head>
+<body>
+<main>
+  <div class="pix-row" style="justify-content:space-between">
+    <span class="pix-label">PIX · Primitives for Intelligent eXperiences</span>
+    <button class="pix-btn pix-btn--outline pix-btn--sm" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">Toggle theme</button>
+  </div>
+  <h2>Plain HTML, no build step</h2>
+  <div class="pix-grid">
+    <div class="pix-metric"><div class="pix-metric__label">Pass rate</div><div class="pix-metric__value">94.2%</div><div class="pix-metric__delta pix-metric__delta--up">▲ 1.8 pts</div></div>
+    <div class="pix-metric"><div class="pix-metric__label">Latency p95</div><div class="pix-metric__value">1.9s</div><div class="pix-metric__delta pix-metric__delta--down">▼ 0.3s</div></div>
+  </div>
+  <div class="pix-ask">Why did run 0042 pass?</div>
+  <div class="pix-response">
+    <div class="pix-response__meta">gpt-5 · 1.4s · 2,140 tokens</div>
+    <div class="pix-thinking">Diffed run 0042 against 0038.
+Found one missing tool call.</div>
+    <p class="pix-response__body">The run skipped the certificate read, so the rate came from the vendor master.</p>
+    <span class="pix-citation">1 run #0042</span>
+  </div>
+  <div class="pix-callout pix-callout--claim"><span><b class="pix-callout__title">Model claim</b>Treaty rate 0.10 applied.</span></div>
+  <div class="pix-callout pix-callout--truth"><span><b class="pix-callout__title">Ground truth</b>Certificate lapsed; statutory rate 0.30 applies.</span></div>
+  <div class="pix-prompt"><textarea rows="2" placeholder="Ask a follow-up…" aria-label="Prompt"></textarea><div class="pix-row" style="justify-content:space-between"><span class="pix-prompt__hint">Enter to send</span><button class="pix-btn pix-btn--sm">Send</button></div></div>
+  <div class="pix-row"><span class="pix-badge pix-badge--success"><span class="pix-badge__dot"></span>Passed</span><span class="pix-badge pix-badge--danger">Failed</span><span class="pix-badge pix-badge--warning">Flagged</span><span class="pix-badge pix-badge--info">Running</span></div>
+  <div class="pix-row"><span class="pix-small">Auto-escalate</span><button class="pix-switch" role="switch" aria-checked="true" aria-label="Auto-escalate" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked') !== 'true')"></button></div>
+</main>
+</body>
+</html>

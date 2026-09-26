@@ -1,0 +1,23 @@
+{
+  "name": "@pix-ui/css",
+  "version": "0.1.0",
+  "description": "PIX (Primitives for Intelligent eXperiences) framework-agnostic CSS: tokens, base styles and pix-* component classes for Vue, Svelte, Angular or plain HTML.",
+  "license": "MIT",
+  "author": "Mandeep Sidhu (#digitalwithdeep)",
+  "repository": { "type": "git", "url": "git+https://github.com/Digital-With-Deep/pix.git", "directory": "packages/css" },
+  "keywords": ["pix", "css", "design-system", "ai", "framework-agnostic"],
+  "type": "module",
+  "style": "./dist/pix.css",
+  "main": "./dist/pix.css",
+  "sideEffects": ["*.css"],
+  "exports": {
+    ".": "./dist/pix.css",
+    "./base.css": "./dist/base.css",
+    "./components.css": "./dist/components.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "scripts": { "build": "node build.mjs" },
+  "dependencies": { "@pix-ui/tokens": "workspace:^" },
+  "publishConfig": { "access": "public" }
+}

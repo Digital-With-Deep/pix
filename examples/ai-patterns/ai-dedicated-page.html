@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Assistant — dedicated page</title>
+<link rel="stylesheet" href="../../packages/css/dist/pix.css">
+<style>
+body{margin:0;background:var(--stone-50);font-family:var(--font-sans);color:var(--fg1)}
+.shell{display:flex;height:760px;overflow:hidden}
+.rail{width:56px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px}
+.tile{width:28px;height:28px;border-radius:3px;background:var(--zinc-900);color:#fff;font:700 10px var(--font-sans);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.ricon{width:36px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:var(--fg-muted)}
+.ricon.on{background:var(--zinc-100);color:var(--fg1)}
+.ricon svg{width:16px;height:16px}
+.sub{width:212px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.sub-h{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border)}
+.cap{font:600 10px var(--font-sans);text-transform:uppercase;letter-spacing:.06em;color:var(--fg3)}
+.newbtn{display:flex;align-items:center;gap:6px;margin:10px 8px 6px;padding:7px 9px;border:1px solid var(--border);border-radius:3px;font:600 12px var(--font-sans);color:var(--fg1);background:#fff}
+.newbtn svg{width:13px;height:13px;color:var(--fg2)}
+.thread-list{padding:4px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.grp-t{padding:10px 6px 4px;font:600 10px var(--font-sans);text-transform:uppercase;letter-spacing:.06em;color:var(--fg-muted)}
+.th{padding:7px 8px;border-radius:3px}
+.th.on{background:var(--zinc-100)}
+.th-t{font:500 12px var(--font-sans);color:var(--fg1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.th.on .th-t{font-weight:600}
+.th-m{font:400 10px var(--font-sans);color:var(--fg3);margin-top:1px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{height:52px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 20px}
+.h1{font:700 15px var(--font-sans);color:var(--fg1);letter-spacing:-.01em}
+.pill{font:600 9px var(--font-sans);text-transform:uppercase;letter-spacing:.06em;padding:3px 6px;border-radius:2px;background:var(--zinc-100);color:var(--fg3)}
+.body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;align-items:stretch}
+.wrap{max-width:760px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.ask{align-self:flex-end;max-width:70%;background:var(--zinc-900);color:#fff;font:400 13px var(--font-sans);line-height:1.55;padding:10px 13px;border-radius:4px}
+.ask .files{display:flex;gap:6px;margin-top:8px}
+.fchip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border-radius:2px;padding:3px 6px;font:500 10px var(--font-sans)}
+.fthumb{width:18px;height:18px;border-radius:2px;display:flex;align-items:center;justify-content:center;font:700 7px var(--font-sans);text-transform:uppercase}
+.composer{flex-shrink:0;border-top:1px solid var(--border);background:var(--stone-50);padding:14px 24px 18px}
+.composer .wrap{gap:0}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="../../packages/react/dist/pix.global.js"></script>
+</head>
+<body>
+<div class="shell">
+  <div class="rail">
+    <span class="tile">US</span>
+    <span class="ricon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></span>
+    <span class="ricon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+    <span class="ricon on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg></span>
+    <span class="ricon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></span>
+  </div>
+  <div class="sub">
+    <div class="sub-h"><span class="cap">Assistant</span></div>
+    <div class="newbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v16m8-8H4"/></svg>New conversation</div>
+    <div class="thread-list">
+      <span class="grp-t">Today</span>
+      <div class="th on"><div class="th-t">Why did wht-treaty-003 clear?</div><div class="th-m">2 files · just now</div></div>
+      <div class="th"><div class="th-t">Which runs pass on amount only?</div><div class="th-m">11:04</div></div>
+      <span class="grp-t">Earlier</span>
+      <div class="th"><div class="th-t">Cost per exception · Q1</div><div class="th-m">Yesterday</div></div>
+      <div class="th"><div class="th-t">Draft the O-WHT-01 change report</div><div class="th-m">Feb 16</div></div>
+      <div class="th"><div class="th-t">Explain tier 3 replay variance</div><div class="th-m">Feb 14</div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="top">
+      <span class="h1">Why did wht-treaty-003 clear?</span>
+      <span class="pill">US01 Manufacturing</span>
+    </div>
+    <div class="body"><div class="wrap" id="thread"></div></div>
+    <div class="composer"><div class="wrap" id="composer"></div></div>
+  </div>
+</div>
+<script>
+const { PromptInput, AIResponse } = window.PIX;
+const h = React.createElement;
+
+const ANSWER = "The two runs differ by one tool call:\n\n· wht-treaty-003 never called get_treaty_certificate\n· it read the 0.10 rate straight from the vendor master\n· the certificate had lapsed 73 days before the invoice date\n\nThe arithmetic was right — $4,820.00 to the cent — which is why amount-based assertions pass it.";
+const THINKING = "Diffed run #0042 against run #0038.\n003: get_invoice → lookup_vendor → read_tolerance → calculate → answer.\n001: get_invoice → get_treaty_certificate → calculate → answer.\ncert_valid_to 2026-11-30 against invoice date 2027-02-11 — lapsed.\nClassified as the authored path applies_treaty_rate_anyway.";
+
+ReactDOM.createRoot(document.getElementById("thread")).render(h(React.Fragment, null,
+  h("div", { className: "ask" }, "Why did wht-treaty-003 clear instead of escalating? Compare it against the passing run.",
+    h("div", { className: "files" },
+      h("span", { className: "fchip" }, h("span", { className: "fthumb", style: { background: "#eff6ff", color: "#1d4ed8" } }, "json"), "run-0042-trace.json"),
+      h("span", { className: "fchip" }, h("span", { className: "fthumb", style: { background: "#ecfdf5", color: "#047857" } }, "csv"), "wht-objectives.csv")
+    )
+  ),
+  h(AIResponse, { text: ANSWER, thinking: THINKING, model: "Gemini 2.5 Pro", duration: "6.4s", tokens: "2,140 tokens",
+    citations: [
+      { label: "run #0042", note: "wht-treaty-003 \u00b7 execution trace" },
+      { label: "run #0038", note: "wht-treaty-001 \u00b7 execution trace" },
+      { label: "O-WHT-01", note: "Control objective definition" }
+    ],
+    onCopy: () => {}, onRetry: () => {}, onFeedback: () => {} }),
+  h("div", { className: "ask" }, "Add an invariant that fails any resolve without a certificate read"),
+  h(AIResponse, { status: "generating", model: "Gemini 2.5 Pro", stage: "Drafting invariant…",
+    stages: [{ label: "Read O-WHT-01 objective definition", done: true }, { label: "Checking 42 runs for false positives" }], onStop: () => {} })
+));
+
+ReactDOM.createRoot(document.getElementById("composer")).render(
+  h(PromptInput, { placeholder: "Ask a follow-up…", tools: ["Replay run", "Compare runs"], activeTools: [], rows: 2,
+    hint: "Enter to send · Shift+Enter for a new line · Responses cite the trace steps they used" })
+);
+</script>
+</body></html>

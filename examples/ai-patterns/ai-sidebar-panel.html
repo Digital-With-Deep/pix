@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Assistant — sidebar panel</title>
+<link rel="stylesheet" href="../../packages/css/dist/pix.css">
+<style>
+body{margin:0;background:var(--stone-50);font-family:var(--font-sans);color:var(--fg1)}
+.shell{display:flex;height:720px;overflow:hidden}
+.rail{width:56px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px}
+.tile{width:28px;height:28px;border-radius:3px;background:var(--stone-900);color:#fff;font:700 10px var(--font-mono);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.ricon{width:36px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:var(--fg-muted)}
+.ricon.on{background:var(--stone-100);color:var(--fg1)}
+.ricon svg{width:16px;height:16px}
+.work{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{height:52px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 20px}
+.h1{font:600 15px var(--font-mono);letter-spacing:-.01em}
+.tag{font:600 9px var(--font-mono);text-transform:uppercase;letter-spacing:.08em;padding:3px 6px;border-radius:2px}
+.tag.fail{background:var(--red-50);color:var(--red-700)}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:3px;background:#fff;font:500 12px var(--font-sans);color:var(--fg2)}
+.btn.dark{background:var(--stone-900);color:#fff;border-color:var(--stone-900);font-weight:600}
+.btn svg{width:13px;height:13px}
+.content{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card{background:#fff;border:1px solid var(--border);border-radius:4px;padding:12px}
+.k{font:600 9px var(--font-sans);text-transform:uppercase;letter-spacing:.08em;color:var(--fg3)}
+.v{font:600 19px var(--font-mono);color:var(--fg1);margin-top:4px}
+.sm{font:400 10px var(--font-sans);color:var(--fg-muted);margin-top:2px}
+.tblwrap{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--stone-50)}
+th{text-align:left;padding:8px 12px;font:600 9px var(--font-sans);text-transform:uppercase;letter-spacing:.08em;color:var(--fg3)}
+td{padding:9px 12px;font:400 12px var(--font-sans);color:var(--fg2);border-top:1px solid var(--divider)}
+td.m{font-family:var(--font-mono);color:var(--fg1);font-weight:500}
+td.n{text-align:right;font-family:var(--font-mono)}
+tr.hl td{background:var(--amber-50)}
+.vd{font:600 10px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.vd.f{color:var(--red-700)}
+.vd.p{color:var(--emerald-700)}
+.panel{width:392px;flex-shrink:0;background:#fff;border-left:1px solid var(--border);display:flex;flex-direction:column}
+.p-h{height:52px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--border)}
+.p-mark{width:22px;height:22px;border-radius:2px;background:var(--stone-900);color:#fff;display:flex;align-items:center;justify-content:center}
+.p-mark svg{width:13px;height:13px}
+.p-t{font:600 13px var(--font-sans);color:var(--fg1)}
+.p-x{margin-left:auto;color:var(--fg-muted);display:flex}
+.p-x svg{width:15px;height:15px}
+.scope{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--stone-50);border-bottom:1px solid var(--divider);font:400 11px var(--font-sans);color:var(--fg3)}
+.scope b{font:600 11px var(--font-mono);color:var(--fg2)}
+.p-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.ask{align-self:flex-end;max-width:82%;background:var(--stone-900);color:#fff;font:400 12px var(--font-sans);line-height:1.5;padding:9px 11px;border-radius:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 8px;border:1px solid var(--border);border-radius:3px;font:500 11px var(--font-sans);color:var(--fg2);background:#fff}
+.p-foot{flex-shrink:0;border-top:1px solid var(--border);padding:12px 14px 14px;background:var(--stone-50)}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="../../packages/react/dist/pix.global.js"></script>
+</head>
+<body>
+<div class="shell">
+  <div class="rail">
+    <span class="tile">US</span>
+    <span class="ricon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></span>
+    <span class="ricon on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8V4z"/></svg></span>
+    <span class="ricon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 012-2h9l-1.5 4H20l-2 5h-8"/></svg></span>
+  </div>
+
+  <div class="work">
+    <div class="top">
+      <span class="h1">wht-treaty-003</span>
+      <span class="tag fail">Failed</span>
+      <span class="spacer"></span>
+      <span class="btn">Re-run scenario</span>
+      <span class="btn dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg>Ask assistant</span>
+    </div>
+    <div class="content">
+      <div class="kpis">
+        <div class="card"><div class="k">Withholding</div><div class="v">$4,820.00</div><div class="sm">matches expected to the cent</div></div>
+        <div class="card"><div class="k">Tool calls</div><div class="v">5</div><div class="sm">300ms · 2,140 tokens</div></div>
+        <div class="card"><div class="k">Replay</div><div class="v">3 of 3</div><div class="sm">consistent</div></div>
+      </div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>Run</th><th>Objective</th><th>Tier</th><th>Verdict</th><th style="text-align:right">Cost</th></tr></thead>
+          <tbody>
+            <tr class="hl"><td class="m">wht-treaty-003</td><td class="m">O-WHT-01</td><td>2</td><td><span class="vd f">Failed</span></td><td class="n">$0.031</td></tr>
+            <tr class="hl"><td class="m">wht-treaty-004</td><td class="m">O-WHT-01</td><td>2</td><td><span class="vd f">Failed</span></td><td class="n">$0.033</td></tr>
+            <tr><td class="m">wht-treaty-001</td><td class="m">O-WHT-01</td><td>1</td><td><span class="vd p">Passed</span></td><td class="n">$0.019</td></tr>
+            <tr><td class="m">dup-invoice-014</td><td class="m">O-DUP-03</td><td>2</td><td><span class="vd p">Passed</span></td><td class="n">$0.024</td></tr>
+            <tr><td class="m">tolerance-011</td><td class="m">O-TOL-04</td><td>1</td><td><span class="vd p">Passed</span></td><td class="n">$0.014</td></tr>
+            <tr><td class="m">gr-mismatch-007</td><td class="m">O-GRM-02</td><td>3</td><td><span class="vd f">Failed</span></td><td class="n">$0.048</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="p-h">
+      <span class="p-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l2.3 6.9L21 12l-5.7 2.1L13 21l-2.3-6.9L5 12l5.7-2.1L13 3z"/></svg></span>
+      <span class="p-t">Assistant</span>
+      <span class="p-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 18L18 6M6 6l12 12"/></svg></span>
+    </div>
+    <div class="scope">Scoped to <b>run #0042</b> · O-WHT-01 · 5 calls</div>
+    <div class="p-body" id="panel"></div>
+    <div class="p-foot" id="panel-composer"></div>
+  </div>
+</div>
+<script>
+const { PromptInput, AIResponse } = window.PIX;
+const h = React.createElement;
+
+ReactDOM.createRoot(document.getElementById("panel")).render(h(React.Fragment, null,
+  h("div", { className: "ask" }, "Why are two runs highlighted?"),
+  h(AIResponse, {
+    text: "Both took the same authored path:\n\n· get_treaty_certificate was never called\n· the treaty rate came from the vendor master\n· both produced the correct amount and still cleared",
+    thinking: "Filtered 42 runs by objective O-WHT-01.\nChecked each trace for a get_treaty_certificate call.\n003 and 004 omit it; 001 includes it and escalates.\nBoth omissions land on applies_treaty_rate_anyway.",
+    model: "gpt-5.2", duration: "1.9s", showActions: false,
+  }),
+  h("div", { className: "chips" },
+    h("span", { className: "chip" }, "Add a certificate-read invariant"),
+    h("span", { className: "chip" }, "Compare 003 against 001"),
+    h("span", { className: "chip" }, "Open change report")
+  )
+));
+
+ReactDOM.createRoot(document.getElementById("panel-composer")).render(
+  h(PromptInput, { placeholder: "Ask about this run…", rows: 2, showHint: false,
+    plusItems: [
+      { label: "Attach a trace", icon: "upload", meta: "JSON · 25 MB", action: "attach" },
+      { label: "Add another run", icon: "data", meta: "42 this quarter" },
+    ] })
+);
+</script>
+</body></html>

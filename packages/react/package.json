@@ -1,0 +1,29 @@
+{
+  "name": "@pix-ui/react",
+  "version": "0.1.0",
+  "description": "PIX (Primitives for Intelligent eXperiences) React components: AI responses, thinking traces, prompt inputs, data tables and app primitives.",
+  "license": "MIT",
+  "author": "Mandeep Sidhu (#digitalwithdeep)",
+  "repository": { "type": "git", "url": "git+https://github.com/Digital-With-Deep/pix.git", "directory": "packages/react" },
+  "homepage": "https://github.com/Digital-With-Deep/pix/tree/main/packages/react#readme",
+  "keywords": ["pix", "react", "design-system", "ai", "llm", "chat", "components", "ui"],
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }, "require": { "types": "./dist/index.d.ts", "default": "./dist/index.cjs" } },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup && node scripts/copy-types.mjs && cp ../css/dist/pix.css dist/styles.css",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": { "react": ">=18", "react-dom": ">=18" },
+  "dependencies": { "@pix-ui/tokens": "workspace:^", "@pix-ui/css": "workspace:^" },
+  "devDependencies": { "tsup": "^8.3.0", "typescript": "^5.6.0", "@types/react": "^18.3.0", "react": "^18.3.1", "react-dom": "^18.3.1" },
+  "publishConfig": { "access": "public" }
+}

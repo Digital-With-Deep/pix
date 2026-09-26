@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PACT Console · built with PIX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../packages/css/dist/pix.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    emerald: { 50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b' }
+  } } } };
+</script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../packages/react/dist/pix.global.js"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 antialiased">
+  <div id="root"></div>
+  <script type="text/babel" src="Shared.jsx"></script>
+  <script type="text/babel" src="Overview.jsx"></script>
+  <script type="text/babel" src="Agents.jsx"></script>
+  <script type="text/babel" src="Controls.jsx"></script>
+  <script type="text/babel" src="TestingSchedule.jsx"></script>
+  <script type="text/babel" src="TestingAnalysis.jsx"></script>
+  <script type="text/babel" src="Evidence.jsx"></script>
+  <script type="text/babel" src="Findings.jsx"></script>
+  <script type="text/babel" src="Library.jsx"></script>
+  <script type="text/babel" src="Settings.jsx"></script>
+  <script type="text/babel" src="RunDetail.jsx"></script>
+  <script type="text/babel" src="ChangeReport.jsx"></script>
+  <script type="text/babel" src="App.jsx"></script>
+  <script type="text/babel">
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

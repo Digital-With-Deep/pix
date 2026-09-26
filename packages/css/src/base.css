@@ -1,0 +1,28 @@
+/* PIX base — element defaults. Opt out by importing @pix-ui/css/components.css and @pix-ui/tokens/css only. */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--fg1);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, .pix-h1 { font-size: var(--text-4xl); font-weight: var(--weight-bold); line-height: var(--leading-tight); letter-spacing: -0.02em; color: var(--fg1); }
+h2, .pix-h2 { font-size: var(--text-3xl); font-weight: var(--weight-bold); line-height: var(--leading-tight); letter-spacing: -0.015em; color: var(--fg1); }
+h3, .pix-h3 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); line-height: var(--leading-snug); letter-spacing: -0.01em; color: var(--fg1); }
+h4, .pix-h4 { font-size: var(--text-xl); font-weight: var(--weight-semibold); line-height: var(--leading-snug); color: var(--fg1); }
+h5, .pix-h5 { font-size: var(--text-lg); font-weight: var(--weight-semibold); line-height: var(--leading-snug); color: var(--fg1); }
+p, .pix-p { font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--fg2); }
+.pix-small { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--fg2); }
+.pix-meta { font-size: var(--text-xs); color: var(--fg3); }
+.pix-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg3); }
+.pix-mono { font-family: var(--font-mono); }
+code, pre, .pix-code { font-family: var(--font-mono); font-size: 0.925em; color: var(--fg1); background: var(--bg-muted); border-radius: var(--radius-sm); padding: 0.1em 0.35em; }
+a { color: var(--accent-fg); text-decoration: none; font-weight: var(--weight-medium); }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+kbd, .pix-kbd { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--fg3); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 2px 6px; box-shadow: 0 1px 0 0 var(--border); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

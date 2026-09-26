@@ -1,0 +1,29 @@
+{
+  "name": "@pix-ui/tokens",
+  "version": "0.1.0",
+  "description": "PIX (Primitives for Intelligent eXperiences) design tokens for web, iOS, Android, Compose, Flutter and React Native.",
+  "license": "MIT",
+  "author": "Mandeep Sidhu (#digitalwithdeep)",
+  "repository": { "type": "git", "url": "git+https://github.com/Digital-With-Deep/pix.git", "directory": "packages/tokens" },
+  "homepage": "https://github.com/Digital-With-Deep/pix/tree/main/packages/tokens#readme",
+  "keywords": ["pix", "design-tokens", "design-system", "ai", "css-variables", "swift", "compose", "flutter", "react-native"],
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "main": "./dist/js/index.cjs",
+  "module": "./dist/js/index.js",
+  "types": "./dist/js/index.d.ts",
+  "exports": {
+    ".": { "import": { "types": "./dist/js/index.d.ts", "default": "./dist/js/index.js" }, "require": { "types": "./dist/js/index.d.cts", "default": "./dist/js/index.cjs" } },
+    "./react-native": { "import": { "types": "./dist/react-native/index.d.ts", "default": "./dist/react-native/index.js" }, "require": { "types": "./dist/react-native/index.d.cts", "default": "./dist/react-native/index.cjs" } },
+    "./css": "./dist/css/tokens.css",
+    "./css/auto-dark": "./dist/css/tokens.auto-dark.css",
+    "./scss": "./dist/scss/_tokens.scss",
+    "./json": "./dist/json/tokens.json",
+    "./source": "./src/pix.tokens.json",
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "src", "build.mjs", "README.md"],
+  "scripts": { "build": "node build.mjs", "clean": "rm -rf dist" },
+  "publishConfig": { "access": "public" }
+}

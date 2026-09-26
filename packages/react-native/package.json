@@ -1,0 +1,23 @@
+{
+  "name": "@pix-ui/react-native",
+  "version": "0.1.0",
+  "description": "PIX (Primitives for Intelligent eXperiences) React Native components for iOS and Android: theme provider, buttons, badges, cards, AI responses, thinking traces and prompt input.",
+  "license": "MIT",
+  "author": "Mandeep Sidhu (#digitalwithdeep)",
+  "repository": { "type": "git", "url": "git+https://github.com/Digital-With-Deep/pix.git", "directory": "packages/react-native" },
+  "keywords": ["pix", "react-native", "design-system", "ai", "ios", "android", "expo"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "react-native": "./src/index.ts",
+  "source": "./src/index.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "react-native": "./src/index.ts", "default": "./dist/index.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "src", "README.md"],
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit" },
+  "peerDependencies": { "react": ">=18", "react-native": ">=0.72" },
+  "dependencies": { "@pix-ui/tokens": "workspace:^" },
+  "devDependencies": { "typescript": "^5.6.0", "@types/react": "^18.3.0", "react": "^18.3.1", "react-native": "^0.76.0" },
+  "publishConfig": { "access": "public" }
+}

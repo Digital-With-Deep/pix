@@ -1,0 +1,893 @@
+{
+  "name": "PIX",
+  "description": "Primitives for Intelligent eXperiences — design tokens (source of truth).",
+  "version": 1,
+  "color": {
+    "themes": [
+      {
+        "id": "light",
+        "name": "Light"
+      },
+      {
+        "id": "dark",
+        "name": "Dark"
+      }
+    ],
+    "tokens": [
+      {
+        "name": "stone-50",
+        "value": "#fafaf9"
+      },
+      {
+        "name": "stone-100",
+        "value": "#f5f5f4"
+      },
+      {
+        "name": "stone-200",
+        "value": "#e7e5e4"
+      },
+      {
+        "name": "stone-300",
+        "value": "#d6d3d1"
+      },
+      {
+        "name": "stone-400",
+        "value": "#a8a29e"
+      },
+      {
+        "name": "stone-500",
+        "value": "#78716c"
+      },
+      {
+        "name": "stone-600",
+        "value": "#57534e"
+      },
+      {
+        "name": "stone-700",
+        "value": "#44403c"
+      },
+      {
+        "name": "stone-800",
+        "value": "#292524"
+      },
+      {
+        "name": "stone-900",
+        "value": "#1c1917"
+      },
+      {
+        "name": "stone-950",
+        "value": "#0c0a09"
+      },
+      {
+        "name": "zinc-50",
+        "value": {
+          "light": "{stone-50}",
+          "dark": "{stone-900}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-100",
+        "value": {
+          "light": "{stone-100}",
+          "dark": "{stone-800}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-200",
+        "value": {
+          "light": "{stone-200}",
+          "dark": "#3a3533"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-300",
+        "value": {
+          "light": "{stone-300}",
+          "dark": "{stone-700}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-400",
+        "value": {
+          "light": "{stone-400}",
+          "dark": "{stone-600}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-500",
+        "value": {
+          "light": "{stone-500}",
+          "dark": "{stone-500}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-600",
+        "value": {
+          "light": "{stone-600}",
+          "dark": "{stone-400}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-700",
+        "value": {
+          "light": "{stone-700}",
+          "dark": "{stone-300}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-800",
+        "value": {
+          "light": "{stone-800}",
+          "dark": "{stone-200}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-900",
+        "value": {
+          "light": "{stone-900}",
+          "dark": "{stone-100}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "zinc-950",
+        "value": {
+          "light": "{stone-950}",
+          "dark": "{stone-50}"
+        },
+        "usage": "Neutral step used by components. Inverts in the dark theme so a light step stays a quiet surface and a dark step stays strong ink; use stone-* for a fixed value."
+      },
+      {
+        "name": "emerald-50",
+        "value": {
+          "light": "#ecfdf5",
+          "dark": "rgb(16 185 129 / 0.12)"
+        }
+      },
+      {
+        "name": "emerald-100",
+        "value": {
+          "light": "#d1fae5",
+          "dark": "rgb(16 185 129 / 0.20)"
+        }
+      },
+      {
+        "name": "emerald-200",
+        "value": {
+          "light": "#a7f3d0",
+          "dark": "rgb(16 185 129 / 0.32)"
+        }
+      },
+      {
+        "name": "emerald-300",
+        "value": "#6ee7b7"
+      },
+      {
+        "name": "emerald-400",
+        "value": "#34d399"
+      },
+      {
+        "name": "emerald-500",
+        "value": "#10b981"
+      },
+      {
+        "name": "emerald-600",
+        "value": "#059669"
+      },
+      {
+        "name": "emerald-700",
+        "value": {
+          "light": "#047857",
+          "dark": "#34d399"
+        }
+      },
+      {
+        "name": "emerald-800",
+        "value": {
+          "light": "#065f46",
+          "dark": "#6ee7b7"
+        }
+      },
+      {
+        "name": "emerald-900",
+        "value": {
+          "light": "#064e3b",
+          "dark": "#a7f3d0"
+        }
+      },
+      {
+        "name": "amber-50",
+        "value": {
+          "light": "#fffbeb",
+          "dark": "rgb(245 158 11 / 0.12)"
+        }
+      },
+      {
+        "name": "amber-100",
+        "value": {
+          "light": "#fef3c7",
+          "dark": "rgb(245 158 11 / 0.20)"
+        }
+      },
+      {
+        "name": "amber-200",
+        "value": {
+          "light": "#fde68a",
+          "dark": "rgb(245 158 11 / 0.32)"
+        }
+      },
+      {
+        "name": "amber-300",
+        "value": "#fcd34d"
+      },
+      {
+        "name": "amber-400",
+        "value": "#fbbf24"
+      },
+      {
+        "name": "amber-500",
+        "value": "#f59e0b"
+      },
+      {
+        "name": "amber-600",
+        "value": "#d97706"
+      },
+      {
+        "name": "amber-700",
+        "value": {
+          "light": "#b45309",
+          "dark": "#fbbf24"
+        }
+      },
+      {
+        "name": "amber-800",
+        "value": {
+          "light": "#92400e",
+          "dark": "#fcd34d"
+        }
+      },
+      {
+        "name": "amber-900",
+        "value": {
+          "light": "#78350f",
+          "dark": "#fde68a"
+        }
+      },
+      {
+        "name": "red-50",
+        "value": {
+          "light": "#fef2f2",
+          "dark": "rgb(239 68 68 / 0.12)"
+        }
+      },
+      {
+        "name": "red-100",
+        "value": {
+          "light": "#fee2e2",
+          "dark": "rgb(239 68 68 / 0.20)"
+        }
+      },
+      {
+        "name": "red-200",
+        "value": {
+          "light": "#fecaca",
+          "dark": "rgb(239 68 68 / 0.32)"
+        }
+      },
+      {
+        "name": "red-500",
+        "value": "#ef4444"
+      },
+      {
+        "name": "red-600",
+        "value": "#dc2626"
+      },
+      {
+        "name": "red-700",
+        "value": {
+          "light": "#b91c1c",
+          "dark": "#f87171"
+        }
+      },
+      {
+        "name": "violet-50",
+        "value": {
+          "light": "#f5f3ff",
+          "dark": "rgb(139 92 246 / 0.12)"
+        }
+      },
+      {
+        "name": "violet-100",
+        "value": {
+          "light": "#ede9fe",
+          "dark": "rgb(139 92 246 / 0.20)"
+        }
+      },
+      {
+        "name": "violet-500",
+        "value": "#8b5cf6"
+      },
+      {
+        "name": "violet-600",
+        "value": "#7c3aed"
+      },
+      {
+        "name": "violet-700",
+        "value": {
+          "light": "#6d28d9",
+          "dark": "#a78bfa"
+        }
+      },
+      {
+        "name": "blue-50",
+        "value": {
+          "light": "#eff6ff",
+          "dark": "rgb(59 130 246 / 0.12)"
+        },
+        "usage": "Info tint and ink (badges, avatars)."
+      },
+      {
+        "name": "blue-100",
+        "value": {
+          "light": "#dbeafe",
+          "dark": "rgb(59 130 246 / 0.20)"
+        },
+        "usage": "Info tint and ink (badges, avatars)."
+      },
+      {
+        "name": "blue-700",
+        "value": {
+          "light": "#1d4ed8",
+          "dark": "#60a5fa"
+        },
+        "usage": "Info tint and ink (badges, avatars)."
+      },
+      {
+        "name": "blue-800",
+        "value": {
+          "light": "#1e40af",
+          "dark": "#93c5fd"
+        },
+        "usage": "Info tint and ink (badges, avatars)."
+      },
+      {
+        "name": "success",
+        "value": "{emerald-500}"
+      },
+      {
+        "name": "warning",
+        "value": "{amber-500}"
+      },
+      {
+        "name": "danger",
+        "value": "{red-500}"
+      },
+      {
+        "name": "info",
+        "value": "#3b82f6"
+      },
+      {
+        "name": "truth",
+        "value": "{emerald-700}"
+      },
+      {
+        "name": "truth-bg",
+        "value": "{emerald-50}"
+      },
+      {
+        "name": "claim",
+        "value": "{red-700}"
+      },
+      {
+        "name": "claim-bg",
+        "value": "{red-50}"
+      },
+      {
+        "name": "fault",
+        "value": "{amber-700}"
+      },
+      {
+        "name": "fault-bg",
+        "value": "{amber-50}"
+      },
+      {
+        "name": "fault-border",
+        "value": "{amber-200}"
+      },
+      {
+        "name": "control",
+        "value": "{violet-700}"
+      },
+      {
+        "name": "control-bg",
+        "value": "{violet-50}"
+      },
+      {
+        "name": "deficiency-1",
+        "value": "{amber-700}"
+      },
+      {
+        "name": "deficiency-1-bg",
+        "value": "{amber-50}"
+      },
+      {
+        "name": "deficiency-2",
+        "value": {
+          "light": "#c2410c",
+          "dark": "#fb923c"
+        }
+      },
+      {
+        "name": "deficiency-2-bg",
+        "value": {
+          "light": "#fff7ed",
+          "dark": "rgb(249 115 22 / 0.12)"
+        }
+      },
+      {
+        "name": "deficiency-3",
+        "value": "{red-700}"
+      },
+      {
+        "name": "deficiency-3-bg",
+        "value": "{red-50}"
+      },
+      {
+        "name": "confidence-high",
+        "value": "{emerald-700}"
+      },
+      {
+        "name": "confidence-low",
+        "value": "{amber-700}"
+      },
+      {
+        "name": "confidence-low-bg",
+        "value": "{amber-50}"
+      },
+      {
+        "name": "bg",
+        "value": {
+          "light": "#ffffff",
+          "dark": "{stone-950}"
+        }
+      },
+      {
+        "name": "bg-subtle",
+        "value": {
+          "light": "{zinc-50}",
+          "dark": "{stone-900}"
+        }
+      },
+      {
+        "name": "bg-muted",
+        "value": {
+          "light": "{zinc-100}",
+          "dark": "{stone-800}"
+        }
+      },
+      {
+        "name": "surface",
+        "value": {
+          "light": "#ffffff",
+          "dark": "{stone-900}"
+        }
+      },
+      {
+        "name": "surface-alt",
+        "value": {
+          "light": "{zinc-50}",
+          "dark": "{stone-800}"
+        }
+      },
+      {
+        "name": "fg1",
+        "value": {
+          "light": "{zinc-900}",
+          "dark": "{stone-100}"
+        }
+      },
+      {
+        "name": "fg2",
+        "value": {
+          "light": "{zinc-600}",
+          "dark": "{stone-400}"
+        }
+      },
+      {
+        "name": "fg3",
+        "value": {
+          "light": "{zinc-500}",
+          "dark": "{stone-500}"
+        }
+      },
+      {
+        "name": "fg-muted",
+        "value": {
+          "light": "{zinc-400}",
+          "dark": "{stone-600}"
+        }
+      },
+      {
+        "name": "fg-inverse",
+        "value": {
+          "light": "#ffffff",
+          "dark": "{stone-900}"
+        }
+      },
+      {
+        "name": "border",
+        "value": {
+          "light": "{zinc-200}",
+          "dark": "{stone-800}"
+        }
+      },
+      {
+        "name": "border-strong",
+        "value": {
+          "light": "{zinc-300}",
+          "dark": "{stone-700}"
+        }
+      },
+      {
+        "name": "divider",
+        "value": {
+          "light": "{zinc-100}",
+          "dark": "{stone-800}"
+        }
+      },
+      {
+        "name": "accent",
+        "value": {
+          "light": "{emerald-500}",
+          "dark": "{emerald-400}"
+        }
+      },
+      {
+        "name": "accent-hover",
+        "value": {
+          "light": "{emerald-600}",
+          "dark": "{emerald-300}"
+        }
+      },
+      {
+        "name": "accent-bg",
+        "value": {
+          "light": "{emerald-50}",
+          "dark": "rgb(16 185 129 / 0.10)"
+        }
+      },
+      {
+        "name": "accent-fg",
+        "value": {
+          "light": "{emerald-700}",
+          "dark": "{emerald-400}"
+        }
+      }
+    ]
+  },
+  "type": {
+    "fonts": [],
+    "families": {},
+    "groups": [
+      {
+        "name": "Type styles",
+        "family": "",
+        "styles": [
+          {
+            "name": "body",
+            "fontSize": "16px",
+            "lineHeight": "1.5",
+            "usage": "From `body` in colors_and_type.css — its font-family var(--font-sans) is not one of the system’s font tokens."
+          },
+          {
+            "name": "h1",
+            "fontSize": "36px",
+            "lineHeight": "1.2",
+            "fontWeight": "700",
+            "letterSpacing": "-0.02em",
+            "usage": "From `h1, .h1` in colors_and_type.css; also `.h1`."
+          },
+          {
+            "name": "h2",
+            "fontSize": "30px",
+            "lineHeight": "1.2",
+            "fontWeight": "700",
+            "letterSpacing": "-0.015em",
+            "usage": "From `h2, .h2` in colors_and_type.css; also `.h2`."
+          },
+          {
+            "name": "h3",
+            "fontSize": "24px",
+            "lineHeight": "1.35",
+            "fontWeight": "600",
+            "letterSpacing": "-0.01em",
+            "usage": "From `h3, .h3` in colors_and_type.css; also `.h3`."
+          },
+          {
+            "name": "h4",
+            "fontSize": "20px",
+            "lineHeight": "1.35",
+            "fontWeight": "600",
+            "usage": "From `h4, .h4` in colors_and_type.css; also `.h4`."
+          },
+          {
+            "name": "h5",
+            "fontSize": "18px",
+            "lineHeight": "1.35",
+            "fontWeight": "600",
+            "usage": "From `h5, .h5` in colors_and_type.css; also `.h5`."
+          },
+          {
+            "name": "p",
+            "fontSize": "16px",
+            "lineHeight": "1.65",
+            "usage": "From `p, .p` in colors_and_type.css."
+          },
+          {
+            "name": "code",
+            "fontSize": "0.925em",
+            "lineHeight": "1.5",
+            "usage": "From `code, .code, pre` in colors_and_type.css — its font-family var(--font-mono) is not one of the system’s font tokens; also `.code`."
+          },
+          {
+            "name": "pre",
+            "fontSize": "0.925em",
+            "lineHeight": "1.5",
+            "usage": "From `code, .code, pre` in colors_and_type.css — its font-family var(--font-mono) is not one of the system’s font tokens."
+          },
+          {
+            "name": "kbd",
+            "fontSize": "11px",
+            "lineHeight": "1.5",
+            "usage": "From `kbd` in colors_and_type.css — its font-family var(--font-mono) is not one of the system’s font tokens."
+          },
+          {
+            "name": "meta",
+            "fontSize": "12px",
+            "lineHeight": "1.5",
+            "usage": "From `.meta` in colors_and_type.css."
+          },
+          {
+            "name": "label",
+            "fontSize": "12px",
+            "lineHeight": "1.5",
+            "fontWeight": "600",
+            "letterSpacing": "0.06em",
+            "usage": "From `.label` in colors_and_type.css — uppercase."
+          }
+        ]
+      }
+    ]
+  },
+  "spacing": {
+    "tokens": [
+      {
+        "name": "space-0",
+        "value": "0"
+      },
+      {
+        "name": "space-1",
+        "value": "4px"
+      },
+      {
+        "name": "space-2",
+        "value": "8px"
+      },
+      {
+        "name": "space-3",
+        "value": "12px"
+      },
+      {
+        "name": "space-4",
+        "value": "16px"
+      },
+      {
+        "name": "space-5",
+        "value": "20px"
+      },
+      {
+        "name": "space-6",
+        "value": "24px"
+      },
+      {
+        "name": "space-8",
+        "value": "32px"
+      },
+      {
+        "name": "space-10",
+        "value": "40px"
+      },
+      {
+        "name": "space-12",
+        "value": "48px"
+      },
+      {
+        "name": "space-16",
+        "value": "64px"
+      }
+    ]
+  },
+  "radius": {
+    "tokens": [
+      {
+        "name": "radius-none",
+        "value": "0"
+      },
+      {
+        "name": "radius-sm",
+        "value": "2px"
+      },
+      {
+        "name": "radius-md",
+        "value": "4px"
+      },
+      {
+        "name": "radius-lg",
+        "value": "6px"
+      },
+      {
+        "name": "radius-xl",
+        "value": "8px"
+      },
+      {
+        "name": "radius-2xl",
+        "value": "10px"
+      },
+      {
+        "name": "radius-full",
+        "value": "9999px"
+      }
+    ]
+  },
+  "shadow": {
+    "tokens": [
+      {
+        "name": "shadow-xs",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.04)"
+      },
+      {
+        "name": "shadow-sm",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.04)"
+      },
+      {
+        "name": "shadow-md",
+        "value": "0 2px 4px -1px rgb(0 0 0 / 0.06), 0 4px 6px -1px rgb(0 0 0 / 0.05)"
+      },
+      {
+        "name": "shadow-lg",
+        "value": "0 4px 6px -2px rgb(0 0 0 / 0.05), 0 10px 15px -3px rgb(0 0 0 / 0.08)"
+      },
+      {
+        "name": "shadow-xl",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.08), 0 20px 25px -5px rgb(0 0 0 / 0.10)"
+      }
+    ]
+  },
+  "motion": {
+    "tokens": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      {
+        "name": "dur-fast",
+        "value": "150ms"
+      },
+      {
+        "name": "dur-base",
+        "value": "200ms"
+      },
+      {
+        "name": "dur-slow",
+        "value": "300ms"
+      }
+    ]
+  },
+  "fontSize": {
+    "tokens": [
+      {
+        "name": "text-2xs",
+        "value": "11px"
+      },
+      {
+        "name": "text-xs",
+        "value": "12px"
+      },
+      {
+        "name": "text-sm",
+        "value": "14px"
+      },
+      {
+        "name": "text-base",
+        "value": "16px"
+      },
+      {
+        "name": "text-lg",
+        "value": "18px"
+      },
+      {
+        "name": "text-xl",
+        "value": "20px"
+      },
+      {
+        "name": "text-2xl",
+        "value": "24px"
+      },
+      {
+        "name": "text-3xl",
+        "value": "30px"
+      },
+      {
+        "name": "text-4xl",
+        "value": "36px"
+      },
+      {
+        "name": "text-5xl",
+        "value": "48px"
+      }
+    ]
+  },
+  "lineHeight": {
+    "tokens": [
+      {
+        "name": "leading-tight",
+        "value": "1.2"
+      },
+      {
+        "name": "leading-snug",
+        "value": "1.35"
+      },
+      {
+        "name": "leading-normal",
+        "value": "1.5"
+      },
+      {
+        "name": "leading-relaxed",
+        "value": "1.65"
+      }
+    ]
+  },
+  "fontWeight": {
+    "tokens": [
+      {
+        "name": "weight-regular",
+        "value": "400"
+      },
+      {
+        "name": "weight-medium",
+        "value": "500"
+      },
+      {
+        "name": "weight-semibold",
+        "value": "600"
+      },
+      {
+        "name": "weight-bold",
+        "value": "700"
+      }
+    ]
+  },
+  "fontFamily": {
+    "tokens": [
+      {
+        "name": "font-sans",
+        "value": "ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
+        "usage": "All UI text."
+      },
+      {
+        "name": "font-mono",
+        "value": "ui-monospace, SFMono-Regular, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace",
+        "usage": "Identifiers, IDs, amounts, code, model and tool names."
+      }
+    ]
+  }
+}
