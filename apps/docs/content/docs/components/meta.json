@@ -1,0 +1,4 @@
+{
+  "title": "Components",
+  "pages": ["button", "badge", "callout", "alert", "tabs", "select", "data-table", "metric-card", "ai-response", "prompt-input"]
+}

@@ -51,7 +51,9 @@ export function buildRegistrySource(entries) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   mkdirSync(outDir, { recursive: true });
-  const src = buildRegistrySource(collectExamples());
+  const entries = collectExamples();
+  const src = buildRegistrySource(entries);
   writeFileSync(join(outDir, "index.ts"), src);
-  console.log(`@pix-ui/docs: registry → ${collectExamples().length} examples`);
+  writeFileSync(join(outDir, "names.json"), JSON.stringify(entries.map((e) => e.name)));
+  console.log(`@pix-ui/docs: registry → ${entries.length} examples`);
 }
