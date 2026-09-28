@@ -24,6 +24,7 @@ pnpm-debug.log*
 
 # standalone npm examples (repo uses pnpm; don't commit their lockfiles)
 examples/*/package-lock.json
+.angular/
 
 # docs app
 apps/docs/.next/
