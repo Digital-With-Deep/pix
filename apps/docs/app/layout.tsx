@@ -1,3 +1,4 @@
+import '@pix-ui/react/styles.css';
 import { Inter } from 'next/font/google';
 import { Provider } from '@/components/provider';
 import './global.css';

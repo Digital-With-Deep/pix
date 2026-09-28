@@ -5,8 +5,16 @@ import { resolveProps } from "./props-resolve.mjs";
 const cell: React.CSSProperties = { padding: "8px 12px", borderBottom: "1px solid var(--border, #e4e4e7)", textAlign: "left", verticalAlign: "top", font: "13px var(--font-sans, ui-sans-serif, system-ui)", color: "var(--fg1, #1c1917)" };
 const mono: React.CSSProperties = { font: "12px var(--font-mono, ui-monospace, Menlo, monospace)" };
 
+interface PropRow {
+  name: string;
+  type: string;
+  default?: string | null;
+  required?: boolean;
+  description?: string | null;
+}
+
 export function PropsTable({ component }: { component: string }) {
-  const rows = resolveProps(props as Record<string, any[]>, component);
+  const rows = resolveProps(props as Record<string, PropRow[]>, component) as PropRow[];
   return (
     <div style={{ overflowX: "auto", margin: "16px 0" }}>
       <table style={{ borderCollapse: "collapse", width: "100%" }}>
