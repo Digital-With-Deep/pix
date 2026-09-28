@@ -19,3 +19,11 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# docs app
+apps/docs/.next/
+apps/docs/out/
+apps/docs/.source/
+apps/docs/registry/__generated__/
+apps/docs/next-env.d.ts
+*.tsbuildinfo
