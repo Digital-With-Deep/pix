@@ -10,7 +10,7 @@
     "start": "serve out",
     "types:check": "next typegen && tsc --noEmit",
     "lint": "eslint",
-    "test": "node --test scripts/*.test.mjs"
+    "test": "node --test 'scripts/*.test.mjs' 'components/*.test.mjs'"
   },
   "dependencies": {
     "@pix-ui/react": "workspace:*",
