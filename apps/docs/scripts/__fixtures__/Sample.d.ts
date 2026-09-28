@@ -6,5 +6,10 @@ export interface SampleProps {
   disabled?: boolean;
   /** Required label text. */
   label: string;
+  /**
+   * Size of the control.
+   * @default "md"
+   */
+  size?: "sm" | "md" | "lg";
 }
 export declare function Sample(props: SampleProps): React.ReactElement;

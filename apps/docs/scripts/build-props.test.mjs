@@ -19,3 +19,10 @@ test("required prop is marked required", () => {
   assert.equal(label.required, true);
   assert.equal(label.type, "string");
 });
+
+test("@default JSDoc tag is captured on an optional union prop", () => {
+  const size = rows.find((r) => r.name === "size");
+  assert.equal(size.required, false);
+  assert.equal(size.type, `"sm" | "md" | "lg"`);
+  assert.equal(size.default, `"md"`);
+});
