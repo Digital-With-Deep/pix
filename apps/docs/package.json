@@ -3,11 +3,14 @@
   "version": "0.0.35",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "predev": "node scripts/build-registry.mjs && node scripts/build-props.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/build-registry.mjs && node scripts/build-props.mjs",
+    "build": "next build",
     "start": "serve out",
     "types:check": "next typegen && tsc --noEmit",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "@pix-ui/react": "workspace:*",
