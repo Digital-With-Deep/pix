@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, AIResponse, PromptInput } from "@pix-ui/react";
 
 export default function Page() {
   const [dark, setDark] = useState(false);
-  if (typeof document !== "undefined") document.documentElement.dataset.theme = dark ? "dark" : "light";
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+  }, [dark]);
 
   return (
     <main style={{ maxWidth: 640, margin: "40px auto", padding: 16 }}>

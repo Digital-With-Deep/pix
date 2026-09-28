@@ -1,7 +1,6 @@
 # docs
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+This is the PIX documentation site — a Next.js app built with [Fumadocs](https://fumadocs.dev) that documents the `@pix-ui` component library. See the [PIX repository](https://github.com/Digital-With-Deep/pix) for the rest of the monorepo, including the component packages this site documents.
 
 It is a Next.js app with [Static Export](https://nextjs.org/docs/app/guides/static-exports) configured.
 
@@ -36,12 +35,8 @@ Collections are defined with the [Macro API](https://fumadocs.dev/docs/mdx/macro
 
 Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
 
-## Learn More
+## Learn more
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+- [PIX repository](https://github.com/Digital-With-Deep/pix) - the monorepo this site documents, including `@pix-ui/react` and `@pix-ui/css`.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Fumadocs](https://fumadocs.dev) - learn about the framework powering this site.
