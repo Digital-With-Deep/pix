@@ -1,0 +1,36 @@
+---
+title: Next.js
+description: Use PIX in a Next.js App Router project.
+---
+
+## Install
+
+```bash
+npm i @pix-ui/react
+```
+
+## Import the styles
+
+In `app/layout.tsx`:
+
+```tsx
+import "@pix-ui/react/styles.css";
+```
+
+## Use a component
+
+```tsx
+import { Button, AIResponse } from "@pix-ui/react";
+
+export default function Page() {
+  return <Button variant="filled">Run evaluation</Button>;
+}
+```
+
+PIX components already ship `"use client"` where they need it, so they work in Server Components.
+
+## Dark mode
+
+Set `data-theme="dark"` on `<html>` (or use `next-themes`). See [Dark mode](/docs/dark-mode).
+
+A runnable starter is in [`examples/nextjs`](https://github.com/Digital-With-Deep/pix/tree/main/examples/nextjs).
