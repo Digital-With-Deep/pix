@@ -1,0 +1,44 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build            # builds @pix-ui/* so docs can consume workspace styles
+      - run: pnpm --filter docs test
+      - run: pnpm --filter docs build
+      - name: Build React example starters
+        run: |
+          for d in examples/nextjs examples/vite-react; do
+            (cd "$d" && npm install && npm run build)
+          done
+      - uses: actions/upload-artifact@v4
+        with: { name: docs-out, path: apps/docs/out }
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: docs-out, path: apps/docs/out }
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live
+          entryPoint: apps/docs

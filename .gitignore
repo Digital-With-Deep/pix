@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+.next/
+next-env.d.ts
 
 # Logs
 *.log
@@ -19,3 +21,15 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# standalone npm examples (repo uses pnpm; don't commit their lockfiles)
+examples/*/package-lock.json
+.angular/
+
+# docs app
+apps/docs/.next/
+apps/docs/out/
+apps/docs/.source/
+apps/docs/registry/__generated__/
+apps/docs/next-env.d.ts
+*.tsbuildinfo

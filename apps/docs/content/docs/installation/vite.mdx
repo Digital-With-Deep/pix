@@ -1,0 +1,30 @@
+---
+title: Vite (React)
+description: Use PIX in a Vite + React project.
+---
+
+## Install
+
+```bash
+npm i @pix-ui/react
+```
+
+## Import the styles
+
+In `src/main.tsx`:
+
+```tsx
+import "@pix-ui/react/styles.css";
+```
+
+## Use a component
+
+```tsx
+import { Button } from "@pix-ui/react";
+
+export function App() {
+  return <Button variant="filled">Run evaluation</Button>;
+}
+```
+
+A runnable starter is in [`examples/vite-react`](https://github.com/Digital-With-Deep/pix/tree/main/examples/vite-react).
