@@ -1,0 +1,12 @@
+---
+title: Dark mode
+description: How theming works across web and native.
+---
+
+PIX ships light and dark values for every colour token. On the web, dark mode activates when the root element has `data-theme="dark"` or the `dark` class:
+
+```html
+<html data-theme="dark">
+```
+
+Every component reads tokens (`var(--accent)`, `var(--fg1)`), so the whole tree flips at once. Contrast stays ≥4.5:1 for text in both themes.

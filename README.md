@@ -91,6 +91,18 @@ Every React component accepts `loading` to render a skeleton in its own footprin
 
 `examples/html-starter` (plain HTML), `examples/ai-patterns` (assistant page, sidebar panel, inline entry points) and `examples/pact-console` — a full agent-evaluation console built on PIX, where the system started.
 
+Minimal per-framework starters, each installing PIX from npm:
+
+| Starter | Framework | Package |
+| --- | --- | --- |
+| [`examples/nextjs`](examples/nextjs) | Next.js (App Router) | `@pix-ui/react` |
+| [`examples/vite-react`](examples/vite-react) | Vite + React | `@pix-ui/react` |
+| [`examples/angular`](examples/angular) | Angular (standalone components) | `@pix-ui/css` |
+
+## Documentation
+
+The docs site (component reference, guides, live previews) is built from [`apps/docs`](apps/docs) with Fumadocs and deployed to Firebase Hosting. It is not live yet — the URL will be `<your-project>.web.app` once a maintainer creates the Firebase project and adds the deploy secret, per [`docs/DEPLOY-DOCS.md`](docs/DEPLOY-DOCS.md).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Released under the [MIT License](LICENSE).

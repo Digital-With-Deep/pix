@@ -1,0 +1,34 @@
+---
+title: Angular
+description: Use PIX in an Angular project via the framework-agnostic CSS.
+---
+
+Angular uses **`@pix-ui/css`** — the `pix-*` classes — rather than the React package.
+
+## Install
+
+```bash
+npm i @pix-ui/css
+```
+
+## Add the stylesheet
+
+In `angular.json`, add PIX to `styles`:
+
+```json
+"styles": ["node_modules/@pix-ui/css/dist/pix.css", "src/styles.css"]
+```
+
+## Use the classes
+
+```html
+<button class="pix-btn pix-btn--filled">Run evaluation</button>
+```
+
+<Preview name="callout-truth" />
+
+## Dark mode
+
+Set `data-theme="dark"` on a root element (e.g. `<html data-theme="dark">`).
+
+A runnable starter is in [`examples/angular`](https://github.com/Digital-With-Deep/pix/tree/main/examples/angular).
