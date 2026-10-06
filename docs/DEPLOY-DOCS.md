@@ -46,7 +46,7 @@ Both `FIREBASE_SERVICE_ACCOUNT` (secret) and `FIREBASE_PROJECT_ID` (variable) ar
 
 ## 6. Site URL
 
-The site is served at `https://<project-id>.web.app` (and the Firebase-assigned `.firebaseapp.com` alias) until a custom domain is attached in the Firebase console under **Hosting > Add custom domain**.
+The site is served at the custom domain **[pixui.digitalwithdeep.com](https://pixui.digitalwithdeep.com)** (connected via a `pixui` CNAME → `pixui-15966.web.app`), and also at the Firebase default URLs `pixui-15966.web.app` and `pixui-15966.firebaseapp.com`. To attach or change a custom domain, use the Firebase console under **Hosting > Add custom domain**.
 
 ## Troubleshooting
 
