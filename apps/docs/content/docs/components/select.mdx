@@ -3,7 +3,105 @@ title: Select
 description: A searchable dropdown for choosing one option.
 ---
 
-<Preview name="select-assignee" />
+Select is a single-value combobox: a trigger button that opens a searchable
+listbox. It handles long option lists well — search filters by label,
+description, meta, group, and hidden keywords — and each option can carry an
+icon or letter tile, a secondary description line, and a right-aligned mono
+meta value for things like a shortcode or a token count.
+
+## When to use
+
+- Use **Select** when exactly one value must be chosen from a list, especially
+  once that list grows past five or six items or needs search, descriptions,
+  icons, or grouping — an assignee, a model, a region.
+- Use **MultiSelect** when the field can hold more than one value at once,
+  such as tags or reviewers.
+- Use **RadioGroup** when there are a small number of mutually exclusive,
+  always-visible options (two to five) and showing them all at once, with no
+  extra click to open a menu, helps the user compare them directly.
+
+## Basic
+
+A labeled select with a handful of plain options. Search is on by default,
+but with three short options here it stays out of the way until typed into.
+
+<Preview title="BASIC" name="select-assignee" />
+
+## Placeholder / empty
+
+With no `value`, the trigger shows `placeholder` in muted text. Pair it with
+`hint` to explain what the choice affects. If a search query matches nothing,
+the menu shows `emptyMessage` (default "Nothing matches") instead of an empty
+list.
+
+<Preview title="PLACEHOLDER" name="select-placeholder" />
+
+## Disabled options
+
+Individual options can be disabled — for a model the workspace hasn't enabled,
+a seat the user doesn't have, a waitlisted feature. Disabled options stay
+visible with a description explaining why, but they're skipped by arrow-key
+navigation and can't be clicked or selected.
+
+<Preview title="DISABLED OPTIONS" name="select-disabled-options" />
+
+## Grouped options
+
+Give adjacent options the same `group` string and Select inserts one heading
+above the run — useful for a region picker grouped by continent, or a model
+list grouped by provider. Keep options in the same group next to each other;
+a heading repeats if the group is interrupted.
+
+<Preview title="GROUPED" name="select-grouped" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the exact footprint the real control
+would occupy — including the label row — so a model list or an
+async-populated field doesn't jump once data arrives.
+
+<Preview title="LOADING" name="select-loading" />
+
+## Anatomy
+
+```tsx
+<Select
+  label="Model"
+  placeholder="Choose a model"
+  options={[
+    { value: "gpt-4o", label: "GPT-4o", description: "Fast, multimodal", meta: "128k" },
+    { value: "claude-opus", label: "Claude Opus", disabled: true },
+  ]}
+  value={value}
+  onChange={(value, option) => setValue(value)}
+/>
+```
+
+- **`options`** — an array of `{ value, label }`, optionally extended with
+  `description`, `meta`, `icon`, `tile`, `group`, `keywords`, and `disabled`.
+  `icon` wins over `tile` when both are set.
+- **`value`** — the selected option's `value`, or `null`/`undefined` for no
+  selection. Select is controlled: without `value` the trigger always shows
+  `placeholder`.
+- **`onChange(value, option)`** — called with the picked value and the full
+  matching option object, so callers that need more than the value (a label
+  for a toast, a meta for a badge) don't have to re-look it up.
+- **`placeholder`** — shown in the trigger when nothing is selected.
+
+## Accessibility
+
+- The trigger is a real `button` with `role="combobox"`, `aria-haspopup`,
+  `aria-expanded`, and `aria-controls` pointing at the listbox.
+- The listbox uses `role="listbox"` / `role="option"` with `aria-selected`
+  and `aria-disabled`; the active option is tracked with
+  `aria-activedescendant` while the search input holds focus.
+- Arrow Up/Down move between enabled options and wrap at the ends; Home/End
+  jump to the first/last enabled option; disabled options are skipped
+  entirely. Enter picks the active option, Escape closes and returns focus to
+  the trigger, and Tab closes without picking.
+- `label` renders as a real `<label>` wired to the trigger via `htmlFor`; an
+  `error` message takes over the hint region, turns the border red, and sets
+  `aria-invalid` on the trigger.
 
 ## Props
 

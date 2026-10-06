@@ -37,3 +37,6 @@ apps/docs/next-env.d.ts
 # Firebase / GCP service-account keys — never commit
 *firebase-adminsdk*.json
 *-service-account*.json
+
+# docs changelog page (generated from root CHANGELOG.md)
+apps/docs/content/docs/changelog.mdx

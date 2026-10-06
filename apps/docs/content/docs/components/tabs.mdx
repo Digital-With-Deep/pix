@@ -3,7 +3,96 @@ title: Tabs
 description: Section navigation or an in-card view toggle.
 ---
 
-<Preview name="tabs-overview" />
+Tabs switches between a small set of mutually exclusive views without leaving
+the page — a case's Overview / Findings / Evidence sections, or a chart's
+Day / Week / Month range. It ships in two shapes: `underline`, for
+page-level section navigation, and `segmented`, for a compact toggle inside a
+card.
+
+<Preview title="OVERVIEW" name="tabs-overview" />
+
+## When to use
+
+- Use **Tabs** when there are two to roughly six views of the same object and
+  only one needs to be visible at a time — a record's detail sections, a
+  report's date range.
+- Use **underline** for primary, page-level navigation between sections of a
+  screen; it reads as part of the page layout.
+- Use **segmented** for a smaller, self-contained choice inside a card or
+  toolbar, like switching a chart's granularity — it reads as a control, not
+  navigation.
+- Prefer separate pages or a **Select** once the list of options grows past
+  what fits on one line, or when only one option is ever relevant at a time
+  and the others aren't worth a visible slot.
+
+## Basic
+
+Pass `tabs` as an array of `{ value, label }` (plain strings work too — the
+string is used as both value and label) and control the active tab with
+`value` and `onChange`. Individual tabs can be `disabled`.
+
+<Preview title="BASIC" name="tabs-basic" />
+
+The `segmented` variant renders the same API as a pill-shaped toggle instead
+of an underlined strip — a better fit for a compact, in-card choice like a
+date-range control.
+
+<Preview title="SEGMENTED" name="tabs-segmented" />
+
+## With panel content
+
+Tabs only renders the strip — pairing it with content is the caller's job.
+Keep a piece of state for the active value, pass it down as `value`, and
+render whichever panel matches it in `onChange`. A `count` on a tab item adds
+a small trailing pill, useful for surfacing how many findings or items a
+section holds without opening it.
+
+<Preview title="WITH PANEL CONTENT" name="tabs-with-content" />
+
+With more tabs than fit on one line, the strip scrolls horizontally instead
+of wrapping. A `dot` marks a tab whose underlying state changed since it was
+last viewed (`underline` variant only).
+
+<Preview title="MANY TABS" name="tabs-many" />
+
+## Anatomy
+
+```tsx
+<Tabs
+  tabs={[
+    { value: "overview", label: "Overview" },
+    { value: "findings", label: "Findings", count: 2 },
+    { value: "evidence", label: "Evidence", dot: true },
+    { value: "settings", label: "Settings", disabled: true },
+  ]}
+  value={value}
+  onChange={setValue}
+  variant="underline"
+/>
+```
+
+- **`tabs`** — an array of plain strings or `TabItem` objects:
+  `{ value, label, count?, dot?, disabled? }`. `value` falls back to `label`
+  when omitted, so a plain string tab uses its own text as the value.
+- **`value`** — the active tab's value. Tabs is controlled when `value` is
+  set; omit it (optionally with `defaultValue`) to let Tabs track its own
+  selection instead.
+- **`onChange(value)`** — called with the newly picked tab's `value` whenever
+  a user selects an enabled tab.
+- **`variant`** — `"underline"` (default) for page-level section nav,
+  `"segmented"` for an in-card view toggle.
+- **`size`** — `"sm"` or `"md"` (default), affecting padding and font size.
+
+## Accessibility
+
+- Each tab is a real `button`, so it is reachable by Tab and operable with
+  Enter or Space, and disabled tabs are skipped by both pointer and keyboard
+  interaction.
+- Tabs with `disabled` set are rendered at reduced opacity with
+  `disabled` on the underlying button, which also removes them from the
+  default Tab order.
+- Keep labels short and literal ("Findings", not an icon alone) — the label
+  is the only accessible name the tab exposes.
 
 ## Props
 

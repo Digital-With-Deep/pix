@@ -1,9 +1,58 @@
 ---
-title: PromptInput
+title: Prompt input
 description: The composer for asking an AI product a question — model picker, attachments, and tool toggles included.
 ---
 
-<Preview name="prompt-input-basic" />
+Prompt input is the composer at the bottom of a chat or agent surface. It bundles a growable textarea with a "+" context menu for attachments, a model selector, toggleable tool pills, and a send button, so most products only need to wire up `onSubmit`.
+
+## When to use
+
+- As the primary way a user asks a question, gives an instruction, or follows up inside a chat, agent, or run-investigation surface.
+- When the user may want to attach files or context (traces, documents, screenshots) alongside their message.
+- When the surface offers more than one model or toggleable capability and the user should pick before sending.
+- Prefer a plain form `<textarea>` and button for short, single-purpose inputs that aren't part of a conversation.
+
+## Basic
+
+With no props, `PromptInput` manages its own text, model, and attachment state. Pass `placeholder` to hint at what belongs in the box, and read the final payload — `{ text, model, attachments }` — in `onSubmit`.
+
+<Preview title="BASIC" name="prompt-input-basic" />
+
+## With tools
+
+Pass `tools` as a list of capability names to render them as pills next to the send button — things like "Replay run" or "Search traces" that apply to the message being sent. Mark the ones currently on with `activeTools`, and handle `onToggleTool` to flip them; `PromptInput` doesn't track tool state on its own.
+
+<Preview title="WITH TOOLS" name="prompt-input-tools" />
+
+## Disabled and loading
+
+Set `disabled` while a message is in flight or the composer is temporarily unavailable — the textarea, plus menu, tool pills, model selector, and send button all stop responding, and the field dims slightly.
+
+<Preview title="DISABLED" name="prompt-input-disabled" />
+
+Set `loading` to render the component's skeleton in its own footprint instead of its content — use this while the surrounding page is still fetching the data the composer depends on, such as available models or tools.
+
+<Preview title="LOADING" name="prompt-input-loading" />
+
+## Anatomy
+
+- `placeholder` — the hint text shown in the empty textarea.
+- `value` / `onChange` — controlled text. Omit both to let the composer manage its own draft.
+- `tools` — capability names rendered as toggle pills; pair with `activeTools` and `onToggleTool` to control which are on.
+- `models` / `model` / `onModelChange` — the model picker's options and controlled selection. Set `showModelSelector={false}` to hide it entirely.
+- `allowFiles` / `attachments` / `onAttach` / `onRemoveAttachment` — the attachment chips and hidden file input. The "+" menu's "Upload files" item opens the same picker.
+- `onSubmit` — fired on `Enter` or a click on send with `{ text, model, attachments }`.
+- `disabled` — blocks every control in the composer.
+- `loading` — swaps the whole component for a skeleton sized to `rows` and `width`.
+- `hint` / `error` — the helper line under the field; `error` replaces it and turns the border red.
+
+## Accessibility
+
+- The composer is a native `<textarea>`, so it's reachable by keyboard and works with screen readers without extra wiring — pair `placeholder` with a visible label nearby if the surface doesn't already describe the field's purpose.
+- `Enter` submits and `Shift+Enter` inserts a new line; the default `hint` text states this so the behavior isn't only discoverable by trial.
+- Send is a disabled native `<button>` until there's text to submit, which keeps assistive technology from announcing an action that would do nothing.
+- Tool pills and the model selector are buttons, not checkboxes or a native `<select>` — if a tool's on/off state needs to be announced explicitly, pair `onToggleTool` with your own `aria-pressed` wrapper.
+- `disabled` removes every control from the tab order; show a visible reason nearby (such as the `hint` or `error` line) rather than relying on the disabled state alone.
 
 ## Props
 

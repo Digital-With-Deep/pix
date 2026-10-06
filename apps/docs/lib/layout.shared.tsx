@@ -5,7 +5,12 @@ export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       // JSX supported
-      title: appName,
+      title: (
+        <>
+          <img src="/pix-mark.svg" alt="" width={20} height={20} style={{ borderRadius: 4 }} />
+          <span style={{ fontWeight: 600 }}>{appName}</span>
+        </>
+      ),
     },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
   };

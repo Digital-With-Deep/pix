@@ -1,9 +1,73 @@
 ---
-title: MetricCard
+title: Metric card
 description: A single number with a label, a trend, and an optional progress rule.
 ---
 
-<Preview name="metric-card-open-items" />
+A metric card surfaces one number a user should check at a glance — a run count, a pass rate,
+a queue depth — alongside the context needed to tell whether it's good or bad: a label, an
+optional trend line, and a qualifier like a time window.
+
+## When to use
+
+- For a dashboard header row of top-line numbers: runs, pass rate, open items, latency.
+- When the number alone isn't enough context — pair it with a `delta` so a user can tell if
+  it moved in the right direction since the last period.
+- Not for a table of many rows of data — use `DataTable` once there's more than a handful of
+  values to scan.
+- Not for free-form narrative text — use `Callout` or `Alert` when the content is a sentence,
+  not a number.
+
+## Basic
+
+A row of cards reads best when every card in the row answers a comparable question — all
+daily totals, all rates, all durations for the same window.
+
+<Preview title="OVERVIEW" name="metric-card-overview" />
+
+## With a delta or trend
+
+Pass `delta` with `deltaType` to show a change since the last period. `deltaType="up"` and
+`deltaType="down"` render a colored arrow; `deltaType="neutral"` (the default) stays
+unstyled. Pair `valueTone` with the delta when the number itself represents a state —
+`success` for a healthy pass rate, `danger` for an error rate that's climbing — but reserve
+tone for real signal rather than decoration.
+
+<Preview title="DELTA" name="metric-card-delta" />
+
+## Loading
+
+Set `loading` while the underlying query is in flight. The card renders a skeleton sized to
+its own footprint instead of a label and value, so a row of cards doesn't jump when the data
+arrives.
+
+<Preview title="LOADING" name="metric-card-loading" />
+
+## Anatomy
+
+A metric card is a label, a value, and optional context around them:
+
+- `label` — a short, tracked, uppercase string naming the metric (`Open items`, `Pass rate`).
+- `value` — the number, pre-formatted as a string or number (`"$42,318"`, `128`, `"94.2%"`).
+- `hint` — a small right-aligned qualifier in the header row, such as `"Today"`.
+- `delta` / `deltaType` — a secondary line under the value showing change, colored and
+  prefixed with an arrow by `deltaType`.
+- `valueTone` — colors the value itself for `danger`, `warning`, or `success` states.
+- `progress` — a 0–1 completion rule drawn under the value.
+- `footer` — an extra node under the delta, such as a badge or a chip row.
+
+<Preview title="LABEL, VALUE, DELTA" name="metric-card-open-items" />
+
+## Accessibility
+
+- The card is a static `<div>` — it presents a value, it doesn't trigger an action. If a card
+  is clickable (for example, to drill into the underlying runs), wrap it in a button or link
+  rather than attaching a click handler to the `div` directly.
+- Don't rely on `deltaType`'s color alone to convey direction — the arrow glyph in front of
+  the delta text carries the same meaning for users who can't distinguish the color.
+- `valueTone` is a visual cue only; make sure the surrounding `label` or `delta` text also
+  states the condition in words for screen reader users.
+- While `loading`, the rendered skeleton has no text content, so a screen reader announces
+  nothing until the real label and value replace it — keep loading windows short.
 
 ## Props
 
