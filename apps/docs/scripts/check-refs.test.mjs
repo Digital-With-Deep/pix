@@ -28,3 +28,12 @@ test("passes when every reference resolves", () => {
   );
   assert.deepEqual(ok, []);
 });
+
+test("finds name/component regardless of attribute order (e.g. title before name)", () => {
+  const bad = findDanglingRefs(
+    [{ file: "d.mdx", text: '<Preview title="Some state" name="ghost-demo" />' }],
+    new Set(["button-variants"]),
+    new Set(["Button"]),
+  );
+  assert.deepEqual(bad, ['d.mdx: unknown preview "ghost-demo"']);
+});

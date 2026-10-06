@@ -3,7 +3,89 @@ title: Alert
 description: A finding a reviewer needs to act on, with an optional action.
 ---
 
-<Preview name="alert-review" />
+An alert surfaces a single finding inline, in the flow of a report or review screen,
+rather than as a transient toast. It carries a title written as a finding (not a
+label), an optional body, an optional monospace citation for pinning the finding to
+a standard or workpaper reference, and optional actions. Tone is the primary signal:
+it tells the reader whether this is a note, a stated limitation, a claim to verify,
+a confirmed result, or the one line they should leave with.
+
+## When to use
+
+Use `Alert` for a finding that belongs next to the evidence it describes — a
+reconciliation exception, a control test result, a scope limitation on a benchmark,
+or the single sentence a reviewer should carry out of a long report. Prefer `Badge`
+for a short status chip inside a table row, and `Callout` for general explanatory
+asides that aren't findings. Pass `loading` while the finding is still being computed
+to render the component's own skeleton in place, rather than showing an empty or
+stale tone.
+
+## Tones
+
+`tone` carries the meaning of the finding. `neutral` is a routine note. `fault` is an
+authored fault — benchmarking unavailable, or a stated scope limitation on the review
+itself. `claim` is the agent's claim or a verdict that failed. `truth` is ground truth:
+the objective was met. `inverse` is the dark bar reserved for the one reading a
+reviewer should leave with.
+
+<Preview title="NEUTRAL — A ROUTINE NOTE" name="alert-neutral" />
+
+<Preview title="FAULT — AUTHORED LIMITATION, NOT A FINDING" name="alert-fault" />
+
+<Preview title="CLAIM — THE AGENT'S CLAIM, UNVERIFIED OR FAILED" name="alert-claim" />
+
+<Preview title="TRUTH — THE OBJECTIVE WAS MET" name="alert-truth" />
+
+<Preview title="INVERSE — THE READING TO LEAVE WITH" name="alert-inverse" />
+
+Reach for `inverse` sparingly — at most once per screen. It's the dark bar, and it
+reads as "if you remember one thing, remember this."
+
+## With actions
+
+Pass `actions` with one or more `AlertAction` buttons for a finding that needs a
+next step — reviewing supporting detail, or escalating to a formal finding. Actions
+are right-aligned and wrap under the body on narrow layouts.
+
+<Preview title="SINGLE ACTION" name="alert-review" />
+
+<Preview title="MULTIPLE ACTIONS" name="alert-actions" />
+
+`AlertAction` only styles itself for two tones — give it `tone="inverse"` inside an
+inverse alert so the button reads correctly against the dark bar; every other alert
+tone uses the default `neutral` button styling.
+
+<Preview title="ACTION ON AN INVERSE ALERT" name="alert-inverse-actions" />
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `tone` | `"inverse" \| "neutral"` | Match the parent `Alert`'s tone so the button reads correctly against it. Defaults to `neutral`. |
+| `onClick` | `() => void` | Click handler. |
+| `children` | `React.ReactNode` | Button label. |
+
+## Anatomy
+
+An alert is a single bordered, padded row with up to four parts, left to right: an
+optional icon mark (`icon`, either the default circled glyph, a built-in name —
+`alert` | `warn` | `info` | `check` — or raw SVG path data), a text column (`title`,
+then `children` or `body`, then an optional monospace `citation` line), and an
+optional `actions` cluster that wraps independently. `children` wins over `body` when
+both are passed. With `loading`, the alert renders a `Skeleton` in its own footprint
+instead of any of this.
+
+## Accessibility
+
+`Alert` is a styled `div` — it does not apply `role="alert"` or `role="status"`
+itself, so screen readers won't announce it automatically on mount. If a finding
+appears as the direct result of a user action and should be announced immediately,
+wrap it (or apply the role via `style`'s sibling props, or a wrapping element) with
+`role="alert"` for urgent findings or `role="status"` for routine ones. For findings
+that are simply part of the page's static content — most review and report screens —
+no live region is needed; make sure the heading structure around the alert still
+gives it context when read out of visual order. Actions rendered via `AlertAction`
+are plain `<button>` elements, so they're keyboard-focusable and operable by default;
+give each one a label that stands on its own (for example "Raise finding" rather than
+"Raise"), since screen reader users may navigate buttons out of context.
 
 ## Props
 

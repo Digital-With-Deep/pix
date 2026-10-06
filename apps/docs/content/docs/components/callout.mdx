@@ -3,7 +3,47 @@ title: Callout
 description: Inline context, a cost estimate, or a warning that needs a glance.
 ---
 
+A callout carries a verdict or a note next to content — a cost estimate, a warning, or a model's claim set against the verified truth. It's quieter than Alert and lives inline with the content it's commenting on, rather than pinned to the top of a page.
+
 <Preview name="callout-info" />
+
+## When to use
+
+- To teach in place — what enabling a setting costs, what a field expects — with `tone="info"`.
+- To flag something that needs attention without pulling focus the way a page-level finding would, with `tone="warn"`.
+- To pair a model's claim with the verified truth so the two are never mistaken for each other, with `tone="claim"` and `tone="truth"`.
+- To add neutral supporting context with `tone="note"`.
+- Prefer Alert for a finding that applies to the whole page or run; Callout is for a note attached to specific, nearby content.
+
+## Variants
+
+`info` teaches — a cost estimate, a hint about what a field expects. `note` is neutral context with no judgment attached. `warn` and `claim` both need attention, so both render with `role="alert"`; `truth` confirms, and renders calmly. Each tone ships a default icon, but `icon` can override it with any glyph name, or `false` to hide it entirely.
+
+<Preview title="NOTE" name="callout-note" />
+
+<Preview title="WARN" name="callout-warn" />
+
+PIX never lets a model's claim and the verified truth share a color. `tone="claim"` renders in red with a warning glyph; `tone="truth"` renders in emerald with a check glyph. Placed side by side, a mismatch between what a model said and what was actually verified is visible before a single word is read.
+
+<Preview title="CLAIM VS TRUTH" name="callout-claim-truth" />
+
+## Anatomy
+
+- `tone` — one of `info`, `note`, `warn`, `truth`, `claim`. Selects the background, border, text color, and default icon together.
+- `icon` — a name (`info`, `note`, `warn`, `check`, `spark`) overrides the tone's default glyph; `false` hides it entirely.
+- `title` — an optional bold lead-in.
+- `children` / `body` — the message itself; `children` wins when both are passed.
+- `action` — a trailing link or small button, vertically centered next to the message.
+- `compact` — tightens padding and font size for dense layouts, such as inside a table row.
+
+<Preview title="ANATOMY" name="callout-anatomy" />
+
+## Accessibility
+
+- The role is `alert` for `warn` and `claim` — tones that need attention — and `note` for `info`, `note`, and `truth`, which are ambient context rather than interruptions.
+- The icon is an `aria-hidden` SVG; the tone's meaning has to come through in the `title` and message text, not the glyph alone.
+- When pairing a claim with a truth, say so in words ("Claim" / "Truth", or "Verified:") rather than relying on color — screen reader users and anyone with color-vision deficiency need the distinction spelled out too.
+- If `action` is interactive, use a real focusable element (a link or button) rather than a styled `<div>`, so it reaches the tab order on its own.
 
 ## Props
 

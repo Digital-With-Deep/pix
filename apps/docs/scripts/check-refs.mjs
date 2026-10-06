@@ -6,10 +6,11 @@ import { fileURLToPath } from "node:url";
 export function findDanglingRefs(files, previewNames, componentNames) {
   const errors = [];
   for (const { file, text } of files) {
-    for (const m of text.matchAll(/<Preview\s+name=["']([^"']+)["']/g)) {
+    // Match name=/component= anywhere within the tag, so attribute order (e.g. title before name) doesn't matter.
+    for (const m of text.matchAll(/<Preview\b[^>]*?\bname=["']([^"']+)["']/g)) {
       if (!previewNames.has(m[1])) errors.push(`${file}: unknown preview "${m[1]}"`);
     }
-    for (const m of text.matchAll(/<PropsTable\s+component=["']([^"']+)["']/g)) {
+    for (const m of text.matchAll(/<PropsTable\b[^>]*?\bcomponent=["']([^"']+)["']/g)) {
       if (!componentNames.has(m[1])) errors.push(`${file}: unknown component "${m[1]}"`);
     }
   }

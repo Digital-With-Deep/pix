@@ -1,9 +1,112 @@
 ---
-title: DataTable
+title: Data table
 description: A sortable, filterable table for rows of data.
 ---
 
-<Preview name="data-table-transactions" />
+DataTable renders rows of data as a real `<table>` with a toolbar above it —
+free-text search across every column, optional per-column dropdown filters,
+and a "n of m rows" readout — plus click-to-sort column headers. Columns
+choose their own rendering: numeric columns get tabular figures, identity
+columns can be emphasized, and any column can supply a custom `render` for
+things like monospaced IDs or status chips.
+
+## When to use
+
+- Use **DataTable** for a list of records someone needs to scan, sort,
+  search, and filter — transactions, invoices, vendors, run history.
+- Use **MetricCard** instead when you need a single rolled-up number, not a
+  list of rows.
+- Pair DataTable's `onRowClick` with a drawer or detail page rather than
+  cramming every field into the row — keep columns to what helps scanning
+  and comparing.
+
+## Basic
+
+A table with a caption, a few plain columns, and the default toolbar: search
+is on unless you pass `searchable={false}`, and the row count sits at the far
+right of the toolbar.
+
+<Preview title="TRANSACTIONS" name="data-table-transactions" />
+
+## Numeric and strong columns
+
+`numeric` right-aligns figures and switches them to tabular numerals so
+amounts line up column-wise as they change; pair it with `align="right"` on
+the header. `strong` renders a column in primary ink at a heavier weight for
+the field that identifies the row — here, the vendor name. A column can also
+supply `render` to format a cell however it needs, such as a monospaced
+reference ID. Clicking a `sortable` header cycles ascending → descending →
+off.
+
+<Preview title="VENDOR PAYOUTS" name="data-table-numeric" />
+
+## Loading
+
+Pass `loading` to render a skeleton in DataTable's own footprint —
+`skeletonRows` placeholder rows (default 5) sized to the real column count —
+instead of its content, so a table whose rows arrive asynchronously doesn't
+jump once data lands.
+
+<Preview title="LOADING" name="data-table-loading" />
+
+## Empty state
+
+When `rows` is empty, DataTable renders a single centered row spanning every
+column with `emptyMessage` ("No rows match these filters." by default)
+instead of an empty table body. The same message also covers the case where
+search or a filter excludes every row.
+
+<Preview title="EMPTY" name="data-table-empty" />
+
+## Anatomy
+
+```tsx
+<DataTable
+  caption="Vendor payouts"
+  columns={[
+    { key: "vendor", label: "Vendor", strong: true },
+    { key: "amount", label: "Amount", numeric: true, align: "right", sortable: true },
+    { key: "status", label: "Status", align: "center" },
+  ]}
+  rows={rows}
+  filters={[{ key: "status", options: ["Matched", "Pending", "Review"] }]}
+  initialSort={{ key: "amount", dir: "desc" }}
+  onRowClick={(row) => openDetail(row)}
+/>
+```
+
+- **`columns`** — an array of `{ key, label }`, optionally extended with
+  `align` ("left" / "right" / "center"), `sortable`, `numeric`, `strong`, and
+  `render(row)` for a custom cell. `key` also reads the value straight off
+  each row when `render` is omitted.
+- **`rows`** — the array of records to display; each row's `key` properties
+  feed the matching columns. Give rows an `id` to keep React's reconciliation
+  stable; DataTable falls back to index otherwise.
+- **`searchable`** / **`searchPlaceholder`** — the free-text filter box in
+  the toolbar, on by default, matching against every column's value.
+- **`filters`** — column dropdown filters, each `{ key, options, allLabel }`,
+  shown next to the search box.
+- **`initialSort`** — `{ key, dir }` applied on first render; afterward
+  sorting is driven by clicking `sortable` headers.
+- **`caption`** — a toolbar title shown to the left of the filter controls.
+- **`rowCount`** — toggles the "n of m rows" readout, on by default.
+- **`emptyMessage`** — shown in place of rows when none match.
+- **`loading`** / **`skeletonRows`** — render a skeleton instead of content.
+- **`onRowClick(row)`** — called with the full row when a `<tr>` is clicked.
+
+## Accessibility
+
+- DataTable renders a semantic `<table>` with a real `<thead>` and `<tbody>`,
+  so screen readers and browser table navigation work without extra ARIA.
+- Column headers are `<th>` elements carrying the column's `label`; a
+  `sortable` header's current direction is conveyed visually with an arrow
+  icon alongside the text.
+- The toolbar's search input and filter `<select>` elements are native form
+  controls with visible labels or placeholders, so they're reachable and
+  operable by keyboard without any extra wiring.
+- When `onRowClick` is set, rows get `cursor: pointer` as a visual affordance;
+  pair it with a keyboard-accessible way to reach the same destination (a
+  link in one of the cells) if the row click is the only way in.
 
 ## Props
 

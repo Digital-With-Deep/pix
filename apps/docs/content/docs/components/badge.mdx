@@ -3,7 +3,69 @@ title: Badge
 description: A small status or entity chip.
 ---
 
-<Preview name="badge-tones" />
+Badge is a compact label for surfacing state inline with other content — a run's
+outcome, a record's lifecycle stage, an assignee, a tag. It never carries its own
+interaction besides an optional remove action; clicking elsewhere on the row is
+the row's job, not the badge's.
+
+## When to use
+
+Use Badge when you need a short, scannable label next to a title, table cell, or
+list row — "passed", "3 failures", "needs review". Reach for a status dot when the
+badge represents something that changes over time, like a job or connection state.
+For anything that needs its own click target beyond removal, use Button instead.
+
+## Tones
+
+`tone` is semantic, not decorative. Default to `neutral` for states that aren't
+good or bad (draft, archived). Reserve `success`, `warning`, `danger`, and `info`
+for real outcomes so they stay meaningful next to each other. `accent` calls out
+the one thing that matters most on a screen. `outline` is the quiet, bordered
+chip — pair it with `size="md"` for entity labels like a run ID or environment
+name.
+
+<Preview title="TONES" name="badge-tones" />
+
+## With a status dot
+
+Set `dot` to add a small leading dot in the current text color. Use it for
+states that are live or ongoing — a connection, a background job, a service —
+where the dot reads as "this is current" rather than "this already happened."
+
+<Preview title="STATUS DOT" name="badge-dot" />
+
+## Sizes
+
+`size="sm"` (11px) is the default — a status pill sized to sit inline with body
+text or in a table cell. `size="md"` (12px) reads as an entity chip rather than a
+status; pair it with `tone="outline"` for things like run IDs, where the chip is
+naming something rather than judging it.
+
+<Preview title="SIZES" name="badge-sizes" />
+
+## Removable
+
+Pass `onRemove` to add a trailing close control, turning the badge into a
+removable chip — a filter, a tag, a selected reviewer. The button gets an
+automatic `aria-label` built from the badge's text, so removal stays
+announced correctly even without visible text nearby.
+
+<Preview title="REMOVABLE" name="badge-removable" />
+
+## Anatomy
+
+A Badge is a single inline element containing, in order: an optional status dot,
+the label, and an optional remove button. Long labels ellipsis rather than wrap —
+set `maxWidth` to cap the width, and the full label becomes the tooltip
+(or pass `title` explicitly to override it).
+
+## Accessibility
+
+The label is read as plain text, so make sure it's understandable on its own —
+"3 failures" rather than just a color. When `onRemove` is set, the remove button
+already has a correct `aria-label` ("Remove" plus the label text); don't wrap the
+whole badge in another interactive element, since that nests two controls inside
+one hit target.
 
 ## Props
 

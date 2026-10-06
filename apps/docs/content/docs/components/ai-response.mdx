@@ -1,9 +1,65 @@
 ---
-title: AIResponse
-description: A streamed answer with a reasoning trace and citations.
+title: AI response
+description: A streamed answer with a reasoning trace, sources, and controls — the core PIX primitive.
 ---
 
-<Preview name="ai-response-answer" />
+AIResponse is the core PIX primitive: a model answer with its reasoning, sources, and controls one click away. It carries its own generating skeleton, a collapsible thinking trace, numbered citations, and the copy / regenerate / feedback row underneath — so a single component covers a model turn from the first streamed token to the finished, sourced answer.
+
+## When to use
+
+- To render a model's answer inside a chat, review, or agent-run surface — anywhere a user reads generated text and may want to check the reasoning behind it.
+- When the answer should carry its sources inline, as numbered citation chips, rather than as a separate footnote list.
+- When you want a built-in generating state, so the surface doesn't jump between a different skeleton and a different final layout.
+- Not for short, one-line system messages — reach for `Callout` or `Alert` when there's no reasoning trace, sources, or regenerate step to carry.
+
+## States
+
+AIResponse is driven by `status`: `"generating"` shows a shimmering skeleton, `"done"` shows the answer, and `"error"` shows a failure card with a retry action. A separate `loading` prop renders a generic placeholder skeleton in the component's footprint for cases like a route transition, before you even know what `status` will be.
+
+### Generating
+
+While `status="generating"`, the header label pulses and an optional `stages` checklist renders above the skeleton — each entry a plain string or a `{ label, done }` object, with completed steps marked by a solid dot and pending ones pulsing. Pass `onStop` to add a Stop button.
+
+<Preview title="GENERATING — SKELETON WITH STAGE CHECKLIST" name="ai-response-generating" />
+
+### Generated, thinking pane collapsed
+
+Once `status="done"`, the answer renders from `text` (or richer `children`), followed by citation chips and the thinking trace — collapsed by default. This is the resting state for most answers: the reasoning is there, one click away, without competing with the answer for attention.
+
+<Preview title="GENERATED — THINKING PANE COLLAPSED" name="ai-response-answer" />
+
+### Generated, thinking pane open
+
+Set `defaultThinkingOpen` to start the trace expanded — useful when the reasoning is the point, such as an audit trail a reviewer is expected to check. `thinking` also accepts a `ThinkingStep[]` array instead of a plain string, which lets individual steps carry a `kind` (`thought`, `tool`, `read`, `write`), a `system` mark, a monospace `detail`, and a `duration` readout, rendered through `ThinkingTrace`.
+
+<Preview title="GENERATED — THINKING PANE OPEN" name="ai-response-thinking-open" />
+
+### Failed
+
+Set `status="error"` to show the failure card in place of the answer — a red-tinted header, an `error` message, and a Retry button from `onRetry`. There's no separate error component layered on top: a failed turn is a state of AIResponse itself, not a different component.
+
+<Preview title="FAILED" name="ai-response-failed" />
+
+## Citations
+
+`citations` renders as a row of numbered chips under the answer. Each entry is either a plain string label, or an object with a `note` (shown on hover) and an `href` (which turns the chip into a link with a trailing external-link glyph). Use the object form when a source has a date, a version, or a status worth surfacing without cluttering the answer text itself.
+
+<Preview title="WITH CITATIONS" name="ai-response-citations" />
+
+## Anatomy
+
+- **Header** — a spark mark, the word "Response" (or the generating `stage` label / "Generation failed"), then `model`, `duration`, and `tokens` as small muted meta on the right.
+- **Text / children** — the answer body. `text` preserves line breaks; `children` takes precedence when you need richer markup.
+- **Citations** — numbered source chips rendered under the answer when `citations` is set.
+- **Thinking** — the reasoning trace, rendered via `ThinkingTrace` when `thinking` is set. `thinkingLabel` overrides the disclosure's label, `defaultThinkingOpen` controls its initial state, and `onReplayThinking` adds a replay control.
+- **Actions** — a row of Copy (`onCopy`), Regenerate/Retry (`onRetry`), and thumbs up / down feedback (`onFeedback`), hidden entirely when `showActions={false}`.
+
+## Accessibility
+
+- The thinking disclosure is keyboard-operable: it is a standard expand/collapse control reachable by `Tab` and toggled with `Enter` or `Space`, the same as any other disclosure widget.
+- The feedback buttons carry `aria-label`s ("Helpful" / "Not helpful") and set `aria-pressed` to reflect the current vote, so a screen reader announces the control's purpose and state even though it's icon-only.
+- Copy and Regenerate/Retry render as native `<button>` elements, so they're tab-reachable and activate with `Enter` / `Space` without extra wiring.
+- A citation with an `href` renders as a real `<a>`, keeping it in the natural tab order and usable with assistive technology, rather than a `span` with a click handler.
 
 ## Props
 

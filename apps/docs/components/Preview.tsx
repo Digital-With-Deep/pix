@@ -4,7 +4,7 @@ import { registry } from "../registry/__generated__";
 import { resolveEntry } from "./preview-resolve.mjs";
 import { CodeBlock } from "./CodeBlock";
 
-export function Preview({ name }: { name: string }) {
+export function Preview({ name, title }: { name: string; title?: string }) {
   const [tab, setTab] = React.useState<"preview" | "code">("preview");
   const entry = resolveEntry(registry, name); // throws → build fails on a bad name
   const tabBtn = (id: "preview" | "code", label: string) => (
@@ -16,6 +16,11 @@ export function Preview({ name }: { name: string }) {
   );
   return (
     <div style={{ border: "1px solid var(--border, #e4e4e7)", borderRadius: 8, overflow: "hidden", margin: "16px 0" }}>
+      {title ? (
+        <div style={{ padding: "8px 12px", borderBottom: "1px solid var(--border, #e4e4e7)", background: "var(--surface-alt, #fafaf9)", font: "600 11px var(--font-sans, ui-sans-serif, system-ui)", letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--fg3, #78716c)" }}>
+          {title}
+        </div>
+      ) : null}
       <div style={{ display: "flex", gap: 4, borderBottom: "1px solid var(--border, #e4e4e7)", padding: "0 8px", background: "var(--surface, #fff)" }}>
         {tabBtn("preview", "Preview")}{tabBtn("code", "Code")}
       </div>
