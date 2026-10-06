@@ -101,7 +101,7 @@ Minimal per-framework starters, each installing PIX from npm:
 
 ## Documentation
 
-The docs site (component reference, guides, live previews) is built from [`apps/docs`](apps/docs) with Fumadocs and deployed to Firebase Hosting. It is not live yet — the URL will be `<your-project>.web.app` once a maintainer creates the Firebase project and adds the deploy secret, per [`docs/DEPLOY-DOCS.md`](docs/DEPLOY-DOCS.md).
+**[pixui.digitalwithdeep.com](https://pixui.digitalwithdeep.com)** — component reference, per-framework guides, and live previews. Built from [`apps/docs`](apps/docs) with Fumadocs and deployed to Firebase Hosting on every push to `main` (see [`docs/DEPLOY-DOCS.md`](docs/DEPLOY-DOCS.md)).
 
 ## Contributing
 
