@@ -54,7 +54,3 @@ The site is served at the custom domain **[pixui.digitalwithdeep.com](https://pi
 - **Deploy job fails with an auth error**: confirm the `FIREBASE_SERVICE_ACCOUNT` secret contains the full JSON key (not a path or a base64-encoded value) and that the service account has the Firebase Hosting Admin role.
 - **Deploy job fails because it can't determine the project**: confirm the `FIREBASE_PROJECT_ID` repo variable is set to the correct project ID (see step 5, above).
 - **Build succeeds but the site looks stale**: the `build` job uploads `apps/docs/out` as an artifact and `deploy` downloads it fresh on each run, so a stale site usually means the previous `deploy` run did not complete — check the Actions tab for the workflow run's logs.
-
-## Known issues
-
-- `apps/docs` pins `typescript` to an exact version (currently `7.0.2`, a preview/native compiler release) rather than a caret range, so the compiler used for `types:check` and the Next.js build can't drift without an explicit bump. `typescript-eslint` does not yet support TypeScript 7, so `apps/docs`'s `lint` script is currently broken and intentionally not run in CI (`.github/workflows/docs.yml` only runs `test` and `build` for the `docs` filter). Re-enable `lint` in CI once `typescript-eslint` supports TS 7.

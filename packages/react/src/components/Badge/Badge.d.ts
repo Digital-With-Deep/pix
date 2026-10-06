@@ -1,10 +1,10 @@
 import type React from "react";
 export interface BadgeProps {
-  /** Semantic tone. Default `neutral` (zinc) — accent/success reserved for real state. */
+  /** Semantic tone. Default `neutral` (zinc) — accent/success reserved for real state. @default "neutral" */
   tone?: "neutral" | "accent" | "success" | "warning" | "danger" | "info" | "outline";
-  /** Show a leading status dot in the current text color. */
+  /** Show a leading status dot in the current text color. @default false */
   dot?: boolean;
-  /** `sm` (default) — 11px status pill. `md` — 12px entity chip; pair with `outline` for the bordered chip. */
+  /** `sm` (default) — 11px status pill. `md` — 12px entity chip; pair with `outline` for the bordered chip. @default "sm" */
   size?: "sm" | "md";
   /** Cap the width — the label ellipses and the full text becomes the tooltip. */
   maxWidth?: number | string;

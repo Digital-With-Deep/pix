@@ -20,8 +20,9 @@ export interface TabsProps {
   /** Initial value when uncontrolled. Defaults to the first tab. */
   defaultValue?: string;
   onChange?: (value: string) => void;
-  /** `underline` for page-level section nav; `segmented` for in-card view toggles. */
+  /** `underline` for page-level section nav; `segmented` for in-card view toggles. @default "underline" */
   variant?: "underline" | "segmented";
+  /** @default "md" */
   size?: "sm" | "md";
   style?: React.CSSProperties;
 }

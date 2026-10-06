@@ -7,6 +7,7 @@ export function baseOptions(): BaseLayoutProps {
       // JSX supported
       title: (
         <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- 20px inline SVG mark; next/image adds nothing with images.unoptimized */}
           <img src="/pix-mark.svg" alt="" width={20} height={20} style={{ borderRadius: 4 }} />
           <span style={{ fontWeight: 600 }}>{appName}</span>
         </>
