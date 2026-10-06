@@ -33,3 +33,7 @@ apps/docs/.source/
 apps/docs/registry/__generated__/
 apps/docs/next-env.d.ts
 *.tsbuildinfo
+
+# Firebase / GCP service-account keys — never commit
+*firebase-adminsdk*.json
+*-service-account*.json
