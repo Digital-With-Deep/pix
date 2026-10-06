@@ -8,7 +8,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
   const [tab, setTab] = React.useState<"preview" | "code">("preview");
   const entry = resolveEntry(registry, name); // throws → build fails on a bad name
   const tabBtn = (id: "preview" | "code", label: string) => (
-    <button type="button" onClick={() => setTab(id)}
+    <button type="button" role="tab" onClick={() => setTab(id)}
       aria-selected={tab === id}
       style={{ font: "500 13px var(--font-sans, ui-sans-serif, system-ui)", padding: "6px 10px", border: 0, borderBottom: `2px solid ${tab === id ? "var(--accent, #10b981)" : "transparent"}`, background: "transparent", color: tab === id ? "var(--fg1, #1c1917)" : "var(--fg2, #52525b)", cursor: "pointer" }}>
       {label}
@@ -21,7 +21,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
           {title}
         </div>
       ) : null}
-      <div style={{ display: "flex", gap: 4, borderBottom: "1px solid var(--border, #e4e4e7)", padding: "0 8px", background: "var(--surface, #fff)" }}>
+      <div role="tablist" aria-label="Preview and code" style={{ display: "flex", gap: 4, borderBottom: "1px solid var(--border, #e4e4e7)", padding: "0 8px", background: "var(--surface, #fff)" }}>
         {tabBtn("preview", "Preview")}{tabBtn("code", "Code")}
       </div>
       {tab === "preview" ? (

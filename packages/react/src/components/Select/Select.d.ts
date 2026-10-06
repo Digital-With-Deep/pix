@@ -22,21 +22,24 @@ export interface SelectProps {
   options: SelectOption[];
   value?: string | null;
   onChange?: (value: string, option: SelectOption) => void;
+  /** @default "Select…" */
   placeholder?: string;
+  /** @default "Search…" */
   searchPlaceholder?: string;
-  /** Default true. Turn off for five or fewer plain options. */
+  /** Default true. Turn off for five or fewer plain options. @default true */
   searchable?: boolean;
   /** Uppercase field label, wired to the control. */
   label?: string;
   hint?: React.ReactNode;
   /** Replaces the hint and turns the border red. */
   error?: React.ReactNode;
+  /** @default false */
   disabled?: boolean;
-  /** Shown with the query when the search has no results. Default "Nothing matches". */
+  /** Shown with the query when the search has no results. Default "Nothing matches". @default "Nothing matches" */
   emptyMessage?: string;
   /** Popover width; defaults to the trigger's width (min 220px). */
   menuWidth?: number | string;
-  /** Scroll height of the option list. Default 280. */
+  /** Scroll height of the option list. Default 280. @default 280 */
   maxHeight?: number;
   /** Pinned under the list — an "Add entity" action, a link to manage the list. */
   footer?: React.ReactNode;

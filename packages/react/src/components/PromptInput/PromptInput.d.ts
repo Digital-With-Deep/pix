@@ -42,20 +42,22 @@ export interface PromptInputProps {
   loading?: boolean;
   /** Controlled text. Omit to let the composer manage its own state. */
   value?: string;
+  /** @default "" */
   defaultValue?: string;
   onChange?: (value: string) => void;
   /** Fired on Enter or Send with the full submission payload. */
   onSubmit?: (submission: PromptSubmission) => void;
+  /** @default "Ask about a run, an agent, or a finding…" */
   placeholder?: string;
 
-  /** Show the left "+" context menu. Default true. */
+  /** Show the left "+" context menu. Default true. @default true */
   showPlusMenu?: boolean;
   /** Menu contents. Defaults to upload / Drive / entity ledger / saved prompt. */
   plusItems?: PromptPlusItem[];
   /** Fired for any plus item without `action: "attach"`. */
   onPlusAction?: (item: PromptPlusItem) => void;
 
-  /** Show the model selector. Default true. */
+  /** Show the model selector. Default true. @default true */
   showModelSelector?: boolean;
   models?: PromptModel[];
   /** Controlled model id. */
@@ -63,28 +65,33 @@ export interface PromptInputProps {
   defaultModel?: string;
   onModelChange?: (id: string) => void;
 
-  /** Enable file attachment chips and the hidden file input. Default true. */
+  /** Enable file attachment chips and the hidden file input. Default true. @default true */
   allowFiles?: boolean;
   /** Controlled attachment list. Omit to let the composer track its own. */
   attachments?: PromptAttachment[];
   onAttach?: (files: PromptAttachment[]) => void;
   onRemoveAttachment?: (file: PromptAttachment) => void;
 
-  /** Toggleable capability pills, e.g. ["Web search", "Deep research"]. */
+  /** Toggleable capability pills, e.g. ["Web search", "Deep research"]. @default [] */
   tools?: string[];
+  /** @default [] */
   activeTools?: string[];
   onToggleTool?: (tool: string) => void;
 
+  /** @default "Send" */
   sendLabel?: string;
-  /** Helper line under the field. */
+  /** Helper line under the field. @default "Enter to send · Shift+Enter for a new line" */
   hint?: string;
+  /** @default true */
   showHint?: boolean;
   /** Composer-level error. Turns the field border red and replaces the hint
    *  line with this message. Use for upload, quota, and model failures. */
   error?: string;
+  /** @default false */
   disabled?: boolean;
-  /** Textarea rows. Default 3. */
+  /** Textarea rows. Default 3. @default 3 */
   rows?: number;
+  /** @default "100%" */
   width?: number | string;
   style?: React.CSSProperties;
 }

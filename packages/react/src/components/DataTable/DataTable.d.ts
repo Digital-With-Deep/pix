@@ -18,28 +18,30 @@ export interface DataTableFilter {
   /** Row property this dropdown filters on. */
   key: string;
   options: string[];
-  /** Label for the pass-through option. Default "All". */
+  /** Label for the pass-through option. Default "All". @default "All" */
   allLabel?: string;
 }
 
 export interface DataTableProps<Row = any> {
   /** Render the skeleton for this component in its footprint (see Skeleton). */
   loading?: boolean;
-  /** Number of placeholder rows while `loading`. Default 5. */
+  /** Number of placeholder rows while `loading`. Default 5. @default 5 */
   skeletonRows?: number;
   columns: DataTableColumn<Row>[];
   rows: Row[];
-  /** Free-text filter across every column. Default true. */
+  /** Free-text filter across every column. Default true. @default true */
   searchable?: boolean;
+  /** @default "Filter rows…" */
   searchPlaceholder?: string;
-  /** Column dropdown filters shown in the toolbar. */
+  /** Column dropdown filters shown in the toolbar. @default [] */
   filters?: DataTableFilter[];
   /** Sort applied on first render. */
   initialSort?: { key: string; dir: "asc" | "desc" };
   /** Toolbar title shown left of the filter controls. */
   caption?: string;
-  /** Show the "n of m rows" readout. Default true. */
+  /** Show the "n of m rows" readout. Default true. @default true */
   rowCount?: boolean;
+  /** @default "No rows match these filters." */
   emptyMessage?: string;
   onRowClick?: (row: Row) => void;
   style?: React.CSSProperties;

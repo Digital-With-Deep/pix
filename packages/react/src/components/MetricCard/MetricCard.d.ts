@@ -8,11 +8,11 @@ export interface MetricCardProps {
   value: string | number;
   /** Secondary line under the value. */
   delta?: string;
-  /** Colors the delta and prefixes an arrow. */
+  /** Colors the delta and prefixes an arrow. @default "neutral" */
   deltaType?: "up" | "down" | "neutral";
   /** Small right-aligned qualifier in the header row (e.g. "Today"). */
   hint?: string;
-  /** Colors the value itself. Reserve for real state, not decoration. */
+  /** Colors the value itself. Reserve for real state, not decoration. @default "default" */
   valueTone?: "default" | "danger" | "warning" | "success";
   /** Adds a completion rule under the value, 0–1. */
   progress?: number;

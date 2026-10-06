@@ -6,6 +6,7 @@ export interface AlertProps {
    * `inverse` — the dark bar carrying the reading a reviewer should leave with.
    * `fault` — authored fault, benchmarking unavailable, stated scope limitation.
    * `claim` — the agent's claim or a failed verdict. `truth` — objective met.
+   * @default "neutral"
    */
   tone?: "inverse" | "fault" | "claim" | "truth" | "neutral";
   /** Headline. Written as a finding, not a label. */
@@ -27,7 +28,7 @@ export interface AlertProps {
 export declare function Alert(props: AlertProps): React.JSX.Element;
 
 export interface AlertActionProps {
-  /** Match the parent Alert's tone so the button reads correctly against it. */
+  /** Match the parent Alert's tone so the button reads correctly against it. @default "neutral" */
   tone?: "inverse" | "neutral";
   onClick?: () => void;
   children?: React.ReactNode;

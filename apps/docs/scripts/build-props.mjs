@@ -1,11 +1,7 @@
 #!/usr/bin/env node
-// NOTE: the app's "typescript" devDependency is pinned to the v7 native
-// rewrite, whose package no longer exposes the classic compiler API
-// (ts.createSourceFile, ts.isInterfaceDeclaration, etc.) from its main
-// entry point. This parser needs that classic API, so it imports a
-// second, aliased devDependency ("typescript-classic") pinned to a 5.x
-// release instead of touching the app's primary "typescript" version.
-import ts from "typescript-classic";
+// Parses each component's hand-written .d.ts into prop rows using the
+// TypeScript compiler API (ts.createSourceFile, ts.forEachChild, …).
+import ts from "typescript";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
