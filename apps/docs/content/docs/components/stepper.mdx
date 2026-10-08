@@ -1,0 +1,67 @@
+---
+title: Stepper
+description: A horizontal progress bar across a fixed, ordered sequence of steps.
+---
+
+Stepper shows where someone is in a fixed, ordered flow — an onboarding wizard, a multi-page
+form — as a row of labeled bars. Earlier steps read as done, the current one is emphasized,
+and later ones stay neutral until they're reached.
+
+## When to use
+
+- For a sequential process with a known, fixed number of steps the user moves through in
+  order — account setup, a multi-step form, a checkout flow.
+- Keep `steps` short and each label to one or two words; long labels truncate rather than
+  wrap, since the bar above each label sets its width.
+- Pass `onStepClick` only when going back is actually safe — Stepper never makes a future
+  step clickable, only completed ones.
+- Not for a checklist of independent, unordered actions — use `GettingStarted`, where each
+  step tracks its own `done` state rather than a single `current` position.
+
+## Basic
+
+Each step gets a thin bar above its label: filled and marked "DONE" for steps before
+`current`, dark for the current step, and neutral for steps still ahead.
+
+<Preview title="STEP 3 OF 4" name="stepper-overview" />
+
+## Clickable steps
+
+Pass `onStepClick` to let people jump back to a step they've already completed — useful when
+a wizard allows editing earlier answers. Future steps never become clickable, regardless of
+whether `onStepClick` is set.
+
+<Preview title="COMPLETED STEPS ARE CLICKABLE" name="stepper-clickable" />
+
+## Loading
+
+Pass `loading` while the step count or current position isn't known yet. The component
+renders a skeleton bar per step instead of labels that would otherwise jump once resolved.
+
+<Preview title="LOADING" name="stepper-loading" />
+
+## Anatomy
+
+- `steps` — short step names, in order. Keep each to one or two words.
+- `current` — the zero-based index of the step in progress. Every index before it reads as
+  done.
+- `onStepClick(index)` — when given, completed steps become clickable so people can go back.
+  Future steps are never clickable, even when this is set.
+
+## Accessibility
+
+- The current step carries `aria-current="step"` on its list item, so assistive technology
+  can announce progress without relying on the bar's color alone.
+- Completed steps show the word "DONE" above the label, not just a color change, so the
+  distinction holds for users who can't perceive the color difference between the filled and
+  neutral bars.
+- When `onStepClick` is set, completed steps become click targets on the `<li>` itself rather
+  than a native `<button>` — if keyboard access to "go back" matters for your flow, pair the
+  bar with an actual keyboard-operable control (for example a visible "Back" button) rather
+  than relying on the step click alone.
+- While `loading`, the rendered skeleton has no text content; keep loading windows short so a
+  screen reader isn't left announcing nothing.
+
+## Props
+
+<PropsTable component="Stepper" />

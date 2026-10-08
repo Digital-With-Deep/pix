@@ -1,0 +1,53 @@
+---
+title: Menu
+description: A dropdown action menu that opens from any trigger element.
+---
+
+Menu wraps any trigger — typically an icon-only `Button` — with a dropdown panel of actions. Items support a leading icon, a right-aligned keyboard shortcut, dividers, uppercase group headings, a destructive tone, and up to three levels of hover-opening submenus.
+
+## When to use
+
+- For a row- or page-level "more actions" control — rename, duplicate, archive, delete — behind a kebab or chevron trigger.
+- Group related actions with `heading` and separate groups with `separator`; mark destructive actions with `tone="danger"` rather than color alone.
+- Prefer a visible button row when there are only one or two actions — hiding them behind a menu costs more clicks than it saves.
+
+## Basic
+
+Pass `items` with a mix of plain actions, a `separator`, and a `tone="danger"` entry for the destructive one.
+
+<Preview title="BASIC" name="menu-basic" />
+
+## Groups and shortcuts
+
+`heading` renders a small uppercase group label instead of an item; `shortcut` right-aligns a keyboard hint; `disabled` removes an item from being actionable while still showing it.
+
+<Preview title="GROUPS AND SHORTCUTS" name="menu-groups" />
+
+## Submenu
+
+Give an item its own `items` array to turn it into a submenu that opens on hover — nest up to three levels.
+
+<Preview title="SUBMENU" name="menu-submenu" />
+
+## Anatomy
+
+- `trigger` — the clickable element that opens the panel; typically an icon-only `Button`. Gets `aria-haspopup`/`aria-expanded` automatically when it's a valid element.
+- `items` — the rows to render. Each `MenuItem` is one of:
+  - an action: `label`, optional `iconPath`, `shortcut`, `onSelect`, `disabled`, `tone`
+  - a submenu: the same shape plus nested `items`
+  - a `separator: true` divider
+  - a `heading: "..."` group label
+- `align` — which edge the panel aligns to; `"end"` (default, right) or `"start"`.
+- `width` — minimum panel width in pixels; default `200`.
+- `open` / `onOpenChange` — controlled open state; omit both to let Menu manage it itself.
+
+## Accessibility
+
+- The panel renders with `role="menu"` and each actionable row with `role="menuitem"`, so assistive technology announces the structure correctly.
+- Clicking outside the panel or pressing `Escape` closes it.
+- `disabled` items are rendered as a disabled native `<button>`, so they're skipped by keyboard navigation rather than merely dimmed.
+- Submenus currently open on pointer hover only (`onMouseEnter`), not on keyboard focus — if nested actions must be reachable without a mouse, surface them as top-level items instead until submenus gain keyboard support.
+
+## Props
+
+<PropsTable component="Menu" />

@@ -1,0 +1,73 @@
+---
+title: Next steps
+description: A row of suggested follow-ups after setup is done, each with a category chip and one action.
+---
+
+NextSteps surfaces a short list of suggested follow-ups — things that are worth doing but
+aren't blocking, unlike the required actions in `GettingStarted`. Each item is a finding
+written as a statement, a short category chip for scanning, and at most one action link that
+leads somewhere.
+
+## When to use
+
+- After the required setup in `GettingStarted` is finished, for the next tier of
+  worthwhile-but-optional actions: rotating a key, inviting a missing teammate, turning on a
+  notification.
+- Keep `items` short — three or four is plenty. This is a nudge, not an inbox.
+- Give each item at most one `action`; if an item needs two destinations, it's probably two
+  items.
+- Not for required, blocking setup — use `GettingStarted`, where steps track `done` state.
+  Not for a single finding tied to specific evidence — use `Alert`.
+
+## Basic
+
+A chip (`kind` / `kindTone`) marks what kind of finding each item is, followed by the
+statement (`title`), supporting detail (`body`), and an optional action link. An item with no
+`action` just reads as informational.
+
+<Preview title="SUGGESTED NEXT STEPS" name="next-steps-overview" />
+
+## With a subtitle and dismiss
+
+Pass `subtitle` to show provenance under the title — where the suggestions came from, or when
+they were last refreshed. Pass `onDismiss` to show a header control (`dismissLabel`, default
+"Dismiss all") for clearing the whole list at once.
+
+<Preview title="WITH PROVENANCE AND DISMISS" name="next-steps-dismissible" />
+
+## Loading
+
+Pass `loading` while the suggestions are still being computed. The card renders a skeleton in
+its own footprint instead of a stale or empty list.
+
+<Preview title="LOADING" name="next-steps-loading" />
+
+## Anatomy
+
+- `title` — the card heading. Defaults to "Suggested next steps".
+- `subtitle` — an optional provenance line under the title, e.g. "3 actions from this week's
+  sync · reviewed by the control agent".
+- `items` — an array of `NextStepsItem`:
+  - `kind` / `kindTone` — a short uppercase chip ("DRIFT", "GAP", "ATTEST") and its tone
+    (`neutral`, `warning`, `danger`, `info`, `success`).
+  - `title` — the finding, written as a statement of what is true.
+  - `body` — why it matters and what has to happen.
+  - `action` / `onAction` — the label and handler for the one action this item leads to.
+- `onDismiss` / `dismissLabel` — shows a header control to clear the whole list; the label
+  defaults to "Dismiss all".
+
+## Accessibility
+
+- Each item's `action` renders as a real `<button>`, so it's keyboard-focusable and operable
+  by default; give it a label that stands on its own out of context (for example "Rotate key"
+  rather than "Fix").
+- `kindTone` colors the chip background and text together, not the background alone — check
+  that the pairing still meets contrast if you introduce a new tone.
+- The header `onDismiss` control is also a plain button; its visible label already states the
+  action, so no extra `aria-label` is needed.
+- While `loading`, the rendered skeleton has no text content — keep loading windows short so
+  a screen reader isn't left announcing nothing.
+
+## Props
+
+<PropsTable component="NextSteps" />

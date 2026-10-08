@@ -1,0 +1,44 @@
+---
+title: License banner
+description: A full-width notice that a license term is ending or has ended.
+---
+
+LicenseBanner is a full-width bar, typically pinned to the top of the app shell, that warns a plan or evaluation term is running out, or tells the reader it already has. It has exactly two states — counting down in amber, or ended in red — and no neutral idle state, so mount it only once there's something to say.
+
+<Preview name="license-banner-overview" />
+
+## When to use
+
+- Mount it once `daysLeft` crosses your warning threshold for an evaluation or term license — not for the whole term.
+- Switch to `expired` once the term passes; the message and color change together, so there's no separate "ended" component to reach for.
+- Pass `onAction` to send the reader to pricing or renewal; omit it to show the message with no button at all.
+- Pass `loading` while the plan and term date are still being fetched, so the shell doesn't show a banner with the wrong days left for a moment.
+
+## States
+
+<Preview title="COUNTING DOWN" name="license-banner-countdown" />
+
+<Preview title="EXPIRED" name="license-banner-expired" />
+
+<Preview title="LOADING" name="license-banner-loading" />
+
+## Anatomy
+
+- `planLabel` — required. The plan name, e.g. "Evaluation", "Standard".
+- `termEnd` — required. A `Date`, or a string already formatted for display.
+- `daysLeft` — the countdown shown before expiry. Default `0`.
+- `expired` — switches from the amber countdown to the red "ended" message.
+- `actionLabel` — defaults to "See plans", or "Renew" once `expired`.
+- `onAction` — click handler for the action button; omit it to render no button.
+- `loading` — renders a `Skeleton` in the banner's own footprint (38px tall) instead of its content.
+
+## Accessibility
+
+- The bar renders `role="status"`, so if `daysLeft` or `expired` change after mount without a page reload, assistive tech picks up the update.
+- The amber-versus-red distinction is paired with explicit text ("days left" vs. "ended") rather than relying on color alone.
+- The action is a real `<button>` styled as an inline link, so it's keyboard-reachable and has a clear accessible name from `actionLabel`.
+- The `loading` skeleton keeps the same height as the real banner, so the page doesn't jump once the plan and term data arrive.
+
+## Props
+
+<PropsTable component="LicenseBanner" />

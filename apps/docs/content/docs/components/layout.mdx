@@ -1,0 +1,55 @@
+---
+title: Layout
+description: Grid, Stack, and Split — the primitives that arrange everything else on a page.
+---
+
+Grid, Stack, and Split are the three layout primitives behind every PIX page. They don't carry their own visual style — no background, no border — they only arrange children with spacing and a reflow rule for narrow viewports.
+
+## When to use
+
+- `Grid` for a collection of same-shape items — cards, metrics, avatars — that should reflow into fewer columns as the viewport narrows.
+- `Stack` for a simple row or column of elements with consistent gaps, such as a form's fields or a toolbar's buttons.
+- `Split` for a two-region layout — a main column plus a fixed-width side rail — that stacks the rail below the main column on narrow viewports.
+
+## Grid
+
+`Grid` lays children out in a CSS grid that reflows automatically: give it a `min` column width and it fits as many columns as will fit, each at least `min` wide. Pass `cols` instead for a fixed column count that never reflows.
+
+<Preview title="GRID" name="layout-grid" />
+
+### Props
+
+<PropsTable component="Grid" />
+
+## Stack
+
+`Stack` is a flex container for a row or column of children with a consistent `gap`. Use `direction="row"` with `wrap` for a toolbar that needs to survive a narrow viewport, or the default `direction="col"` for a vertical list of fields.
+
+<Preview title="STACK" name="layout-stack" />
+
+### Props
+
+<PropsTable component="Stack" />
+
+## Split
+
+`Split` arranges a `main` column and an `aside` rail. The rail is a fixed `side` width down to a reflow breakpoint, below which `aside` stacks under `main`. Set `sideFirst` to put the rail before the main column on wide viewports — useful for a navigation rail rather than a supporting panel.
+
+<Preview title="SPLIT" name="layout-split" />
+
+### Props
+
+<PropsTable component="Split" />
+
+## Anatomy
+
+- `Grid` — `min` (reflow threshold) or `cols` (fixed count), `gap`, `align`.
+- `Stack` — `direction`, `gap`, `align`, `justify`, `wrap`, `inline`, `grow`, `as`.
+- `Split` — `side` (rail width and reflow threshold), `sideFirst`, `gap`, `main`, `aside`.
+
+## Accessibility
+
+- None of the three primitives add a landmark role or heading — wrap the result in a `<section>` with an accessible name, or a `Page`, when the group needs one.
+- `Stack`'s `as` prop can render a semantic tag (`"ul"`, `"nav"`) when the children need one; it defaults to a plain `div` otherwise.
+- Reflow (in `Grid` and `Split`) is driven by CSS, not JavaScript, so it keeps working with zoom, text resizing, and reduced-motion settings.
+- Visual order from `sideFirst` is a presentation change only — verify it still matches a sensible reading and tab order for keyboard and screen reader users.

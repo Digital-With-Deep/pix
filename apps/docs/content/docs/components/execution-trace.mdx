@@ -1,0 +1,51 @@
+---
+title: Execution trace
+description: A numbered log of an agent run's tool calls, with run totals and the tools it never touched.
+---
+
+ExecutionTrace lists the tool calls an agent run actually made — name, arguments, duration, and the returned result on expand — rolled up with the run's call count, wall time, tokens, and cost. A separate block below the trace names the tools the agent had available but never called, so an omission is as visible as a call.
+
+## When to use
+
+- To give a reviewer the literal sequence of tool calls behind an agent's output, not a narrative summary of it.
+- When a step needs to be flagged for a reviewer — `note` or `flagged` marks a row amber without changing the rest of the log.
+- When the absence of a call matters as much as its presence — `missing` surfaces tools that were available and never invoked.
+- Not for the model's reasoning between calls — pair it with `ThinkingTrace` for that; ExecutionTrace is the record of what was actually executed.
+
+## States
+
+A separate `loading` prop renders a skeleton in the component's footprint while the run's trace is still being assembled.
+
+### Collapsed summary
+
+By default, each step's `result` is collapsed and the card header shows the assembled summary line — `calls`, `duration`, `tokens`, and `cost` — or your own `meta` string in its place.
+
+<Preview title="DEFAULT — COLLAPSED RUN SUMMARY" name="execution-trace-summary" />
+
+### Flagged step, expanded
+
+Set `defaultOpen` to expand every step's `result` on first render. A step with a `note` (or `flagged` set without one) renders amber, marking it as something a reviewer called out.
+
+<Preview title="EXPANDED — FLAGGED STEP WITH REVIEWER NOTE" name="execution-trace-flagged" />
+
+### Missing tool calls
+
+`missing` renders as a hatched block under the trace, naming tools the agent had available but never invoked, each with an optional `note` explaining why the omission matters.
+
+<Preview title="WITH MISSING TOOL CALLS" name="execution-trace-missing" />
+
+## Anatomy
+
+- **Header** — `title` (default "Execution trace") plus the summary line: `calls` (defaults to `steps.length`), `duration`, `tokens`, and `cost`, or a single `meta` string overriding all of them.
+- **Steps** — each `ExecutionTraceStep`'s `name` is always monospace; `args` formats an object as `{ "key": value }` or prints a string verbatim; `result` is revealed on expand; `note` or `flagged` marks the row amber; `index` overrides the displayed step number for an elided trace.
+- **Missing block** — `missing` entries, each an `ExecutionTraceMissing` with `name`, a `label` (default "never called"), and an optional `note`.
+
+## Accessibility
+
+- Tool names, arguments, and results are rendered as real monospace text, not an image, so they remain selectable and legible to assistive technology.
+- A flagged step's amber treatment is paired with its `note` text, so the finding is conveyed in text as well as colour, not colour alone.
+- Expanding a step's result is a disclosure interaction and should remain keyboard-reachable and toggle with `Enter` / `Space`, consistent with other PIX disclosures.
+
+## Props
+
+<PropsTable component="ExecutionTrace" />

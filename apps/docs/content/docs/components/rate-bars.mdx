@@ -1,0 +1,92 @@
+---
+title: Rate bars
+description: A list of named rows scored as a percentage against a pass/fail threshold.
+---
+
+RateBars renders a list of rows — each a monospace name, a fill bar, and a
+percentage — colored by whether the row's value clears `threshold`. Rows
+below threshold switch the bar and the number to red automatically; `tone`
+overrides that verdict when the numeric test disagrees with what the row
+actually means.
+
+## When to use
+
+- Use **RateBars** for a set of named checks reported as percentages —
+  pass rate per invariant, uptime per service, compliance rate per control.
+- Use **BarChart** instead when comparing counts or amounts across
+  categories, not percentages against a single threshold.
+- Use **MetricCard** for one top-line percentage; move to RateBars once
+  there's a list of them to scan together.
+
+## Basic
+
+Rows render in order, each with its `value` as a fill bar and a right-aligned
+percentage. A row under `threshold` (default `90`) turns red in both the bar
+and the number; `note` adds one line saying what a failure of that row looks
+like.
+
+<Preview title="INVARIANTS" name="rate-bars-overview" />
+
+## Tone overrides
+
+`tone` overrides the threshold verdict for a single row — `"danger"` flags a
+row red even though its value clears the threshold (an open finding that
+hasn't been numerically caught up with yet), and `"default"` keeps a row
+neutral even though its value falls short (an accepted, tracked dip).
+
+<Preview title="OVERRIDES" name="rate-bars-tone-overrides" />
+
+## Loading
+
+Pass `loading` to render `Skeleton.List` in place of the rows.
+
+<Preview title="LOADING" name="rate-bars-loading" />
+
+## Anatomy
+
+```tsx
+<RateBars
+  caption="Pass rate across 42 runs"
+  hint="Last 24h"
+  threshold={90}
+  rows={[
+    { name: "schema_valid", value: 99.1 },
+    {
+      name: "cert_valid_to",
+      value: 86.4,
+      note: "Fails when a cert expires before the check window closes.",
+    },
+  ]}
+/>
+```
+
+- **`rows`** — an array of `{ name, value, note, tone }`. `name` renders
+  monospace as the row's identity; `value` is a percentage from 0–100;
+  `note` is one line describing what a failure of the row looks like;
+  `tone` (`"default"` | `"danger"`) overrides the automatic threshold
+  verdict for that row.
+- **`threshold`** — values below this render red. Default `90`.
+- **`caption`** — a small uppercase header label, e.g. "Pass rate across 42
+  runs".
+- **`hint`** — a right-aligned monospace qualifier in the header.
+- **`loading`** — renders the skeleton in this component's own footprint.
+
+## Accessibility
+
+- Every row prints its percentage as text next to the bar, so the
+  pass/fail signal is never conveyed by bar length or color alone.
+- `tone="danger"` and the automatic below-threshold state both render the
+  same red; `tone="default"` suppresses it. When you override the verdict,
+  put the reason in `note` so the row's meaning is legible without the
+  color.
+- RateBars renders plain `<div>`s rather than `<progress>` or
+  `role="meter"` — the adjacent percentage text covers the number for
+  screen readers, but there's no live region, so if rows update in place,
+  make sure the surrounding page announces the change when a user needs to
+  know.
+- While `loading`, the rendered skeleton has no numeric content, so keep
+  loading windows short.
+
+## Props
+
+<PropsTable component="RateBars" />

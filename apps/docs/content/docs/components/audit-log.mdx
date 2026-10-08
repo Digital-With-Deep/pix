@@ -1,0 +1,135 @@
+---
+title: Audit log
+description: A searchable, filterable, append-only event log with facets, a time histogram, and an event detail panel.
+---
+
+AuditLog is a self-contained workbench for one `events` array: a query bar
+with a small field-query syntax, a time range picker, a facet rail for
+drilling in by agent, kind, system, outcome, entity, or control, a histogram
+of events over time you can click to zoom, a virtualized results list, and a
+detail panel with Fields and JSON tabs for the selected event. Search state
+can mirror the URL so a filtered view is a shareable link.
+
+## When to use
+
+- Use **AuditLog** for traceability of agent or system actions — who or
+  what did something, when, under which identity, with what outcome — where
+  someone needs to search, filter, and drill into individual events.
+- Use **DataTable** instead for a general list of business records with no
+  search syntax, facets, or time dimension.
+- Turn on `syncUrl` when a filtered view needs to be bookmarkable or
+  shareable — a saved search then is just a URL.
+- Only pass `onExport` when there's a real export pipeline behind it; the
+  Export button only renders when the prop is set.
+
+## Overview
+
+With just `events`, AuditLog renders its full default shape: the query bar,
+a 24-hour-by-default histogram, the default facets (agent, kind, system,
+outcome, entity, control) in the left rail, and the default result columns
+(Agent, Kind, System, Event, Outcome, Latency) after the fixed Time column.
+Clicking a row opens the detail panel with the event's message, decision
+rationale (when present), and every field.
+
+<Preview title="OVERVIEW" name="audit-log-overview" />
+
+## Custom columns and starting filters
+
+Pass `columns` to replace the result columns after Time — each is
+`{ key, label, width or flex, align, render }`, with `render(event)` for a
+custom cell such as a monospaced resource ID. `defaultFilters` seeds the
+facet filters a search starts with, same shape as a filter chip:
+`{ field, op, values }`.
+
+<Preview title="CUSTOM COLUMNS" name="audit-log-custom-columns" />
+
+## Loading
+
+With `loading` and no `events` yet, AuditLog renders a skeleton of the whole
+workbench — query bar, histogram, and result rows — in its own footprint.
+Once `events` start arriving, `loading` instead shows a "loading…" hint next
+to the hit count rather than replacing the view.
+
+<Preview title="LOADING" name="audit-log-loading" />
+
+## Anatomy
+
+```tsx
+<AuditLog
+  title="Audit log"
+  events={events}
+  defaultRange="24h"
+  columns={[
+    { key: "agent", label: "Agent", width: 150 },
+    { key: "resource", label: "Resource", flex: true },
+    { key: "outcome", label: "Outcome", width: 84 },
+  ]}
+  syncUrl
+  onExport={(hits) => downloadCsv(hits)}
+/>
+```
+
+- **`events`** — the events to search. Each needs `id`, `ts` (epoch
+  milliseconds or an ISO-8601 string), and `message`; optional `agent`,
+  `identity` (a service account), `kind`, `system`, `resource`, `action`,
+  `outcome`, `entity`, `control`, `run_id`, `trace_id`, `latency_ms`, and
+  `rationale` are shown in the result columns, facets, and detail panel —
+  any further field is still searchable, filterable, and shown in the
+  panel. Indexed once per array identity, so memoize it.
+- **`facets`** — fields offered in the left rail. Defaults to agent, kind,
+  system, outcome, entity, control.
+- **`columns`** — result columns after the fixed Time column. `width` for a
+  fixed px width, or `flex` for the one elastic column; `render(event)` for
+  a custom cell.
+- **`defaultQuery`** — the query language: free text matches every field;
+  `"a phrase"` for an exact phrase; `field:value` (`*` wildcard); `field:(a
+  OR b)`; `-term` or `NOT` to negate; `field>n`, `field>=n` for numeric
+  comparisons; `_exists_:field` for presence.
+- **`defaultFilters`** — facet filters a search starts with, each
+  `{ field, op: "is" | "is_not", values }`.
+- **`defaultRange`** — one of `"15m" | "1h" | "24h" | "7d" | "30d" | "all" |
+  "custom"`.
+- **`defaultSort`** — `"asc"` or `"desc"` by time.
+- **`defaultEvent`** — the id of the event open in the detail panel on
+  first render.
+- **`now`** — "now" for relative ranges. Defaults to the newest event's
+  time.
+- **`height`** — overall height in px; the result list scrolls inside it.
+  Default `680`.
+- **`title`** — the label shown in the query bar.
+- **`syncUrl`** — read the initial state from, and mirror every change
+  into, the address bar.
+- **`baseUrl`** — origin + path used when building the copied link.
+  Defaults to the current page.
+- **`onStateChange(state)`** — fired on every state change with the
+  current state plus the encoded `params` string and `hits` count.
+- **`onCopyLink(url)`** — fired after the Copy link button copies a URL.
+- **`onExport(hits)`** — shows the Export button; called with the current
+  hits.
+- **`onOpenEvent(event)`** — fired when a row is opened.
+- **`loading`** — a skeleton of the workbench with no events yet; a
+  "loading…" hint next to the hit count once events are present.
+
+## Accessibility
+
+- The search input carries `aria-label="Search the audit log"`; the
+  histogram is `role="img"` with an `aria-label` stating the event count —
+  it summarizes the shape for screen readers rather than exposing each bar,
+  so don't rely on it alone to communicate a spike. The hit count and time
+  window text beside it carry the same information as text.
+- The results list is `role="listbox"` with each row `role="option"` and
+  `aria-selected`; arrow keys move the selection and Escape closes the open
+  event, all reachable without a mouse.
+- Facet value buttons and their invert/exclude icon buttons carry
+  `aria-label`s ("Filter for `x`", "Exclude `x`") since they're icon-only.
+- Active filter chips show their field and value as visible text, and the
+  invert and remove controls are real buttons with accessible names, not
+  bare icons with only a tooltip.
+- Below about 1020px the facet rail yields its space to an open event, and
+  below about 640px it hides entirely — it's removed from layout, not just
+  visually hidden, so don't rely on facets being reachable in a
+  consistently narrow container.
+
+## Props
+
+<PropsTable component="AuditLog" />

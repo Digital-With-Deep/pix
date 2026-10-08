@@ -1,0 +1,46 @@
+---
+title: Disclosure
+description: A collapsed row that opens in place.
+---
+
+Disclosure is progressive disclosure for a single section — "Advanced", "Install and configure the SDK" — that names what's inside and lets the reader decide whether to look. It opens in place rather than navigating away or overlaying the page, and its content isn't rendered at all until it's opened.
+
+<Preview name="disclosure-overview" />
+
+## When to use
+
+- To hide settings or detail most readers don't need, naming what's inside in `title` so they can decide without opening it.
+- Use `variant="row"` (a bordered bar) for a standalone section like "Advanced" or "Install the SDK"; use `variant="plain"` for a bare text toggle inline with other content, like "Show stack trace".
+- Pass `meta` for a quick count or hint — "3 settings" — so the reader has enough information before they open it.
+- Let it manage its own `defaultOpen` state for most uses; pass `open` and `onChange` only when something else needs to drive or observe it, such as syncing with a URL fragment.
+
+## Variants
+
+<Preview title="ROW" name="disclosure-row" />
+
+<Preview title="PLAIN" name="disclosure-plain" />
+
+<Preview title="WITH ICON" name="disclosure-icon" />
+
+## Anatomy
+
+The toggle is a single button, left to right: an optional `icon`, the `title`, an optional monospace `meta`, and a chevron that rotates on open. When open, `children` renders below in a `role="region"`.
+
+- `title` — required. What's inside, in a short phrase.
+- `meta` — a monospace hint on the right, e.g. "3 settings".
+- `icon` — a leading glyph before the title.
+- `open` / `onChange` — controlled mode; pass both to drive the state yourself.
+- `defaultOpen` — the initial state when uncontrolled. Default `false`.
+- `variant` — `row` (bordered bar, default) or `plain` (bare text toggle).
+- `children` — the content revealed when open.
+
+## Accessibility
+
+- The toggle is a real `<button>` with `aria-expanded` reflecting the open state and `aria-controls` pointing at the content region's id, so assistive tech always knows what it operates and whether it's open.
+- The content is only present in the DOM while open — not just visually hidden — so closed content can't be tabbed into by accident.
+- The chevron is decorative; the open/closed state is carried by `aria-expanded`, not by the icon's rotation alone.
+- `variant="plain"` changes the visual chrome only — it's still a real button, reachable and operable the same way as `variant="row"`.
+
+## Props
+
+<PropsTable component="Disclosure" />

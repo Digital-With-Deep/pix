@@ -1,0 +1,52 @@
+---
+title: Avatar
+description: A person, model, or system's identity — a photo, an icon, or initials.
+---
+
+Avatar renders an identity as a photo, a glyph, or initials, with an optional presence dot and accent ring. AvatarGroup stacks several identities into one compact cluster, collapsing overflow into a `+N` tile.
+
+## When to use
+
+- `Avatar` next to a name wherever an identity needs to be recognizable at a glance — a comment, a run's owner, an assignee.
+- `square` for an organization, an agent, or a system rather than a person — it's the visual cue that this isn't a human.
+- `status` when presence is meaningful, such as whether a teammate or an agent is currently online.
+- `AvatarGroup` for a list of participants — reviewers, collaborators — where showing every identity individually would crowd the row.
+
+## Avatar
+
+Avatar falls back through `src` (an image), then `iconPath` (a glyph), then initials derived from `name` — or an explicit `initials` override.
+
+<Preview title="SIZES AND TONES" name="avatar-sizes" />
+
+<Preview title="STATUS AND RING" name="avatar-status" />
+
+### Props
+
+<PropsTable component="Avatar" />
+
+## AvatarGroup
+
+AvatarGroup shows up to `max` members (default 4) overlapped by `overlap` px, collapsing anything beyond that into a trailing `+N` tile.
+
+<Preview title="AVATAR GROUP" name="avatar-group" />
+
+### Props
+
+<PropsTable component="AvatarGroup" />
+
+## Anatomy
+
+- `src` / `iconPath` / `name` — the fallback chain for what renders inside the circle (or square).
+- `size` — a named step (`xs` – `xl`) or an explicit pixel diameter.
+- `tone` — the fill used for the initials or icon fallback.
+- `square` — a rounded square instead of a circle, for organizations, agents, and systems.
+- `status` — a presence dot (`online`, `away`, `busy`, `offline`) in the lower-right corner.
+- `ring` — an accent ring marking the active or selected identity.
+- `AvatarGroup.max` / `overlap` — how many avatars show before collapsing into `+N`, and how tightly they overlap.
+
+## Accessibility
+
+- Avatar renders an `<img>` with `alt` text derived from `name` when `src` is set, so a screen reader announces who the picture represents rather than "image."
+- `title` (defaulting to `name`) surfaces as a native tooltip on hover and focus — don't rely on it as the only place an identity's name appears.
+- The presence dot from `status` is decorative; pair it with text nearby (such as "Online") when presence needs to be reported to assistive technology.
+- The `+N` overflow tile in `AvatarGroup` is a visual summary only — make sure the full member list is reachable elsewhere in the UI, such as a tooltip or a linked page.

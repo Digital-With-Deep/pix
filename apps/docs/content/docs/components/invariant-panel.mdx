@@ -1,0 +1,70 @@
+---
+title: Invariant panel
+description: Per-invariant pass/fail results for one run, reported individually and never averaged into a score.
+---
+
+An invariant panel reports the standing rules a process must never break —
+one row per invariant, each carrying its own definition, its own verdict for
+this run, and, on failure, what actually happened. There is deliberately no
+rolled-up score prop: an auditor tests the components individually, not an
+average of them.
+
+## When to use
+
+Use `InvariantPanel` next to a run or trace when you need to show which
+process invariants held and which failed — for example, after a trace replay
+or an automated review of an agent run. Each invariant carries `catches`, the
+standing definition of what it guards against, so the panel reads correctly
+even to someone who hasn't memorized the rule set. Prefer `CoverageMatrix`
+instead when the question is "which assertions were tested per objective,"
+not "did this run violate a known rule." Pass `loading` while results are
+still being computed.
+
+## States
+
+The default view lists every invariant with its standing definition and, on
+failure, the run-specific detail that explains it; `compact` collapses each
+row to a name, an optional step reference, and the verdict, for a side rail
+where the full definitions would crowd the column.
+
+<Preview title="DETAIL — MIXED PASS AND FAIL" name="invariant-panel-overview" />
+
+<Preview title="COMPACT — SIDE RAIL WITH A STEP REFERENCE" name="invariant-panel-compact" />
+
+<Preview title="LOADING" name="invariant-panel-loading" />
+
+`not_applicable` renders muted and is excluded from both the failure count
+and the "N of N holding" tally in the header — an invariant that didn't apply
+to this run shouldn't read as either a pass or a gap.
+
+## Anatomy
+
+The header shows `title` (default "Process invariants"), an optional
+monospace `scope` (e.g. a run and objective reference), and a right-aligned
+tally — "N of N failed" in red if anything failed, otherwise "N of N
+holding" in green, counting only invariants that aren't `not_applicable`.
+Below it, each invariant renders as a row: an icon and name, the standing
+`catches` description, and — only when `state` is `"fail"` — the `detail`
+line explaining what happened this run, set off with a red rule. The
+right-hand verdict word is `observed` when supplied (e.g. "3 of 3"),
+otherwise the state's label ("Pass" / "Fail" / "N/A"). In `compact` mode the
+row shrinks to a dot, the monospace name, an optional `step` or `observed`
+value, and the verdict word. Unless `note={false}`, a footer restates that
+these results are reported per invariant and never averaged. With `loading`,
+the panel renders a `Skeleton` sized to `invariants.length` (or 5) instead of
+any of this.
+
+## Accessibility
+
+Invariants render as a real `<ul>`/`<li>` list, so a screen reader announces
+how many invariants are in the panel as it enters the list. The pass/fail/NA
+icon is decorative — the same information is always restated as text (the
+verdict word on the right, or "N/A"), so no additional label is needed on the
+icon itself. The panel has no interactive elements and no live region; if a
+panel's results change in place after the user already has it open (for
+example, a run finishing while the page is visible), consider announcing
+that update yourself rather than relying on the panel to do so.
+
+## Props
+
+<PropsTable component="InvariantPanel" />

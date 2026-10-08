@@ -1,0 +1,50 @@
+---
+title: Code editor
+description: Display or edit code, config, and commands with syntax-aware chrome.
+---
+
+CodeEditor is a block-level surface for showing or editing code, config, and commands, with a header, optional line numbers, and a copy button. InlineCode is the inline counterpart for a single command or identifier inside a sentence.
+
+## When to use
+
+- `CodeEditor` for a config file, a generated script, or a diff that needs its own header, title, and copy affordance.
+- Set `onChange` (without `readOnly`) when a reader should be able to edit the code in place, such as tweaking a generated prompt before running it.
+- `highlightLines` to draw attention to the specific lines a reader needs to change or review.
+- `InlineCode` for a short command, filename, or identifier inside a paragraph — don't reach for `CodeEditor` for a single line of prose.
+
+## CodeEditor
+
+<Preview title="READ-ONLY" name="code-editor-diff" />
+
+<Preview title="EDITABLE" name="code-editor-editable" />
+
+### Props
+
+<PropsTable component="CodeEditor" />
+
+## InlineCode
+
+`tone="accent"` is for a command the reader should actually run; `tone="neutral"` is for identifiers, filenames, and other code mentioned in passing. Set `copy` to let a click copy the text.
+
+<Preview title="INLINE CODE" name="inline-code-usage" />
+
+### Props
+
+<PropsTable component="InlineCode" />
+
+## Anatomy
+
+- `value` / `defaultValue` / `onChange` — controlled or uncontrolled code, and the handler that makes the block editable when paired with a non-`readOnly` state.
+- `language` — selects syntax highlighting; `title` renders in monospace when it looks like a filename.
+- `lineNumbers` / `wrap` / `maxHeight` — reading affordances for longer blocks.
+- `highlightLines` — 1-based line numbers to tint, such as the lines a reader must change.
+- `copy` — a copy button in the header, on by default.
+- `actions` / `status` — extra header controls, and footer text such as a save state or validation result.
+- `onSave` — fires on ⌘S / Ctrl+S while the block is being edited.
+
+## Accessibility
+
+- `ariaLabel` names the editable region for assistive technology — set it to something specific ("Edit system prompt") rather than leaving the default.
+- The copy button announces its result (such as "Copied") so a screen reader user gets confirmation without relying on a transient visual change alone.
+- `highlightLines` is a color-only cue by default; if a highlighted line is load-bearing for understanding, say so in nearby text or the `status` line as well.
+- `InlineCode` renders as a `<code>` element inline with surrounding text, so it's announced as code without breaking the reading flow of the sentence.

@@ -1,0 +1,76 @@
+---
+title: Usage meter
+description: A used-of-limit readout with a bar that shifts color near and at the limit.
+---
+
+UsageMeter shows a single quantity against its plan or license limit — a
+label, the used/limit figures in monospace, and a bar that stays emerald
+until usage nears the limit, then turns amber, then red once the limit is
+reached. Pass `limit={null}` for an unlimited tier and the bar drops
+entirely.
+
+## When to use
+
+- Use **UsageMeter** for anything metered against a plan or license
+  limit — seats, entities in scope, API calls, storage.
+- Stack several in one card with `divider` set on every meter but the
+  first, so they read as one grouped readout rather than separate cards.
+- Use **MetricCard** instead for a number with a trend, not a quantity
+  bounded by a limit.
+
+## Usage levels
+
+The bar and note color themselves from `used` and `limit`: emerald while
+comfortably under `nearAt` (default `0.8` of the limit), amber once past it,
+red once `used` reaches `limit`. The near/full note is automatic unless you
+pass your own `note`.
+
+<Preview title="LEVELS" name="usage-meter-levels" />
+
+## Unlimited
+
+Pass `limit={null}` (or omit it) for an unlimited tier: the bar is dropped
+and the value reads "· unlimited" instead of "of &lt;limit&gt;".
+
+<Preview title="UNLIMITED" name="usage-meter-unlimited" />
+
+## Loading
+
+Pass `loading` to render a skeleton sized to UsageMeter's own footprint
+instead of the label, value, and bar.
+
+<Preview title="LOADING" name="usage-meter-loading" />
+
+## Anatomy
+
+```tsx
+<UsageMeter label="Entities in scope" used={420} limit={1000} />
+```
+
+- **`label`** — what is being counted, e.g. "Seats", "Entities in scope".
+- **`used`** — the current count.
+- **`limit`** — the ceiling. `null` means unlimited: the bar is dropped and
+  the value reads "· unlimited".
+- **`nearAt`** — the fraction of `limit` at which the bar turns amber.
+  Default `0.8`.
+- **`note`** — replaces the automatic near/full message. Pass `null` to
+  show none.
+- **`divider`** — draws a hairline above the meter; set it on every meter
+  but the first when stacking several in one card.
+- **`loading`** — renders the skeleton in this component's own footprint.
+
+## Accessibility
+
+- When there's a limit, the bar carries `role="meter"` with `aria-label`,
+  `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`, so assistive tech
+  gets the real value, not just its color.
+- The emerald/amber/red color is paired with an automatic note describing
+  the state in words ("`n` left on this license.", "At the limit — adding
+  more is blocked until the license is raised."); if you override `note`,
+  keep stating the condition in text so it isn't carried by color alone.
+- When `limit` is `null`, there's no bounded quantity to measure, so no
+  `role="meter"` is rendered — the "· unlimited" text covers the state.
+
+## Props
+
+<PropsTable component="UsageMeter" />

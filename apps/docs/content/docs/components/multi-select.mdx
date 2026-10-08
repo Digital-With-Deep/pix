@@ -1,0 +1,91 @@
+---
+title: MultiSelect
+description: A control for choosing more than one value at once.
+---
+
+MultiSelect holds zero or more values at a time. It has two variants:
+`tiles`, a grid of selectable cards for a handful of choices that need
+explaining, and `dropdown`, a searchable combobox with chips for long lists
+like tags or reviewers.
+
+## When to use
+
+- Use **MultiSelect** when the field can hold more than one value at once —
+  tags on an issue, reviewers on a PR, enabled regions.
+- Use **Select** when exactly one value must be chosen.
+- Use **RadioGroup** when there are a small number of mutually exclusive,
+  always-visible options rather than a multi-value field.
+
+## Variants
+
+### Tiles
+
+Selectable cards with a check badge, for two to six choices that benefit
+from a description — an onboarding screen choosing which integrations to
+enable.
+
+<Preview title="TILES" name="multi-select-tiles" />
+
+### Dropdown
+
+A searchable combobox with chips in the trigger, for long lists such as
+tags. `maxChips` controls how many chips show before collapsing to `+N`, and
+`max` caps the total selection.
+
+<Preview title="DROPDOWN WITH CHIPS" name="multi-select-dropdown" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the same footprint as the real
+control, including the label row, so a tag list populated from an async call
+doesn't shift once data arrives.
+
+<Preview title="LOADING" name="multi-select-loading" />
+
+## Anatomy
+
+```tsx
+<MultiSelect
+  variant="dropdown"
+  label="Reviewers"
+  placeholder="Add reviewers"
+  options={[
+    { value: "alex", label: "Alex Chen", description: "Frontend" },
+    { value: "priya", label: "Priya Nair", description: "Backend" },
+  ]}
+  value={value}
+  onChange={(value, toggled) => setValue(value)}
+  max={3}
+/>
+```
+
+- **`options`** — an array of `{ value, label }`, optionally extended with
+  `description`, `meta`, `icon`, `tile`, `group`, `keywords`, and `disabled`.
+  `icon` wins over `tile` when both are set.
+- **`value`** — an array of selected `value`s. MultiSelect is controlled.
+- **`onChange(value, toggled)`** — called with the full next selection and
+  the single option that was just toggled.
+- **`variant`** — `"tiles"` for a small, explained set of choices;
+  `"dropdown"` for a long, searchable list with chips.
+- **`max`** — caps the selection; remaining options disable once reached and
+  the count reads `n/max`.
+- **`maxChips`** — how many chips the dropdown trigger shows before
+  collapsing the rest into `+N`.
+
+## Accessibility
+
+- In `tiles` variant, each card is a `button role="checkbox"` with
+  `aria-checked`, grouped with `role="group"` under the label.
+- In `dropdown` variant, the trigger is a `button` with `role="combobox"`
+  and `aria-expanded`; the listbox uses `role="listbox"` / `role="option"`
+  with `aria-selected` and `aria-disabled`.
+- Arrow Up/Down move between enabled options and wrap at the ends; disabled
+  options — including ones disabled by hitting `max` — are skipped entirely.
+  Enter toggles the active option, Escape closes the dropdown.
+- `label` renders as a real `<label>`; an `error` message takes over the
+  hint region and sets `aria-invalid` on the trigger (dropdown variant) or
+  the group (tiles variant).
+
+## Props
+
+<PropsTable component="MultiSelect" />

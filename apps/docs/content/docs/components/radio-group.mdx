@@ -1,0 +1,82 @@
+---
+title: RadioGroup
+description: A small set of mutually exclusive, always-visible options.
+---
+
+RadioGroup lays out two to five mutually exclusive choices so they can all be
+compared at once, with no extra click to open a menu. Each option can carry a
+sentence of `description` beneath its label.
+
+## When to use
+
+- Use **RadioGroup** when there are a small number of options (two to five),
+  they're mutually exclusive, and showing them all at once — rather than
+  behind a trigger — helps the user compare them directly, such as a
+  notification frequency or a billing cycle.
+- Use **Select** once the list grows past five or six items, or needs search,
+  icons, or grouping.
+- Use **Switch** when the choice is a single on/off setting rather than one
+  of several named options.
+
+## States
+
+A frequency picker where each option explains what it means. The second
+option is selected by default.
+
+<Preview title="OPTIONS WITH DESCRIPTIONS" name="radio-group-frequency" />
+
+## Disabled
+
+An individual option can be disabled — a tier the workspace hasn't unlocked,
+a mode that needs a different plan. Disabled options stay visible with their
+description, but can't be picked and are skipped by arrow-key navigation.
+The whole group can also be disabled at once.
+
+<Preview title="DISABLED OPTION" name="radio-group-disabled-option" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the same footprint as the real group,
+including the label, so a form populated from an async call doesn't shift
+once data arrives.
+
+<Preview title="LOADING" name="radio-group-loading" />
+
+## Anatomy
+
+```tsx
+<RadioGroup
+  label="Notification frequency"
+  options={[
+    { value: "realtime", label: "Real-time", description: "Notify as soon as it happens." },
+    { value: "daily", label: "Daily digest", description: "One summary each morning." },
+    { value: "off", label: "Off", description: "Don't notify me." },
+  ]}
+  value={value}
+  onChange={(value) => setValue(value)}
+/>
+```
+
+- **`options`** — an array of `{ value, label }`, optionally extended with
+  `description` and `disabled`.
+- **`value`** — the selected option's `value`, or `null`/`undefined` for no
+  selection. RadioGroup is controlled.
+- **`onChange(value, option)`** — called with the picked value and the full
+  matching option object.
+- **`name`** — the native radio `name` shared by every input in the group;
+  generated automatically when omitted.
+
+## Accessibility
+
+- Renders as native `<input type="radio">` elements sharing one `name`, so
+  browser and assistive-tech radio behavior works without extra ARIA.
+- `label` renders as an uppercase group heading wired to the group via
+  `aria-labelledby`.
+- Arrow Up/Down move between enabled options and wrap at the ends; disabled
+  options are skipped entirely, matching native radio group behavior.
+- Each option's description is associated with its input, so screen readers
+  announce the explanation along with the label.
+
+## Props
+
+<PropsTable component="RadioGroup" />

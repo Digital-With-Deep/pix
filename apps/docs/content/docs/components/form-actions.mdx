@@ -1,0 +1,49 @@
+---
+title: Form actions
+description: The sticky action row anchored to a form's end — pins to whichever edge scrolls out of view.
+---
+
+FormActions renders once, in place, at the natural end of a form. While that end is scrolled out of view, the same row reappears pinned to the bottom edge (the end is still below) or the top edge (the reader scrolled past it) of the nearest scrolling container — so the primary action is always one click away, however long the form is.
+
+## When to use
+
+- As the Cancel/Save (or Back/Submit) row at the end of any form, especially a long one that scrolls inside a drawer, modal, or page.
+- Pass `summary` or `status` to add a short state line next to the buttons — "3 fields need attention", "Unsaved changes", "Saved 2 minutes ago" — and `tone` to color it without repeating the word in the message itself.
+- Set `position="static"` when the row should never pin, e.g. it already sits in a fixed footer the surface controls itself.
+
+## Basic
+
+Children are the buttons themselves — primary last. With no `summary`, the row is just the action buttons.
+
+<Preview title="BASIC" name="form-actions-basic" />
+
+## Status line
+
+`summary` (or its alias `status`) renders to the left of the buttons. The default `tone="neutral"` reads in muted ink.
+
+<Preview title="NEUTRAL STATUS" name="form-actions-status" />
+
+## Claim and truth tones
+
+`tone="claim"` renders the summary as a red alert — reserve it for a model's claim or an unresolved problem. `tone="truth"` renders it in emerald for a verified, successful state. The two never share a color.
+
+<Preview title="CLAIM AND TRUTH" name="form-actions-tones" />
+
+## Anatomy
+
+- `children` — the action buttons, primary last.
+- `summary` / `status` — the left-hand state line; `status` is a plain alias of `summary`.
+- `tone` — `neutral` (default), `claim` (red alert), or `truth` (emerald).
+- `position` — `auto` (default) pins the row to whichever viewport edge the form's end has scrolled past; `static` never pins.
+- `style` — applied to the row's own (non-pinned) wrapper.
+
+## Accessibility
+
+- The summary line gets `role="alert"` when `tone="claim"` so assistive technology announces it immediately, and `role="status"` otherwise for a passive announcement.
+- Buttons passed as `children` keep whatever accessible name and role they already have — FormActions doesn't wrap or relabel them.
+- Pinning only changes the row's visual position via CSS; its place in the DOM, and therefore tab order, never changes, so keyboard navigation stays predictable while scrolling.
+- If the surface already renders its own fixed footer, set `position="static"` to avoid two fixed elements competing for the same edge.
+
+## Props
+
+<PropsTable component="FormActions" />

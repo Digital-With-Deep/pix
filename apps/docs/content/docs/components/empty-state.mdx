@@ -1,0 +1,51 @@
+---
+title: Empty state
+description: What a region shows when there is nothing in it yet.
+---
+
+An empty state fills the space a list, table, or panel would otherwise occupy, and says why it's empty and what to do next. PIX treats "nothing yet" as four distinct situations — first use, no results for a filter, no access, and not available — each with its own tone and message, rather than one generic "Empty" box.
+
+<Preview name="empty-state-overview" />
+
+## When to use
+
+- For a first-use invitation — nothing has been created yet — with `tone="accent"` and exactly one primary action.
+- For a filtered list or search that matched nothing, with `tone="neutral"` and a "Clear filters" action.
+- For content the viewer can't see because of plan or permissions, with `tone="fault"`.
+- For a feature that failed to load or isn't available in this release, with `tone="claim"`.
+- Inside a card or a table body, pass `compact` for a left-aligned row instead of the centered block layout.
+- State the situation, not the absence — "No model providers yet", not "Empty".
+
+## States
+
+`tone` sets the tile color behind the icon: `accent` for a first-use invitation, `fault` for "not available", `claim` for an error, and `neutral` for everything else, including no-results. The icon, title, and optional `body`, `meta`, and `actions` stay in the same arrangement across tones.
+
+<Preview title="NO RESULTS" name="empty-state-no-results" />
+
+<Preview title="NOT AVAILABLE" name="empty-state-not-available" />
+
+<Preview title="COMPACT ROW" name="empty-state-compact" />
+
+## Anatomy
+
+- `icon` — one of the built-in glyphs (`plus`, `search`, `lock`, `inbox`, `plug`, `warn`, `check`, `file`) or your own node. Defaults to `inbox`.
+- `tone` — `neutral` (default), `accent`, `fault`, or `claim`. Colors the icon tile only.
+- `title` — required. States the situation in a short phrase.
+- `body` — why it's empty and what happens next, in one or two sentences.
+- `actions` — buttons below the body; a first-use state gets one primary action, a no-results state offers "Clear filters".
+- `meta` — a monospace line for a code or count.
+- `compact` — switches to a left-aligned row for use inside a card or table body.
+- `bordered` — a dashed border, on by default; turn it off when the parent already has one.
+
+<Preview title="ANATOMY" name="empty-state-anatomy" />
+
+## Accessibility
+
+- The root renders `role="region"` with an `aria-label` taken from `title`, so screen reader users can jump straight to it and hear why the area is empty.
+- The icon is decorative and marked `aria-hidden`; the reason has to come through `title` and `body`, not the glyph alone.
+- Tone communicates priority through the icon tile color, but the words in `title` and `body` carry the actual meaning — "Not available on your plan" reads the same with or without color.
+- Put real buttons or links in `actions` so they reach the tab order and have accessible names on their own.
+
+## Props
+
+<PropsTable component="EmptyState" />
