@@ -1,0 +1,46 @@
+---
+title: Thinking trace
+description: A step-by-step reasoning log that reveals as it streams and stays inspectable once done.
+---
+
+ThinkingTrace renders a model's reasoning as an ordered list of steps — plain thoughts alongside named tool calls, reads, and write-backs — so a reviewer can follow how an answer was produced, not just read the answer itself. It drives its own reveal while streaming and collapses into a static, auditable log once finished.
+
+## When to use
+
+- To show the reasoning behind an agent run or model answer as a disclosure, rather than inline with the final text.
+- When steps carry structure worth preserving — a tool name, a system a read or write touched, a duration — not just a sentence.
+- When you want the trace to reveal itself over time as the model works, with a working footer, rather than appearing all at once.
+- Not for the final answer itself — pair it with the component that renders the answer (for example `AIResponse`, which renders `ThinkingTrace` internally for its `thinking` prop).
+
+## States
+
+ThinkingTrace is driven by `status`: `"streaming"` reveals `steps` one at a time on a timer (or under your own control via `revealed`) and shows a working footer; `"done"` shows every step at once under `doneLabel`. A separate `loading` prop renders a skeleton in the component's footprint for cases like a route transition, before any steps exist.
+
+### Streaming
+
+While `status="streaming"`, steps appear one by one every `interval` ms (default 900), each row carrying its `kind` — `thought`, `tool`, `read`, or `write` — with `read` and `write` steps showing a monogram mark derived from `system` (SAP, SharePoint, ServiceNow, and others are recognised). `onComplete` fires once the last step has revealed.
+
+<Preview title="STREAMING — STEPS REVEALING" name="thinking-trace-streaming" />
+
+### Done, with replay
+
+Once `status="done"`, every step renders under `doneLabel`, including nested follow-on `lines` and a right-aligned `duration` readout per step. Pass `onReplay` to add an icon-only replay control next to the header once streaming has stopped.
+
+<Preview title="DONE — FULL TRACE WITH REPLAY" name="thinking-trace-done" />
+
+## Anatomy
+
+- **Header** — `title` while streaming, `doneLabel` once done, plus the optional replay control (`onReplay`, `replayLabel`) and any extra `action` content, shown only after streaming stops.
+- **Steps** — each `ThinkingStep`'s `label` is the reasoning line itself; `kind` picks the row's treatment, `system` and `logo` drive the monogram for `read` / `write` steps, `verb` overrides the READ / WRITE-BACK chip text, and `detail` renders a monospace qualifier (for example a tool's arguments).
+- **Nested lines** — `lines` renders follow-on text indented under a step, for a thought that resolved into several sub-findings.
+- **Footer** — `workingLabel` under the trace while `status="streaming"`.
+
+## Accessibility
+
+- The trace is a static, ordered list of rows — all step text, including monospace `detail` and `duration`, is real text content, never baked into an image, so it's readable by assistive technology and selectable.
+- The replay button (`onReplay`) is icon-only and should be given a clear `replayLabel`; it renders as a native `<button>`, keeping it in the natural tab order and operable with `Enter` / `Space`.
+- Streaming reveals are a visual affordance only: when `status="done"`, every step is present in the DOM at once, so a screen reader is never left waiting on a timer to hear the rest of the trace.
+
+## Props
+
+<PropsTable component="ThinkingTrace" />

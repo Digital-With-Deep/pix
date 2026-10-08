@@ -1,0 +1,58 @@
+---
+title: Skeleton
+description: Placeholder shapes shown while data loads.
+---
+
+Skeleton renders placeholder shapes while real content is on its way. Every data component in PIX also accepts a `loading` prop that renders the matching preset in its own footprint — reach for `Skeleton` directly only for page-level layouts or custom compositions those props don't cover. The shimmer respects `prefers-reduced-motion`.
+
+<Preview name="skeleton-overview" />
+
+## When to use
+
+- Prefer a component's own `loading` prop (`DataTable`, `MetricCard`, `LicenseBanner`, …) over calling `Skeleton` directly — it already matches that component's real footprint.
+- Use the primitives (`variant="block"`, `"text"`, `"circle"`) to build a custom loading shape nothing else covers.
+- Use the named presets (`Skeleton.Table`, `.Metric`, `.Form`, `.List`, `.Field`, `.Chart`, `.Panel`, `.Page`) for a page-level region that isn't backed by a single PIX component, such as a dashboard built from several pieces.
+- Pass `children` to wrap your own composition of shapes in exactly one `role="status"` region, rather than nesting several status regions.
+
+## Variants
+
+<Preview title="PRIMITIVES" name="skeleton-primitives" />
+
+Named presets match the real footprint of the component they stand in for, so nothing jumps once the data lands.
+
+<Preview title="PRESETS" name="skeleton-presets" />
+
+Pass `children` to compose your own shapes — avatar, name, meta line — under one accessible region instead of calling `Skeleton` once per shape.
+
+<Preview title="COMPOSE YOUR OWN" name="skeleton-compose" />
+
+## Anatomy
+
+- `variant` — `block` (default), `text` (12px lines, the last one shorter), or `circle`.
+- `width` / `height` — size overrides; `circle` uses `height` for both dimensions when `width` is omitted.
+- `lines` — for `variant="text"`, how many lines to render.
+- `gap` — spacing between lines.
+- `label` — the accessible name of the loading region. Defaults to `"Loading"`; pass something more specific ("Loading transactions") when it helps.
+- `children` — your own shapes, wrapped in one `role="status"` region instead of the generated shape.
+
+Presets, each a function on the `Skeleton` namespace:
+
+- `Skeleton.Table({ columns, rows, caption })` — a toolbar-and-rows table skeleton.
+- `Skeleton.Metric({})` — a single metric card.
+- `Skeleton.Form({ fields, columns, footer })` — label/input pairs with an optional footer button.
+- `Skeleton.List({ rows, glyph, twoLine })` — rows with a leading glyph and one or two text lines.
+- `Skeleton.Field({ label })` — one label-and-input pair.
+- `Skeleton.Chart({ bars, height })` — a bar chart with legend and axis labels.
+- `Skeleton.Panel({ lines })` — a card with a header and `lines` of text.
+- `Skeleton.Page({ metrics, table, form })` — breadcrumb, title, lede, a metric row, and a table: the shape of most console pages.
+
+## Accessibility
+
+- Every shape (and every preset) is wrapped in `role="status"` with `aria-busy="true"` and an `aria-label`, so assistive tech announces that the region is loading without announcing the placeholder shapes themselves.
+- When composing shapes with `children`, they share the single outer `role="status"` region — don't add another live region inside it.
+- The shimmer animation is disabled under `prefers-reduced-motion: reduce`.
+- Give `label` an accurate, specific value when the default "Loading" would be ambiguous on a page with more than one loading region.
+
+## Props
+
+<PropsTable component="Skeleton" />

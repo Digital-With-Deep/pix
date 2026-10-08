@@ -1,0 +1,91 @@
+---
+title: Bar chart
+description: Grouped bars comparing a measured series against a reference across categories.
+---
+
+BarChart plots one or two series as grouped bars across a row of categories —
+months, runs, cohorts — with a legend above the plot and category labels
+below it. Pass one series for a plain trend, or two to compare a measured
+value against a reference, such as evals executed against evals passed.
+
+## When to use
+
+- Use **BarChart** to compare a measured series against a reference across
+  categories, or to show a single series trending across them — evals
+  executed vs. passed, tickets opened vs. closed, p95 latency per day.
+- Use **RateBars** instead for a list of named rows each scored as a
+  percentage against a pass/fail threshold, not grouped category totals.
+- Use **MetricCard** when a single rolled-up number is the point, not a
+  shape across categories.
+
+## Two series
+
+Each entry in `series` supplies a `label` and a bar `color`; each entry in
+`data` supplies a category `label` and one value per series, in series
+order. Use an emerald token for the measured series and a zinc token for the
+reference series so the two read apart without relying on the legend alone.
+
+<Preview title="EVAL RUNS" name="bar-chart-overview" />
+
+## Single series
+
+Pass one entry in `series` for a plain trend with nothing to compare
+against. `hint` sits right-aligned in the header in monospace; `summary`
+sits right of the legend, also monospace, for a roll-up figure.
+
+<Preview title="P95 LATENCY" name="bar-chart-single-series" />
+
+## Loading
+
+Pass `loading` to render `Skeleton.Chart` in BarChart's own footprint —
+sized to `data.length` bars (or 12 if `data` is empty) at `height` — instead
+of the legend and plot.
+
+<Preview title="LOADING" name="bar-chart-loading" />
+
+## Anatomy
+
+```tsx
+<BarChart
+  caption="Eval runs"
+  hint="Trailing 6 months"
+  summary="1,240 executed · 908 passed"
+  series={[
+    { label: "Executed", color: "var(--zinc-300, #d6d3d1)" },
+    { label: "Passed", color: "var(--accent, #10b981)" },
+  ]}
+  data={[
+    { label: "Apr", values: [205, 160] },
+    { label: "May", values: [210, 158] },
+  ]}
+/>
+```
+
+- **`series`** — an array of `{ label, color }`. Bar `color` can be any
+  valid color value; order matches the value order in each `data` entry.
+- **`data`** — an array of `{ label, values }`, one entry per category.
+  `values` holds one number per series, in series order.
+- **`caption`** — a small uppercase header label.
+- **`hint`** — a right-aligned monospace qualifier in the header, such as a
+  time window.
+- **`summary`** — a monospace roll-up shown to the right of the legend.
+- **`height`** — plot height in px. Default `130`.
+- **`loading`** — renders the skeleton in this component's own footprint.
+
+## Accessibility
+
+- Each bar carries a `title` attribute with the category label, series
+  label, and value, so a mouse hover exposes the exact number — there's no
+  equivalent for keyboard or screen-reader users beyond the legend and axis
+  labels, so pair a chart with `summary` or a table when the comparison
+  itself is the finding someone needs to act on.
+- Legend entries pair a color swatch with the series label as text, so which
+  series is which is never conveyed by color alone.
+- Pick `series` colors with enough contrast between them that the shapes
+  still read in a grayscale printout, not only on a color screen.
+- While `loading`, BarChart renders a skeleton instead of bars; keep loading
+  windows short since the skeleton has no numeric content to announce.
+
+## Props
+
+<PropsTable component="BarChart" />

@@ -1,0 +1,66 @@
+---
+title: Plan card
+description: A plan's name and its limits, with the current plan called out.
+---
+
+PlanCard shows one pricing or usage plan as a name, a list of its limits, and a marker for
+whether it's the plan the account is on today. It deliberately has no price slot — plans sold
+through a sales process belong on an order form, not hardcoded into the UI.
+
+## When to use
+
+- For a row of plan tiers on an account or billing settings page, where the goal is to show
+  what each tier includes and which one is active.
+- Give exactly one card in a row `current` — it's how a reviewer tells "where we are today"
+  from "what else is available" at a glance.
+- Write each entry in `features` already formatted as a complete line ("5 entities in scope"),
+  not as raw numbers the component has to interpret.
+- Not for checkout or upgrade flows that need a price and a buy button baked in — compose
+  `PlanCard`'s `footer` slot with your own pricing and CTA for that, since price varies by
+  contract.
+
+## Basic
+
+A row of plan tiers, each listing its own limits. The `current` plan gets a strong border and
+a "Current" tag next to its name.
+
+<Preview title="PLAN TIERS" name="plan-card-overview" />
+
+## With a footer
+
+`footer` accepts any node under the feature list — a button, a link, or a small note. There's
+no built-in action, so the footer is where you wire up whatever comes next for that plan.
+
+<Preview title="WITH A FOOTER ACTION" name="plan-card-footer" />
+
+## Loading
+
+Pass `loading` while plan data is still being fetched. The card renders a skeleton panel in
+its own footprint instead of a name and list that would otherwise pop in.
+
+<Preview title="LOADING" name="plan-card-loading" />
+
+## Anatomy
+
+- `name` — the plan's name, shown in the header row.
+- `current` — strong border and a "Current" tag. Exactly one card in a row should have it.
+- `features` — one limit per line, already formatted as a complete string.
+- `footer` — an optional node under the list, such as a button or a chip row. There's no
+  built-in price slot by design.
+
+## Accessibility
+
+- `PlanCard` is a static container — it doesn't trigger navigation on its own. If the whole
+  card should be clickable, wrap it in a link or button rather than attaching a click handler
+  to the outer `div`.
+- The "Current" tag is text, not color alone, so which plan is active doesn't depend on
+  distinguishing the strong border from the default one.
+- Anything passed to `footer` keeps its own semantics — a `<button>` stays keyboard-focusable
+  and operable; make sure its label states the action on its own (for example "Upgrade to
+  Growth" rather than "Upgrade").
+- While `loading`, the skeleton has no text content; keep loading windows short so a screen
+  reader isn't left announcing nothing.
+
+## Props
+
+<PropsTable component="PlanCard" />

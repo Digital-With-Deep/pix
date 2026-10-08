@@ -1,0 +1,60 @@
+---
+title: Coverage matrix
+description: An objective-by-assertion grid showing what's been tested, what's stale, and what's missing.
+---
+
+A coverage matrix answers one question at a glance: for every control
+objective (rows), which assertions (columns) have evidence behind them right
+now? Each cell is a single state — tested, stale, no evidence, or not
+applicable — shown as a colored glyph, with a legend spelling out what each
+one means.
+
+## When to use
+
+Use `CoverageMatrix` for a review or audit overview that needs to show
+coverage across many objectives at once, so gaps and drift are visible
+without opening each objective individually. Reach for `DataTable` instead
+when the goal is listing and sorting individual records rather than scanning
+a state grid, and for `StageFlow` when the story is a population moving
+through sequential stages rather than a static coverage snapshot.
+
+## States
+
+The legend is on by default and spells out each state in text next to its
+color; turn it off with `legend={false}` for a denser grid once readers
+already know the key. Pass `loading` to render a skeleton table sized to the
+real column and row counts.
+
+<Preview title="WITH LEGEND" name="coverage-matrix-overview" />
+
+<Preview title="WITHOUT LEGEND" name="coverage-matrix-no-legend" />
+
+<Preview title="LOADING" name="coverage-matrix-loading" />
+
+## Anatomy
+
+An optional legend row lists each state in `legendOrder` (default `tested`,
+`stale`, `none`, `na`) as a color swatch next to its text label. Below it,
+the matrix itself is a real `<table>`: the first header cell reads
+"Objective," followed by one header per entry in `assertions`. Each body row
+starts with `label` (monospace, bold) and an optional `description`, then one
+cell per entry in `cells`, aligned to `assertions` by index — a colored
+square carrying a glyph (`✓` tested, `!` stale, `×` none, `·` not
+applicable) and a `title` tooltip naming the assertion and state in full.
+
+## Accessibility
+
+`CoverageMatrix` renders a genuine `<table>` with `<thead>`/`<tbody>`, so
+screen readers and browser table-navigation commands get real header
+associations between each cell and its objective row and assertion column.
+Cell state is never color-only — it's also carried by the glyph and by the
+`title` attribute — but `title` text only surfaces reliably on mouse hover,
+not to keyboard-only or most screen-reader users, so treat it as a bonus, not
+the primary channel. The legend's text labels are the one place every state
+is spelled out unambiguously; if you set `legend={false}`, make sure the
+grid's meaning is still documented somewhere else on the page for anyone who
+can't rely on the glyph-plus-color combination alone.
+
+## Props
+
+<PropsTable component="CoverageMatrix" />

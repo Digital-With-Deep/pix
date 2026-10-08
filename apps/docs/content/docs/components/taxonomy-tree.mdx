@@ -1,0 +1,57 @@
+---
+title: Taxonomy tree
+description: An indented list of taxonomy nodes, each mapped to a source code and a target objective.
+---
+
+A taxonomy tree renders a flat list of nodes as an indented hierarchy — each
+row showing its label, an optional source-system `code`, an optional
+tenant-extension marker, and the objective it maps to, right-aligned.
+Nesting comes entirely from each node's `depth`; the component doesn't infer
+structure from parent/child references, so the caller owns the display
+order and indentation.
+
+## When to use
+
+Use `TaxonomyTree` when you need to show a taxonomy's shape next to what each
+node maps to — a chart of accounts mapped to control objectives, or a
+standard taxonomy that a tenant has extended locally. The `ext` marker
+(rendered in violet) flags nodes that were added by a tenant rather than
+shipped with the standard taxonomy, so a reviewer can immediately tell which
+mappings are organization-specific. Prefer `DataTable` instead for an
+unstructured list of records of the same shape, where sorting and filtering
+matter more than visual nesting.
+
+## States
+
+<Preview title="OVERVIEW — NESTED TAXONOMY" name="taxonomy-tree-overview" />
+
+<Preview title="EXTENSION — A TENANT-LOADED NODE" name="taxonomy-tree-extension" />
+
+<Preview title="LOADING" name="taxonomy-tree-loading" />
+
+## Anatomy
+
+An optional header shows `caption` (small, uppercase, left) and `hint`
+(monospace, right-aligned). Each node then renders as a row indented by
+`depth * 22px`, prefixed with a corner glyph for any node past the root:
+`label` in monospace, an optional muted monospace `code`, an optional violet
+`ext` marker (e.g. "ext · US01") for tenant-loaded nodes, and a right-aligned
+muted monospace `objective` — the target the node maps to. With `loading`,
+the component renders a 6-row `Skeleton.List` instead of `nodes`.
+
+## Accessibility
+
+`TaxonomyTree` renders plain `div` rows, not a semantic list or an ARIA tree
+(`role="tree"` / `"treeitem"` / `aria-level` are not applied despite the
+component's name) — nesting is conveyed only by visual indentation and the
+corner glyph, so a screen reader gets no structural signal about depth or
+parent/child relationships from the markup itself. If the hierarchy is
+information someone needs rather than a visual aid, pair it with a text
+equivalent elsewhere on the page. The `ext` marker's meaning ("this node was
+added by the tenant, not the standard taxonomy") is carried by violet color
+alone with no text label in the component — make sure the surrounding page
+explains the convention at least once rather than assuming it's self-evident.
+
+## Props
+
+<PropsTable component="TaxonomyTree" />

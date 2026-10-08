@@ -1,0 +1,78 @@
+---
+title: Switch
+description: A binary on/off control for a single setting.
+---
+
+Switch toggles one setting on or off, immediately — there's no separate save
+step. With a `label` it renders as a full settings row (text on the left,
+track on the right); without one it's just the track, so give it an
+accessible name yourself.
+
+## When to use
+
+- Use **Switch** for a single setting that takes effect immediately, such as
+  "Email notifications" or "Dark mode."
+- Use **RadioGroup** when the choice is one of several named options, not a
+  binary on/off — "Weekly," "Daily," "Never."
+- Use a **Button** with a confirmation step when turning the setting on or
+  off is destructive or hard to reverse, rather than an instant toggle.
+
+## States
+
+A stacked settings list. Each row after the first sets `divider` so a
+hairline separates it from the one above; the last row is disabled to show a
+setting the current plan doesn't allow.
+
+<Preview title="SETTINGS LIST" name="switch-settings-list" />
+
+## Standalone
+
+Without a `label`, Switch renders as a bare track. This suits a dense toolbar
+or table cell where the row or column header already names the setting —
+`aria-label` carries the accessible name instead.
+
+<Preview title="STANDALONE" name="switch-standalone" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the same footprint as the real row,
+including the label and description, so a settings panel populated from an
+async call doesn't shift once data arrives.
+
+<Preview title="LOADING" name="switch-loading" />
+
+## Anatomy
+
+```tsx
+<Switch
+  label="Email notifications"
+  description="Get a summary of activity once a day."
+  checked={checked}
+  onChange={setChecked}
+/>
+```
+
+- **`checked`** — whether the switch is on. Switch is controlled: pair it
+  with `onChange` to flip state in the caller.
+- **`onChange(checked)`** — called with the next boolean whenever the track
+  or row is activated.
+- **`label`** — when set, Switch renders as a settings row with the label
+  (and optional `description`) on the left and the track on the right.
+  Without it, only the track renders.
+- **`divider`** — draws a hairline above the row; set it on every row but
+  the first when stacking several switches in a list.
+
+## Accessibility
+
+- Renders as a native `<button role="switch">` with `aria-checked` reflecting
+  `checked`, so assistive tech announces state without extra wiring.
+- When `label` is set, the row's text is wired to the control as its
+  accessible name; without a `label`, pass your own `aria-label`.
+- Enter and Space both toggle the switch; disabled switches are skipped by
+  Tab and never fire `onChange`.
+- The track meets the 3:1 contrast minimum for controls in both the on and
+  off state, in light and dark.
+
+## Props
+
+<PropsTable component="Switch" />

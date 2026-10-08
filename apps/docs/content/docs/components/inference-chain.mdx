@@ -1,0 +1,54 @@
+---
+title: Inference chain
+description: The chain from an agent to the control assertions it touches, and the deficiency its findings add up to.
+---
+
+InferenceChain renders the chain of custody behind a conclusion — agent, control, objective, and assertions, each a rung indented under the last — together with the run's findings and the deficiency they add up to. It exists so a conclusion can always be traced back to what produced it, rather than asserted on its own.
+
+## When to use
+
+- To show how an agent run maps onto a control objective and the assertions it bears on, in an audit or compliance review.
+- When a conclusion needs its chain of custody visible — the rungs stay on screen alongside the verdict, not collapsed away once the finding is reached.
+- When exception volume and materiality need to sit next to the deficiency they produced, with a compensating control named explicitly (including when none was identified).
+- Not for a single tool call or step — pair it with `ExecutionTrace` or `ThinkingTrace` for the run itself; InferenceChain is the rollup of what the run implies.
+
+## States
+
+`deficiency` drives the footer's colour and default sentence: `"none"`, `"control_deficiency"`, `"significant_deficiency"`, or `"material_weakness"`. A separate `loading` prop renders a skeleton in the component's footprint while the chain is still being assembled.
+
+### No deficiency
+
+With `deficiency="none"` and no findings, the footer confirms the control operated as designed.
+
+<Preview title="NO DEFICIENCY" name="inference-chain-none" />
+
+### Control deficiency
+
+A narrower set of `findings` and a named `compensating` control produce a control deficiency — the mildest of the three flagged conclusions.
+
+<Preview title="CONTROL DEFICIENCY" name="inference-chain-control" />
+
+### Material weakness
+
+With `exceptions` and `materiality` both pushing past the threshold and no `compensating` control identified, the chain concludes a material weakness against the named `assertions`.
+
+<Preview title="MATERIAL WEAKNESS" name="inference-chain-material" />
+
+## Anatomy
+
+- **Chain** — `chain`, an ordered array of `ChainRung` (`label`, `value`, `meta`), rendered indented one level per rung: agent → control → objective → assertions.
+- **Findings** — `findings`, rendered as amber observations that bear on the conclusion.
+- **Assertions** — `assertions`, the named assertions the findings affect (for example `accuracy_valuation`, `completeness`).
+- **Exception volume** — `exceptions` (annualised count) and `materiality` (how that volume sits against the threshold).
+- **Compensating control** — `compensating`, either the control that offsets the exceptions or the explicit statement that none was identified.
+- **Footer** — the `deficiency` verdict, or `deficiencyNote` to replace the default sentence entirely.
+
+## Accessibility
+
+- The chain's indentation is conveyed through real DOM structure and spacing, with each rung's `label`, `value`, and `meta` as plain text — not an image of a hierarchy.
+- The deficiency verdict is stated in text (`deficiencyNote` or the default sentence) in addition to the footer's colour, so the conclusion doesn't depend on colour perception.
+- All content — chain, findings, assertions, exceptions, and the verdict — renders as static text, so it is fully available to screen readers and keyboard navigation without any interactive disclosure to operate.
+
+## Props
+
+<PropsTable component="InferenceChain" />

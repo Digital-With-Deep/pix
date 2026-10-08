@@ -1,0 +1,58 @@
+---
+title: Stage flow
+description: A left-to-right funnel showing where a population sits across sequential process stages.
+---
+
+A stage flow lays out sequential stages side by side — intake, triage,
+review, resolution — each showing the population at that stage, a one-line
+note on what's true of items there, and a thin progress rule. It's built to
+answer "where does the estate stand right now, and where does it stall,"
+not to replay history.
+
+## When to use
+
+Use `StageFlow` for a population moving through a known, ordered pipeline —
+a control lifecycle, a triage funnel, a review queue — where the point is
+comparing stage-to-stage volume and spotting where things stick. Give a
+stalled stage `tone="alert"` to tint it amber, and an unreached stage
+`tone="idle"` to grey it out; both are deliberate overrides of the default,
+which otherwise derives from whether `value` is zero. Prefer `CoverageMatrix`
+when the shape of the data is a static grid of states rather than a
+sequence, and `StageFlow`'s `compact` mode when it needs to sit as a tight
+strip at the top of a page rather than its own card.
+
+## States
+
+<Preview title="OVERVIEW — NEUTRAL PROGRESSION" name="stage-flow-overview" />
+
+<Preview title="ALERT — A STALLED STAGE AND AN UNREACHED ONE" name="stage-flow-alert" />
+
+<Preview title="COMPACT — PAGE-TOP STRIP" name="stage-flow-compact" />
+
+## Anatomy
+
+An optional header row shows `caption` (small, uppercase, left) and `hint`
+(monospace, right-aligned — e.g. an agent count and period). Below it, a
+grid of stage cells, one per entry in `stages`, each divided by a vertical
+rule: the stage's uppercase `label`, a large `value`, an optional `note`
+line, and a thin progress rule filled to `progress` (0–1, with a minimum
+visible sliver even near zero). `compact` tightens the cell padding and font
+size for use as a page-top strip rather than a full card.
+
+## Accessibility
+
+`StageFlow` is built from plain `div`s with no ARIA role connecting the
+stages as an ordered sequence and no `role="progressbar"` or
+`aria-valuenow` on the progress rule — order and fill fraction are
+communicated visually only. Tone isn't color-only: `alert` and `idle` stages
+also carry a different `value` and typically a `note` explaining why (e.g.
+"stalled — median age 11 days"), so always pass a `note` alongside
+`tone="alert"` rather than relying on the amber tint by itself to carry the
+meaning. If the stage sequence itself is information someone depends on —
+not just a visual summary — make sure it's also stated in nearby text, since
+the component gives assistive technology no structural cue that these cells
+are steps in an order.
+
+## Props
+
+<PropsTable component="StageFlow" />

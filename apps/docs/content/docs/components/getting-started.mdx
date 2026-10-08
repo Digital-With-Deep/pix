@@ -1,0 +1,71 @@
+---
+title: Getting started
+description: A setup checklist with a progress ring, for a workspace that isn't fully configured yet.
+---
+
+GettingStarted is a self-contained checklist for the handful of actions a new workspace or
+account needs before it's actually useful. A progress ring and "done/total" count sit in the
+header, each unfinished step is a full-width button that routes to where the work gets done,
+and the next actionable step is highlighted so there's never a question of what to do next.
+
+## When to use
+
+- When a workspace has a small, fixed set of setup actions left — inviting a team, connecting
+  a data source, setting limits — and you want to drive people to finish them.
+- Each `step` should resolve to a real destination; pass whatever `onOpen` needs through the
+  step object (an `href`, an `id`) rather than hardcoding routes in the card.
+- Derive `done` from real server state, never from the click that opened the step — otherwise
+  a step can read as finished before the underlying action actually happened.
+- Not for a sequential, ordered process the user must step through one at a time — use
+  `Stepper` for that. Not for optional follow-ups surfaced after setup is already done — use
+  `NextSteps` for that.
+
+## In progress
+
+Unfinished steps render as buttons; the first one renders with "Start ›", the rest with
+"Open ›". Finished steps show a filled check and strike through their label. Pass `onDismiss`
+to show a "Hide for now" control in the header.
+
+<Preview title="SETUP IN PROGRESS" name="getting-started-overview" />
+
+## All done
+
+Once every step is `done`, the heading switches to "Setup complete", the subheading reads
+"Every step below is done.", and the dismiss control (if present) switches to "Hide" since
+there's no next step to come back for.
+
+<Preview title="ALL STEPS DONE" name="getting-started-complete" />
+
+## Loading
+
+Pass `loading` while the step list is still being fetched. The card renders a skeleton sized
+to the real step count instead of a half-populated checklist.
+
+<Preview title="LOADING" name="getting-started-loading" />
+
+## Anatomy
+
+- `steps` — an array of `{ label, done, key? }`. `label` is written as an action
+  ("Add the legal entities in scope"); `done` should come from real state, never a click.
+  Any extra keys ride along and come back in `onOpen`.
+- `title` — the heading shown while steps remain. Defaults to "Finish setting up".
+- `onOpen(step)` — called with the full step object when an unfinished row is activated.
+  Route to wherever that piece of setup happens.
+- `onDismiss` — when provided, shows a header control to hide the card. Pair it with a way
+  back in, such as a Settings entry, since dismissing has no other undo.
+
+## Accessibility
+
+- Finished rows are static `<li>` elements, not buttons — there's nothing to activate once a
+  step is done, so they aren't keyboard targets. The checkmark is decorative; a visually
+  hidden "done" label carries the state to screen readers.
+- Unfinished rows render as real `<button>` elements, so they're keyboard-focusable and
+  operable with Enter or Space without any extra wiring.
+- The progress ring's center label (`done/total`) is text content, not color alone, so the
+  overall completion state doesn't depend on distinguishing the ring's fill color.
+- While `loading`, the skeleton has no text content; keep loading windows short so a screen
+  reader isn't left announcing nothing for long.
+
+## Props
+
+<PropsTable component="GettingStarted" />

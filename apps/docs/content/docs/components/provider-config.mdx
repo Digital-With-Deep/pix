@@ -1,0 +1,56 @@
+---
+title: Provider config
+description: The generated create/edit form for a model provider — auth, request fields, model scope, and behaviors.
+---
+
+ProviderConfig turns a catalog of provider definitions into a full configuration form: an auth-method picker with a secret field and optional connection test, provider-specific request fields with a raw-JSON escape hatch, a model-scope picker (all, selected, or custom), and request-behavior toggles — all generated from the `providers` array you pass in, so adding a provider type never means hand-building another form.
+
+## When to use
+
+- When admins create or edit a connection to a model provider (an OpenAI-compatible endpoint, Azure, Bedrock, a custom gateway) and the required fields differ by provider type.
+- Pass `mode="edit"` with `value` to prefill an existing configuration — the provider type itself locks, since switching it would invalidate the rest of the form.
+- Wire `onTest` to let an admin verify a secret or endpoint before saving, and `secretNote` to state exactly how the secret is protected.
+- For a single flat settings form that never varies by provider type, build it directly from `Select`, `RadioGroup`, and `Switch` instead of generating one from a catalog.
+
+## Creating a provider
+
+Each entry in `providers` can define its own `auth` methods, request `fields`, `behaviors`, and servable `models` — the form adapts as a different provider type is picked.
+
+<Preview title="CREATE" name="provider-config-create" />
+
+## Editing an existing provider
+
+Pass `mode="edit"` with `value` to prefill the form. The provider type `Select` disables itself, the secret input invites leaving it blank to keep the stored value, and `onTest` adds a Test button beside it.
+
+<Preview title="EDIT" name="provider-config-edit" />
+
+## Loading
+
+Pass `loading` while the provider catalog or the configuration being edited hasn't arrived yet — the header and footer stay in place; only the body becomes a form-shaped skeleton.
+
+<Preview title="LOADING" name="provider-config-loading" />
+
+## Anatomy
+
+- `providers` — provider type definitions; each can carry `auth`, `fields`, `behaviors`, and `models`. The form is generated from this array.
+- `value` — an existing configuration, read once on mount when `mode="edit"`.
+- `mode` — `"create"` (default) or `"edit"`.
+- `title` — replaces the default header text ("Configure model provider" / "Edit model provider").
+- `secretNote` — replaces the default line under the secret input; state only what's actually true about how it's protected.
+- `existingNames` — names already taken, enforced as a uniqueness check on the Name field.
+- `onSubmit` — called with the validated `ProviderConfigValue` only; never fires while errors remain.
+- `onCancel` / `onBack` — render the Cancel footer button / the header back button.
+- `onTest` — shows a Test button beside the secret; resolve `{ ok, message }` or throw to report the result inline.
+- `loading` — renders the header and footer with a skeleton body instead of the form.
+- `emptyAction` — rendered in the empty state shown when `providers` resolves to none.
+
+## Accessibility
+
+- Every control is built from `Select`, `RadioGroup`, and `Switch`, so each inherits that primitive's own labeling and keyboard behavior rather than reinventing it.
+- Required fields are marked with a red asterisk in addition to color, and show an inline `role="alert"` message once the field is touched or the form is submitted — never color alone.
+- The secret input uses `type="password"` with `autoComplete="off"` and an explicit `aria-label` from `secretLabel`, so it's announced correctly even without a visible `<label>`.
+- A connection test's result renders with `role="status"`, in addition to emerald (success) or red (failure) ink, so the outcome is announced without relying on color.
+
+## Props
+
+<PropsTable component="ProviderConfig" />

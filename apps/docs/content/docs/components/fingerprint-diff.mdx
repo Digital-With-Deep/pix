@@ -1,0 +1,52 @@
+---
+title: Fingerprint diff
+description: A component-wise comparison of a decision logic fingerprint across two periods, and the benchmarking verdict it implies.
+---
+
+FingerprintDiff compares a decision logic fingerprint component by component — model version, prompt hash, tool configuration, and the rest — across a prior and current period, and states whether prior-period testing can be relied upon as a result. It never collapses the comparison into a single opaque hash: when something moved, the table names which component moved.
+
+## When to use
+
+- To support an AS 2201 benchmarking-strategy conclusion for an AI-based control, where the question is whether the decision logic changed between periods.
+- When a reviewer needs to see which specific component moved — a model version bump, a changed system prompt hash, a different tool set — not just that "something" changed.
+- When provider opacity limits how much can actually be verified — `confidence="low"` states that limitation as text, rather than implying a guarantee the evidence doesn't support.
+- Not for a live, continuously-updating model card — this is a point-in-time, two-column comparison for a specific control period.
+
+## States
+
+A separate `loading` prop renders a skeleton in the component's footprint while the comparison is still being assembled.
+
+### Unchanged, high confidence
+
+When no `components` row has a different `from` and `to`, and `confidence` is `"high"`, the footer defaults to "Benchmarking strategy available" — prior-period testing may be relied upon.
+
+<Preview title="UNCHANGED — BENCHMARKING AVAILABLE" name="fingerprint-diff-unchanged" />
+
+### Changed
+
+As soon as any row's `to` differs from its `from`, that row highlights amber with a moved-arrow glyph, the header count updates, and the footer flips to "Full test required" — prior-period testing cannot be relied upon this period.
+
+<Preview title="CHANGED — FULL TEST REQUIRED" name="fingerprint-diff-changed" />
+
+### Low confidence
+
+Set `confidence="low"` to render the scope-limitation banner above the table, stating in text that the provider's opacity means a silent change would not be visible in this comparison.
+
+<Preview title="LOW CONFIDENCE — SCOPE LIMITATION" name="fingerprint-diff-low-confidence" />
+
+## Anatomy
+
+- **Header** — `title` (default "Decision logic fingerprint") and a count of how many of `components` moved, or that none did.
+- **Scope-limitation banner** — shown when `confidence="low"`; `confidenceNote` replaces the default provider-opacity explanation.
+- **Table** — one row per `FingerprintComponent` (`name`, `from`, `to`), under `periodLabels` (default `["Prior", "Current"]`); a row where `from !== to` is highlighted and marked with a moved glyph.
+- **Verdict** — "Benchmarking strategy available" or "Full test required", driven by whether anything moved and by `confidence`; force it explicitly with `benchmarking`, or replace the explanation entirely with `verdictNote`.
+
+## Accessibility
+
+- A moved row is marked both by colour and by a glyph rendered next to the value, plus the amber row background — the change is never conveyed by colour alone.
+- Every value — component name, prior value, current value, and the verdict text — is real table and paragraph text, so it remains selectable and readable by assistive technology, not an image of a diff.
+- The verdict's heading and supporting paragraph both render as text, so the conclusion ("benchmarking strategy available" vs. "full test required") is explicit, not implied only by colour.
+
+## Props
+
+<PropsTable component="FingerprintDiff" />

@@ -1,0 +1,38 @@
+---
+title: Page
+description: The header and content frame every screen is built on.
+---
+
+Page gives every screen the same header shape — avatar, title, secondary line, actions, meta, and an optional full-width slot below — so a run detail, a settings screen, and a dashboard all orient a reader the same way.
+
+<Preview name="page-basic" />
+
+## When to use
+
+- As the outermost frame for a screen that needs a title, an identity, and a row of actions.
+- When a header needs tabs, a search field, or filters directly beneath it — pass them to `below`.
+- When the header should stay visible while long content scrolls — set `sticky`.
+- Prefer a plain `<Stack>` for a section inside a page; reach for `Page` once per screen, at the top.
+
+## Anatomy
+
+- `avatar` — a rendered element, an `AvatarProps` object, or a plain name string resolved into an `Avatar`.
+- `title` / `secondary` — the heading and the line underneath it, such as an owner or a timestamp.
+- `actions` — a right-aligned row that wraps under the title on narrow viewports.
+- `meta` — badges or small facts rendered under the secondary line.
+- `below` — a full-width slot at the bottom of the header for tabs, search, or filters.
+- `maxWidth` / `padding` — the content column width (default 1200) and the header/content padding (default 24).
+- `sticky` — pins the header while the page content scrolls.
+
+<Preview title="WITH META AND TABS" name="page-tabs" />
+
+## Accessibility
+
+- `title` renders as a heading so the page has a single, programmatically discoverable landmark for its subject.
+- `actions` should hold real, focusable controls (buttons or links) — the row only arranges them, it doesn't add any interactivity of its own.
+- When `sticky` is set, the pinned header still participates in normal tab order; verify focus doesn't jump behind it when tabbing through a long page.
+- `avatar` passed as a plain name string renders an `Avatar` with initials and an accessible tooltip — no extra wiring needed.
+
+## Props
+
+<PropsTable component="Page" />

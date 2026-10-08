@@ -1,0 +1,89 @@
+---
+title: SearchField
+description: A search input with saved searches and a submit action.
+---
+
+SearchField pairs a text input with an optional dropdown of saved searches.
+It can manage its own text (`defaultValue`) or be fully controlled
+(`value`/`onChange`), fires `onSubmit` on Enter, and can show a keyboard
+`shortcut` hint when empty.
+
+## When to use
+
+- Use **SearchField** for a single free-text query against a list or table,
+  especially when past queries are worth saving and re-running — a log
+  viewer, a ticket queue, a transaction list.
+- Use **Select** when the user is choosing from a fixed set of values rather
+  than typing free text.
+- Use **MultiSelect** with `variant="dropdown"` and `searchable` when the
+  search is really filtering a known option list down to one or more
+  selections, not running an open-ended query.
+
+## States
+
+A saved-search dropdown with result counts and an active chip. Saved
+searches can be plain strings or `{ name, query, count }` objects; passing
+`onSelectSaved` and `onDeleteSaved` enables picking and removing a row.
+
+<Preview title="SAVED SEARCHES" name="search-field-saved-searches" />
+
+## Save this search
+
+Passing `onSaveSearch` adds a "Save this search" row to the dropdown once
+there's a query typed in, so a user can promote an ad hoc search into a
+saved one.
+
+<Preview title="SAVE THIS SEARCH" name="search-field-save-search" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the same footprint as the real field,
+so a toolbar populated from an async call doesn't shift once data arrives.
+
+<Preview title="LOADING" name="search-field-loading" />
+
+## Anatomy
+
+```tsx
+<SearchField
+  placeholder="Search tickets"
+  value={query}
+  onChange={setQuery}
+  onSubmit={(value) => runSearch(value)}
+  savedSearches={[{ name: "Open P1s", query: "status:open priority:1", count: 12 }]}
+  activeSaved={activeSaved}
+  onSelectSaved={(saved) => applySaved(saved)}
+  shortcut="/"
+/>
+```
+
+- **`value` / `defaultValue`** — controlled or uncontrolled text. Omit
+  `value` to let the field manage its own state, driven by `defaultValue`.
+- **`onChange(value)`** — fires on every keystroke; **`onSubmit(value)`**
+  fires only on Enter.
+- **`savedSearches`** — strings or `SavedSearchItem` objects
+  (`{ name, query, count }`) listed in the dropdown.
+- **`activeSaved`** — the name of the currently applied saved search; it
+  renders as an emerald chip so the active filter is never ambiguous with an
+  in-progress edit.
+- **`onSaveSearch`** / **`onDeleteSaved`** — enable the "Save this search"
+  row and per-row remove buttons respectively; omit either to hide it.
+- **`shortcut`** — a keyboard hint (e.g. `"/"`) shown when the field is
+  empty; pass `null` to hide it entirely.
+
+## Accessibility
+
+- The input is a native `<input type="search">`; `onSubmit` is wired to the
+  Enter key rather than requiring a separate submit button.
+- The saved-searches dropdown uses `role="listbox"` / `role="option"` with
+  `aria-selected` marking `activeSaved`; Escape closes it and returns focus
+  to the input.
+- Per-row delete buttons carry their own accessible name (the saved search's
+  name), so they're distinguishable to screen readers from the select action
+  on the same row.
+- The `shortcut` hint is decorative and hidden from assistive tech; it never
+  substitutes for a real accessible name on the field.
+
+## Props
+
+<PropsTable component="SearchField" />

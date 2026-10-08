@@ -1,0 +1,57 @@
+---
+title: Saved search
+description: A filter bar with chip-based filters, saved views, and a bookmarkable URL.
+---
+
+SavedSearch combines a free-text query field with per-field filter chips, encoding the whole search state — query, filters, and the active view — into the URL as you type. Save a combination as a named view and it reappears as a pill next to "All", ready to share or reopen later.
+
+## When to use
+
+- As the filter bar above a list or table whose users build structured filters (field is / is not value) rather than typing raw query syntax — orders, tickets, transactions, runs.
+- When common filter combinations are worth naming and sharing — pass `onSaveView` to let users save the current state as a view, and `views` to show the saved set as pills.
+- When the search state should be shareable as a link; `baseUrl`/`syncUrl` keep the address bar and `onSubmit`'s `url` in sync automatically.
+- Prefer a plain `SearchField` when the surface only needs free text with no structured filters or shareable state.
+
+## Basic
+
+Pass `fields` to describe what's filterable. Typing into the box and pressing a field opens a popover to pick values; `onSubmit` fires on Enter with `{ query, filters, url }`.
+
+<Preview title="BASIC" name="saved-search-basic" />
+
+## Saved views
+
+Pass `views` to render named filter combinations as pills after "All", and `onSaveView` to let users save the current state as a new one. A `shared` view renders a small "shared with organization" glyph; `onDeleteView` adds a "Delete view" entry to each pill's own menu.
+
+<Preview title="SAVED VIEWS" name="saved-search-views" />
+
+## Loading
+
+Pass `loading` to render the component's skeleton — a field-sized bar plus a row of pill placeholders — in its own footprint.
+
+<Preview title="LOADING" name="saved-search-loading" />
+
+## Anatomy
+
+- `fields` — the filterable fields and their `options` (strings or `{ value, label }`); each becomes a step in the field-picker popover.
+- `filters` / `defaultFilters` / `onFiltersChange` — the applied `{ field, op, values }` list. Omit `filters` to let the component own it.
+- `query` / `defaultQuery` / `onQueryChange` — the free-text portion of the search.
+- `onSubmit` — fired on Enter with `{ query, filters, url }`, the bookmarkable link for the current state.
+- `views` / `activeView` / `onSelectView` — saved views rendered as pills, and the callback fired when one (or "All") is clicked.
+- `onSaveView` — enables the "Save view" button and its naming dialog; called with `{ name, shared, query, filters, url }`.
+- `onDeleteView` — enables "Delete view" inside each pill's own options menu.
+- `placeholder` — hint text in the empty query field.
+- `baseUrl` / `syncUrl` — the origin used to build shareable links, and whether the address bar mirrors the search state via `replaceState`.
+- `onCopyLink` — called whenever a link is copied, from the "Share" affordance or a view's menu.
+- `action` — a node (typically a primary button) rendered to the right of the search field.
+- `loading` — swaps the whole component for a skeleton.
+
+## Accessibility
+
+- The query field is a native `<input>`, reachable and operable by keyboard without extra wiring; `Enter` submits and `Escape` closes an open filter popover.
+- Saved-view pills, "Save view", and "Share" are native `<button>` elements with visible text labels.
+- Each filter chip's "Is" / "Is not" toggle and value list are custom buttons rather than native radios and checkboxes — they convey selection with color and a check glyph, not an underlying `<input>`, so pair them with your own announcement if a screen reader needs the checked state read explicitly.
+- A view pill's "⋯" options menu (Copy link, Delete view) closes on pointer leave; if keyboard users must reach `onDeleteView` or `onCopyLink` for a given view, expose an equivalent action elsewhere until that menu gets its own keyboard handling.
+
+## Props
+
+<PropsTable component="SavedSearch" />
