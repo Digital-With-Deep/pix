@@ -2,11 +2,78 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+/* Geist everywhere — overrides PIX's --font-sans/--font-mono so the dogfooded
+   components render in Geist too, matching the shadcn aesthetic. */
+:root {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Monochrome docs chrome (shadcn restyle). PIX's semantic accent drives the
+   docs' own links/nav/headings; override it to a zinc/black scheme here. The
+   component previews mostly read the raw emerald scale, so the product keeps
+   its real colour — and the meaning colours (--claim/--truth/--fault) are
+   untouched, so claim ≠ truth still holds. */
+:root,
+:root[data-theme='light'] {
+  --accent: #18181b;
+  --accent-hover: #000000;
+  --accent-fg: #18181b;
+  --accent-bg: #f4f4f5;
+}
+.dark,
+:root[data-theme='dark'] {
+  --accent: #fafafa;
+  --accent-hover: #ffffff;
+  --accent-fg: #fafafa;
+  --accent-bg: #27272a;
+}
+
 html {
   scrollbar-gutter: stable;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* Shiki-highlighted code blocks (the <CodeBlock> component). The container
+   supplies the background; Shiki supplies token colours as dual light/dark CSS
+   variables that flip on the .dark class. Line numbers via a CSS counter. */
+.pix-code .shiki {
+  background: transparent !important;
+  margin: 0;
+  padding: 16px 14px;
+  overflow-x: auto;
+  font: 13px / 1.6 var(--font-mono, ui-monospace, Menlo, monospace);
+}
+.pix-code .shiki code {
+  counter-reset: pix-ln;
+  display: inline-block;
+  min-width: 100%;
+}
+.pix-code .shiki .line {
+  display: inline-block;
+  width: 100%;
+}
+.pix-code .shiki .line::before {
+  counter-increment: pix-ln;
+  content: counter(pix-ln);
+  display: inline-block;
+  width: 1.4rem;
+  margin-right: 1.1rem;
+  text-align: right;
+  color: var(--fg3, #78716c);
+  opacity: 0.55;
+  user-select: none;
+}
+html.dark .pix-code .shiki,
+html.dark .pix-code .shiki span {
+  color: var(--shiki-dark, inherit) !important;
 }
