@@ -229,7 +229,7 @@ export default function ThemesPage() {
       <p style={{ maxWidth: 680, fontSize: 16, lineHeight: 1.6, color: muted, margin: '0 0 28px' }}>
         Pick an accent and a neutral from Tailwind&apos;s palette, a radius and a font. The preview re-themes
         live; copy the CSS variables into your app, or see your theme on a real{' '}
-        <Link href="/examples/proofbench" style={{ color: 'var(--accent-fg, #047857)', textDecoration: 'underline' }}>example app</Link>.
+        <Link href="/blocks" style={{ color: 'var(--accent-fg, #047857)', textDecoration: 'underline' }}>block</Link>.
         Meaning colours — a model&apos;s claim in red, the verified truth in emerald — stay fixed on purpose.
       </p>
 
