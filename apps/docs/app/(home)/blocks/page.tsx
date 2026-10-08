@@ -13,7 +13,7 @@ const ink = 'var(--fg1, #1c1917)';
 
 export default function BlocksPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl px-6" style={{ color: ink, paddingTop: 64, paddingBottom: 80 }}>
+    <main className="mx-auto w-full px-6" style={{ color: ink, paddingTop: 64, paddingBottom: 80, maxWidth: 1360 }}>
       <div style={{ font: '600 12px var(--font-mono, ui-monospace, Menlo, monospace)', letterSpacing: '0.08em', textTransform: 'uppercase', color: faint }}>Blocks</div>
       <h1 style={{ font: '700 clamp(30px, 4vw, 44px)/1.1 var(--font-sans, ui-sans-serif, system-ui)', letterSpacing: '-0.02em', margin: '12px 0 10px' }}>
         Composition patterns, built from the primitives.
