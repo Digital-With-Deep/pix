@@ -1,4 +1,5 @@
 'use client';
+import { ThemedShell } from '@/components/ThemedShell';
 
 import * as React from 'react';
 import {
@@ -203,7 +204,7 @@ function ConversationRow({ conversation }: { conversation: Conversation }) {
 // Page
 // ---------------------------------------------------------------------------
 
-export default function LumenExample() {
+function LumenExampleInner() {
   return (
     <div
       className="flex w-full flex-col md:flex-row"
@@ -332,5 +333,13 @@ export default function LumenExample() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LumenExample() {
+  return (
+    <ThemedShell>
+      <LumenExampleInner />
+    </ThemedShell>
   );
 }

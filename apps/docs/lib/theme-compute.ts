@@ -124,3 +124,12 @@ function block(sel: string, vars: Record<string, string>): string {
 export function toCss(t: ComputedTheme): string {
   return block(':root', { ...t.common, ...t.light }) + '\n\n' + block('[data-theme="dark"], .dark', t.dark) + '\n';
 }
+
+// Most PIX React components set a literal border-radius inline rather than
+// reading the radius tokens, so a radius change wouldn't otherwise show. This
+// scoped rule rounds every inline-radius rectangle (not the 999px circles —
+// dots, avatars) to the chosen radius, so the preview and themed shells reflect
+// it. The exported CSS still drives @pix-ui/css class-based components natively.
+export function radiusCss(scope: string): string {
+  return `${scope} [style*="border-radius"]:not([style*="999"]), ${scope} button, ${scope} input, ${scope} textarea, ${scope} select { border-radius: var(--radius-lg) !important; }`;
+}

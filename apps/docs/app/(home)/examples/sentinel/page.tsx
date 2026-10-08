@@ -1,4 +1,5 @@
 'use client';
+import { ThemedShell } from '@/components/ThemedShell';
 import { useMemo, useState } from 'react';
 import {
   Badge,
@@ -224,7 +225,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
   { id: 'evt_14', ts: '2026-10-07T08:02:15Z', message: 'AP lead opened run #4402 for review', agent: 'dana.reyes@finance', identity: 'dana.reyes@finance', kind: 'auth', outcome: 'ok', run_id: 'run_4402' },
 ];
 
-export default function Example() {
+function ExampleInner() {
   const [selectedId, setSelectedId] = useState<string>(RUNS[0].id);
   const run = useMemo(() => RUNS.find((r) => r.id === selectedId) ?? RUNS[0], [selectedId]);
 
@@ -387,5 +388,13 @@ export default function Example() {
         }
       />
     </Page>
+  );
+}
+
+export default function Example() {
+  return (
+    <ThemedShell>
+      <ExampleInner />
+    </ThemedShell>
   );
 }

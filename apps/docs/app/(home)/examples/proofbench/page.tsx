@@ -1,4 +1,5 @@
 'use client';
+import { ThemedShell } from '@/components/ThemedShell';
 
 import * as React from 'react';
 import {
@@ -151,7 +152,7 @@ const TABS = [
 
 const cardStyle: React.CSSProperties = { borderRadius: 4 };
 
-export default function ProofbenchPage() {
+function ProofbenchPageInner() {
   const [tab, setTab] = React.useState('experiments');
   const [selectedId, setSelectedId] = React.useState(EXPERIMENTS[0].id);
   const selected = EXPERIMENTS.find((e) => e.id === selectedId) ?? EXPERIMENTS[0];
@@ -335,5 +336,13 @@ function CoverageView() {
       </p>
       <CoverageMatrix assertions={ASSERTIONS} rows={COVERAGE_ROWS} />
     </div>
+  );
+}
+
+export default function ProofbenchPage() {
+  return (
+    <ThemedShell>
+      <ProofbenchPageInner />
+    </ThemedShell>
   );
 }
