@@ -10,7 +10,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
   const tabBtn = (id: "preview" | "code", label: string) => (
     <button type="button" role="tab" onClick={() => setTab(id)}
       aria-selected={tab === id}
-      style={{ font: "500 13px var(--font-sans, ui-sans-serif, system-ui)", padding: "6px 10px", border: 0, borderBottom: `2px solid ${tab === id ? "var(--accent, #10b981)" : "transparent"}`, background: "transparent", color: tab === id ? "var(--fg1, #1c1917)" : "var(--fg2, #52525b)", cursor: "pointer" }}>
+      style={{ font: "500 13px var(--font-sans, ui-sans-serif, system-ui)", padding: "6px 10px", border: 0, borderBottom: `2px solid ${tab === id ? "var(--fg1, #1c1917)" : "transparent"}`, background: "transparent", color: tab === id ? "var(--fg1, #1c1917)" : "var(--fg2, #52525b)", cursor: "pointer" }}>
       {label}
     </button>
   );
@@ -31,7 +31,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
             : <div dangerouslySetInnerHTML={{ __html: entry.html }} />}
         </div>
       ) : (
-        <CodeBlock code={entry.source} lang={entry.lang} />
+        <CodeBlock code={entry.source} highlighted={entry.highlighted} lang={entry.lang} embedded />
       )}
     </div>
   );
