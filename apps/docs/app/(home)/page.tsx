@@ -216,7 +216,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Button variant="primary" onClick={() => router.push('/docs')}>Get started</Button>
-            <Button variant="outline" onClick={() => router.push('/examples')}>See examples</Button>
+            <Button variant="outline" onClick={() => router.push('/blocks')}>Browse blocks</Button>
           </div>
         </div>
       </section>

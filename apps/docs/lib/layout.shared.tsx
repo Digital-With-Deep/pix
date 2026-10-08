@@ -15,7 +15,7 @@ export function baseOptions(): BaseLayoutProps {
     },
     links: [
       { text: 'Docs', url: '/docs' },
-      { text: 'Examples', url: '/examples' },
+      { text: 'Blocks', url: '/blocks' },
       { text: 'Themes', url: '/themes' },
     ],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,

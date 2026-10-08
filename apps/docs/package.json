@@ -3,9 +3,9 @@
   "version": "0.0.35",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-changelog.mjs && node scripts/build-registry.mjs && node scripts/build-props.mjs",
+    "predev": "node scripts/build-changelog.mjs && node scripts/build-registry.mjs && node scripts/build-props.mjs && node scripts/build-blocks.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/build-changelog.mjs && node scripts/build-registry.mjs && node scripts/build-props.mjs && node scripts/check-refs.mjs",
+    "prebuild": "node scripts/build-changelog.mjs && node scripts/build-registry.mjs && node scripts/build-props.mjs && node scripts/build-blocks.mjs && node scripts/check-refs.mjs",
     "build": "next build",
     "start": "serve out",
     "types:check": "next typegen && tsc --noEmit",
