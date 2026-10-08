@@ -1,4 +1,5 @@
 'use client';
+import { ThemedShell } from '@/components/ThemedShell';
 
 import * as React from 'react';
 import {
@@ -119,7 +120,7 @@ function RailLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function LensExamplePage() {
+function LensExamplePageInner() {
   return (
     <div
       style={{
@@ -328,5 +329,13 @@ export default function LensExamplePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LensExamplePage() {
+  return (
+    <ThemedShell>
+      <LensExamplePageInner />
+    </ThemedShell>
   );
 }
