@@ -19,6 +19,7 @@ const BLOCKS = [
   { slug: "forge", title: "Forge", kind: "Prompt playground", blurb: "Iterate a prompt across two models side by side — params, streamed completions, a config diff and run metadata.", parts: ["PromptInput", "AIResponse", "Select", "Switch", "RadioGroup", "FingerprintDiff", "Tabs"] },
   { slug: "beacon", title: "Beacon", kind: "LLM observability", blurb: "Production monitoring for a deployed model: request volume, latency and cost metrics, per-route success, a request log and a drift alert.", parts: ["MetricCard", "BarChart", "RateBars", "AuditLog", "UsageMeter", "Alert", "Tabs"] },
   { slug: "guardrail", title: "Guardrail", kind: "Safety review queue", blurb: "Triage flagged generations: a review queue, the model output under policy, pass/fail invariant checks and a claim-against-truth verdict.", parts: ["DataTable", "InvariantPanel", "Callout", "Alert", "ExecutionTrace", "Badge", "Avatar"] },
+  { slug: "relay", title: "Relay", kind: "Human-in-the-loop inbox", blurb: "An approval inbox for an agent's proposed actions — live wait timers, decision-latency metrics, the agent trace and guardrail checks, approve/reject with feedback, and an activity log. Fully interactive.", parts: ["MetricCard", "AIResponse", "ExecutionTrace", "InvariantPanel", "AuditLog", "Tabs", "Avatar", "Button"] },
 ];
 
 if (import.meta.url === `file://${process.argv[1]}`) {
