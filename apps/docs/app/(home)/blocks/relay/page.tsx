@@ -10,21 +10,22 @@ import {
   ExecutionTrace,
   InvariantPanel,
   MetricCard,
-  Tabs,
   type AuditEvent,
   type BadgeProps,
   type ExecutionTraceStep,
   type Invariant,
 } from '@pix-ui/react';
 
-// Relay dogfoods PIX: a human-in-the-loop approval inbox where an autonomous
-// support agent ("Operator") drafts outbound actions — refunds, account
-// changes, emails, data deletions — that a person must approve before they
-// execute. Every surface is a real @pix-ui/react component styled only with
-// PIX tokens, so it flips with the theme. The queue is live: wait timers tick,
-// decision-latency metrics recompute as you act, and you can simulate new
-// requests arriving. Timing is tracked in seconds-since-mount (starting at 0),
-// so static export and the client agree on first paint — no Date.now() here.
+// Relay dogfoods PIX: a human-in-the-loop approval inbox, styled like a
+// familiar mail client (folder rail · message list · reading pane) so there
+// is nothing to learn. An autonomous support agent ("Operator") drafts
+// outbound actions — refunds, account changes, emails, data deletions — that
+// a person approves before they execute. Every surface is a real
+// @pix-ui/react component styled only with PIX tokens, so it flips with the
+// theme. The queue is live: wait timers tick, decision-latency metrics
+// recompute as you act, and you can simulate new requests arriving. Timing is
+// tracked in seconds-since-mount (starting at 0), so static export and the
+// client agree on first paint — no Date.now() here.
 
 const mono = 'var(--font-mono, ui-monospace, Menlo, monospace)';
 const ink = 'var(--fg1, #1c1917)';
@@ -36,6 +37,7 @@ const surfaceAlt = 'var(--surface-alt, #fafaf9)';
 const truth = 'var(--truth, #059669)';
 const fault = 'var(--fault, #d97706)';
 const claim = 'var(--claim, #dc2626)';
+const accent = 'var(--accent, #2563eb)';
 
 const ICON = {
   check: 'M4.5 12.75l6 6 9-13.5',
@@ -45,6 +47,12 @@ const ICON = {
   bolt: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
   inbox:
     'M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z',
+  clock: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z',
+  search: 'M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z',
+  chevronL: 'M15.75 19.5L8.25 12l7.5-7.5',
+  chevronR: 'M8.25 4.5l7.5 7.5-7.5 7.5',
+  refresh: 'M4.5 12a7.5 7.5 0 0113.06-5.06M19.5 4.5v3.75h-3.75M19.5 12a7.5 7.5 0 01-13.06 5.06M4.5 19.5v-3.75h3.75',
+  flag: 'M3 3v18m0-13.5h11.25l-1.8 3 1.8 3H3',
 };
 
 type Risk = 'low' | 'medium' | 'high' | 'critical';
@@ -54,6 +62,7 @@ const RISK_TONE: Record<Risk, BadgeProps['tone']> = {
   high: 'warning',
   critical: 'danger',
 };
+const RISK_BAR: Record<Risk, string> = { low: faint, medium: accent, high: fault, critical: claim };
 
 interface PendingItem {
   key: string;
@@ -91,6 +100,10 @@ interface DecidedItem {
   latencySec: number;
   feedback: string;
   ts: number;
+  proposal: string;
+  risk: Risk;
+  channel: PendingItem['channel'];
+  snapshot?: PendingItem;
 }
 
 const REVIEWER = 'Avery Cole';
@@ -241,12 +254,12 @@ const SEED: PendingItem[] = [
 
 // --- seed activity log -----------------------------------------------------
 const SEED_HISTORY: DecidedItem[] = [
-  { key: 'req_2039', subject: 'Refund for late delivery', requester: 'Aiko Tanaka', actionKind: 'Refund', decision: 'approved', reviewer: REVIEWER, latencySec: 73, feedback: 'Within policy, clean duplicate.', ts: BASE_TS - 180_000 },
-  { key: 'req_2038', subject: 'Welcome-back outreach', requester: 'Sven Berg', actionKind: 'Outbound email', decision: 'approved', reviewer: 'Dana Lee', latencySec: 141, feedback: 'Tone good, sent.', ts: BASE_TS - 420_000 },
-  { key: 'req_2037', subject: 'Change billing contact', requester: 'Nadia Rahman', actionKind: 'Account change', decision: 'changes', reviewer: REVIEWER, latencySec: 262, feedback: 'Confirm the new contact over a second channel first.', ts: BASE_TS - 900_000 },
-  { key: 'req_2036', subject: 'Refund $1,290 — disputed', requester: 'Rafael Cruz', actionKind: 'Refund', decision: 'rejected', reviewer: 'Dana Lee', latencySec: 318, feedback: 'Charge is valid; dispute lacks evidence. Declined.', ts: BASE_TS - 1_500_000 },
-  { key: 'req_2035', subject: 'Escalate to tier 2', requester: 'Nia Clarke', actionKind: 'Escalation', decision: 'approved', reviewer: REVIEWER, latencySec: 54, feedback: 'Correct call, routed.', ts: BASE_TS - 2_100_000 },
-  { key: 'req_2034', subject: 'Erase account data', requester: 'Omar Haddad', actionKind: 'Data deletion', decision: 'rejected', reviewer: 'Dana Lee', latencySec: 205, feedback: 'Open invoice on the account — resolve before erasure.', ts: BASE_TS - 3_000_000 },
+  { key: 'req_2039', subject: 'Refund for late delivery', requester: 'Aiko Tanaka', actionKind: 'Refund', decision: 'approved', reviewer: REVIEWER, latencySec: 73, feedback: 'Within policy, clean duplicate.', ts: BASE_TS - 180_000, proposal: 'Refund $89.00 for the late delivery and send an apology.', risk: 'medium', channel: 'Email' },
+  { key: 'req_2038', subject: 'Welcome-back outreach', requester: 'Sven Berg', actionKind: 'Outbound email', decision: 'approved', reviewer: 'Dana Lee', latencySec: 141, feedback: 'Tone good, sent.', ts: BASE_TS - 420_000, proposal: 'Send a welcome-back note with a 10% returning-customer offer.', risk: 'low', channel: 'Email' },
+  { key: 'req_2037', subject: 'Change billing contact', requester: 'Nadia Rahman', actionKind: 'Account change', decision: 'changes', reviewer: REVIEWER, latencySec: 262, feedback: 'Confirm the new contact over a second channel first.', ts: BASE_TS - 900_000, proposal: 'Update the billing contact to the newly supplied address.', risk: 'medium', channel: 'API' },
+  { key: 'req_2036', subject: 'Refund $1,290 — disputed', requester: 'Rafael Cruz', actionKind: 'Refund', decision: 'rejected', reviewer: 'Dana Lee', latencySec: 318, feedback: 'Charge is valid; dispute lacks evidence. Declined.', ts: BASE_TS - 1_500_000, proposal: 'Refund the disputed $1,290.00 annual charge in full.', risk: 'high', channel: 'Email' },
+  { key: 'req_2035', subject: 'Escalate to tier 2', requester: 'Nia Clarke', actionKind: 'Escalation', decision: 'approved', reviewer: REVIEWER, latencySec: 54, feedback: 'Correct call, routed.', ts: BASE_TS - 2_100_000, proposal: 'Escalate the unresolved integration issue to a tier-2 engineer.', risk: 'medium', channel: 'Live chat' },
+  { key: 'req_2034', subject: 'Erase account data', requester: 'Omar Haddad', actionKind: 'Data deletion', decision: 'rejected', reviewer: 'Dana Lee', latencySec: 205, feedback: 'Open invoice on the account — resolve before erasure.', ts: BASE_TS - 3_000_000, proposal: 'Execute the erasure plan across 6 systems.', risk: 'high', channel: 'API' },
 ];
 
 // --- pool used by "Simulate incoming" --------------------------------------
@@ -271,7 +284,7 @@ const POOL: Omit<PendingItem, 'key' | 'spawnAt' | 'baseAge'>[] = [
   },
   {
     requester: 'Isla Grant', channel: 'Email', subject: 'Renewal offer before expiry',
-    snippet: '', context: 'Account renews in 9 days. Agent drafts a proactive renewal note with a standard loyalty discount.',
+    snippet: 'Account renews in 9 days — proactive note.', context: 'Account renews in 9 days. Agent drafts a proactive renewal note with a standard loyalty discount.',
     risk: 'low', actionKind: 'Outbound email', model: 'operator-2', confidence: 0.92,
     proposal: 'Send a renewal reminder offering the standard 10% loyalty discount if renewed before the expiry date.',
     reasoning: 'Discount is the standard loyalty rate and the account is in good standing.\nLow risk, but outbound mail is held for a quick human glance.',
@@ -341,34 +354,48 @@ function median(ns: number[]): number {
   return s.length % 2 ? s[mid] : Math.round((s[mid - 1] + s[mid]) / 2);
 }
 
-const TOAST_COLOR: Record<string, string> = {
-  success: truth,
-  warning: fault,
-  danger: claim,
-  info: 'var(--accent, #2563eb)',
-  neutral: 'var(--fg3, #78716c)',
+function initials(name: string): string {
+  return name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+}
+
+const DECISION_META: Record<Decision, { label: string; tone: BadgeProps['tone']; verb: string; outcome: string; color: string }> = {
+  approved: { label: 'Approved', tone: 'success', verb: 'approved', outcome: 'ok', color: truth },
+  changes: { label: 'Changes requested', tone: 'warning', verb: 'sent back for changes', outcome: 'flagged', color: fault },
+  rejected: { label: 'Rejected', tone: 'danger', verb: 'rejected', outcome: 'denied', color: claim },
 };
 
-const DECISION_META: Record<Decision, { label: string; tone: BadgeProps['tone']; verb: string; outcome: string }> = {
-  approved: { label: 'Approved', tone: 'success', verb: 'approved', outcome: 'ok' },
-  changes: { label: 'Changes requested', tone: 'warning', verb: 'sent back for changes', outcome: 'flagged' },
-  rejected: { label: 'Rejected', tone: 'danger', verb: 'rejected', outcome: 'denied' },
-};
+const TOAST_COLOR: Record<string, string> = { success: truth, warning: fault, danger: claim, info: accent, neutral: faint };
+
+type Folder = 'inbox' | 'approved' | 'changes' | 'rejected' | 'activity';
+const FOLDERS: { id: Folder; label: string; icon: string }[] = [
+  { id: 'inbox', label: 'Inbox', icon: ICON.inbox },
+  { id: 'approved', label: 'Approved', icon: ICON.check },
+  { id: 'changes', label: 'Changes requested', icon: ICON.pencil },
+  { id: 'rejected', label: 'Rejected', icon: ICON.x },
+  { id: 'activity', label: 'Activity log', icon: ICON.clock },
+];
+
+function Glyph({ d, size = 16, stroke = 'currentColor', width = 1.8 }: { d: string; size?: number; stroke?: string; width?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
+}
+
+const CLIENT_H = 580;
 
 function RelayInner() {
   const [items, setItems] = React.useState<PendingItem[]>(SEED);
   const [history, setHistory] = React.useState<DecidedItem[]>(SEED_HISTORY);
+  const [folder, setFolder] = React.useState<Folder>('inbox');
   const [selectedKey, setSelectedKey] = React.useState<string>(SEED[0].key);
   const [now, setNow] = React.useState(0);
   const [feedback, setFeedback] = React.useState('');
   const [toast, setToast] = React.useState<{ text: string; tone: BadgeProps['tone'] } | null>(null);
-  const [tab, setTab] = React.useState('queue');
+  const [railOpen, setRailOpen] = React.useState(true);
   const seq = React.useRef(1);
   const spawn = React.useRef(0);
   const toastTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Live clock: advance one second at a time. Starts at 0 on both server and
-  // client, so the first paint matches and there is no hydration mismatch.
+  // Live clock: advance one second at a time. Starts at 0 on server and
+  // client, so first paint matches and there is no hydration mismatch.
   React.useEffect(() => {
     const id = setInterval(() => setNow((n) => n + 1), 1000);
     return () => clearInterval(id);
@@ -383,34 +410,56 @@ function RelayInner() {
 
   const liveWait = React.useCallback((it: PendingItem) => it.baseAge + (now - it.spawnAt), [now]);
 
-  const selected = items.find((i) => i.key === selectedKey) ?? null;
+  const decidedBy = (d: Decision) => history.filter((h) => h.decision === d);
+  const counts: Record<Folder, number> = {
+    inbox: items.length,
+    approved: decidedBy('approved').length,
+    changes: decidedBy('changes').length,
+    rejected: decidedBy('rejected').length,
+    activity: history.length,
+  };
+
   const atRisk = items.filter((i) => liveWait(i) > i.slaSec).length;
-  const approvals = history.filter((h) => h.decision === 'approved').length;
+  const approvals = counts.approved;
   const approvalRate = history.length ? Math.round((approvals / history.length) * 100) : 0;
   const medianLatency = median(history.map((h) => h.latencySec));
 
+  const pendingSelected = folder === 'inbox' ? items.find((i) => i.key === selectedKey) ?? null : null;
+  const decidedList = folder === 'approved' || folder === 'changes' || folder === 'rejected' ? decidedBy(folder) : [];
+  const decidedSelected = decidedList.find((d) => d.key === selectedKey) ?? null;
+
+  function openFolder(f: Folder) {
+    setFolder(f);
+    if (f === 'inbox') setSelectedKey(items[0]?.key ?? '');
+    else if (f !== 'activity') setSelectedKey(decidedBy(f)[0]?.key ?? '');
+  }
+
   function decide(decision: Decision) {
-    if (!selected) return;
-    const latency = liveWait(selected);
+    if (!pendingSelected) return;
+    const latency = liveWait(pendingSelected);
     const meta = DECISION_META[decision];
     const decided: DecidedItem = {
-      key: selected.key,
-      subject: selected.subject,
-      requester: selected.requester,
-      actionKind: selected.actionKind,
+      key: pendingSelected.key,
+      subject: pendingSelected.subject,
+      requester: pendingSelected.requester,
+      actionKind: pendingSelected.actionKind,
       decision,
       reviewer: REVIEWER,
       latencySec: latency,
       feedback: feedback.trim() || (decision === 'approved' ? 'Approved as drafted.' : 'No note provided.'),
       ts: BASE_TS + seq.current * 60_000,
+      proposal: pendingSelected.proposal,
+      risk: pendingSelected.risk,
+      channel: pendingSelected.channel,
+      snapshot: pendingSelected,
     };
     seq.current += 1;
-    const rest = items.filter((i) => i.key !== selected.key);
+    const rest = items.filter((i) => i.key !== pendingSelected.key);
     setItems(rest);
     setHistory((h) => [decided, ...h]);
     setFeedback('');
     setSelectedKey(rest[0]?.key ?? '');
-    flash(`${selected.actionKind} ${meta.verb} · decided in ${waitLabel(latency)}`, meta.tone);
+    flash(`${pendingSelected.actionKind} ${meta.verb} · decided in ${waitLabel(latency)}`, meta.tone);
   }
 
   function simulateIncoming() {
@@ -419,7 +468,7 @@ function RelayInner() {
     const key = `req_${2045 + spawn.current}`;
     const item: PendingItem = { ...tpl, key, baseAge: 0, spawnAt: now };
     setItems((prev) => [item, ...prev]);
-    if (!selected) setSelectedKey(key);
+    if (folder === 'inbox' && !pendingSelected) setSelectedKey(key);
     flash(`New request from ${tpl.requester} · ${tpl.actionKind.toLowerCase()}`, 'info');
   }
 
@@ -443,175 +492,195 @@ function RelayInner() {
   );
   const auditNow = React.useMemo(() => auditEvents.reduce((m, e) => Math.max(m, Number(e.ts)), BASE_TS), [auditEvents]);
 
+  const activeFolderMeta = FOLDERS.find((f) => f.id === folder)!;
+
+  // --- message rows --------------------------------------------------------
+  function PendingRow(it: PendingItem) {
+    const sel = it.key === selectedKey;
+    const wait = liveWait(it);
+    const over = wait > it.slaSec;
+    return (
+      <button
+        key={it.key}
+        type="button"
+        onClick={() => setSelectedKey(it.key)}
+        aria-pressed={sel}
+        style={{ width: '100%', textAlign: 'left', display: 'flex', gap: 10, padding: '11px 14px 11px 12px', border: 0, borderBottom: `1px solid ${line}`, borderLeft: `3px solid ${sel ? accent : 'transparent'}`, background: sel ? 'color-mix(in srgb, var(--accent, #2563eb) 8%, var(--surface, #fff))' : 'transparent', cursor: 'pointer', color: 'inherit' }}
+      >
+        <span style={{ width: 3, flex: '0 0 auto', alignSelf: 'stretch', borderRadius: 2, background: RISK_BAR[it.risk] }} />
+        <Avatar name={it.requester} initials={initials(it.requester)} size="sm" tone="neutral" />
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontWeight: 650, fontSize: 13.5, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.requester}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, font: `11px ${mono}`, color: over ? fault : faint, fontWeight: over ? 650 : 400, flex: '0 0 auto' }}>
+              <span style={{ width: 6, height: 6, borderRadius: 999, background: over ? fault : truth, animation: 'relay-pulse 1.6s ease-in-out infinite' }} />
+              {waitLabel(wait)}
+            </span>
+          </span>
+          <span style={{ display: 'block', fontWeight: 600, fontSize: 13, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.subject}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+            <span style={{ flex: 1, minWidth: 0, fontSize: 12.5, color: muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.snippet}</span>
+            <Badge tone={RISK_TONE[it.risk]} size="sm">{it.risk}</Badge>
+            {over ? <span title="Over SLA" style={{ color: fault, display: 'inline-flex' }}><Glyph d={ICON.flag} size={13} /></span> : null}
+          </span>
+        </span>
+      </button>
+    );
+  }
+
+  function DecidedRow(d: DecidedItem) {
+    const sel = d.key === selectedKey;
+    const meta = DECISION_META[d.decision];
+    return (
+      <button
+        key={d.key}
+        type="button"
+        onClick={() => setSelectedKey(d.key)}
+        aria-pressed={sel}
+        style={{ width: '100%', textAlign: 'left', display: 'flex', gap: 10, padding: '11px 14px 11px 12px', border: 0, borderBottom: `1px solid ${line}`, borderLeft: `3px solid ${sel ? accent : 'transparent'}`, background: sel ? 'color-mix(in srgb, var(--accent, #2563eb) 8%, var(--surface, #fff))' : 'transparent', cursor: 'pointer', color: 'inherit' }}
+      >
+        <span style={{ width: 3, flex: '0 0 auto', alignSelf: 'stretch', borderRadius: 2, background: meta.color }} />
+        <Avatar name={d.requester} initials={initials(d.requester)} size="sm" tone="neutral" />
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontWeight: 650, fontSize: 13.5, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.requester}</span>
+            <span style={{ font: `11px ${mono}`, color: faint, flex: '0 0 auto' }}>{waitLabel(d.latencySec)}</span>
+          </span>
+          <span style={{ display: 'block', fontWeight: 600, fontSize: 13, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.subject}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+            <span style={{ flex: 1, minWidth: 0, fontSize: 12.5, color: muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.actionKind} · {d.channel}</span>
+            <Badge tone={meta.tone} size="sm" dot>{meta.label}</Badge>
+          </span>
+        </span>
+      </button>
+    );
+  }
+
+  const listRows =
+    folder === 'inbox'
+      ? items.length
+        ? items.map(PendingRow)
+        : <EmptyList label="All caught up" sub="No requests awaiting review. Simulate one to watch the queue fill." />
+      : decidedList.length
+        ? decidedList.map(DecidedRow)
+        : <EmptyList label="Nothing here yet" sub="Decisions you make land in this folder." />;
+
   return (
     <div style={{ background: 'var(--bg, #ffffff)', color: ink, minHeight: '100%', font: '14px var(--font-sans, ui-sans-serif, system-ui)' }}>
       <style>{`@keyframes relay-pulse{0%,100%{opacity:1}50%{opacity:.35}}`}</style>
 
-      {/* Top bar */}
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 22px', borderBottom: `1px solid ${line}`, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      {/* Command bar */}
+      <header style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 20px', borderBottom: `1px solid ${line}`, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: 8, background: ink }}>
-            <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="var(--bg, #fff)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d={ICON.inbox} /></svg>
+            <Glyph d={ICON.inbox} size={17} stroke="var(--bg, #fff)" />
           </span>
           <div>
-            <div style={{ fontWeight: 650, letterSpacing: '-0.01em' }}>Relay</div>
-            <div style={{ fontSize: 12, color: faint }}>Human-in-the-loop approvals</div>
+            <div style={{ fontWeight: 650, letterSpacing: '-0.01em', lineHeight: 1.1 }}>Relay</div>
+            <div style={{ fontSize: 11.5, color: faint }}>Human-in-the-loop approvals</div>
           </div>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginLeft: 6, padding: '3px 9px', borderRadius: 999, border: `1px solid ${line}`, background: surfaceAlt, fontSize: 12, color: muted }}>
-            <span style={{ width: 7, height: 7, borderRadius: 999, background: truth, animation: 'relay-pulse 1.6s ease-in-out infinite' }} />
-            Live
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginLeft: 4, padding: '3px 9px', borderRadius: 999, border: `1px solid ${line}`, background: surfaceAlt, fontSize: 12, color: muted }}>
+            <span style={{ width: 7, height: 7, borderRadius: 999, background: truth, animation: 'relay-pulse 1.6s ease-in-out infinite' }} />Live
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <label style={{ flex: 1, minWidth: 180, maxWidth: 420, display: 'flex', alignItems: 'center', gap: 8, padding: '7px 12px', borderRadius: 8, border: `1px solid ${line}`, background: surfaceAlt, color: faint }}>
+          <Glyph d={ICON.search} size={15} />
+          <input disabled placeholder="Search mail (demo)" aria-label="Search" style={{ border: 0, outline: 0, background: 'transparent', color: muted, font: '13px var(--font-sans, ui-sans-serif, system-ui)', width: '100%' }} />
+        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto' }}>
           <Button variant="filled" iconPath={ICON.bolt} onClick={simulateIncoming}>Simulate incoming</Button>
-          <Avatar name={REVIEWER} size="sm" tone="accent" status="online" title={`${REVIEWER} · reviewer`} />
+          <Avatar name={REVIEWER} initials={initials(REVIEWER)} size="sm" tone="accent" status="online" title={`${REVIEWER} · reviewer`} />
         </div>
       </header>
 
-      {/* Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 12, padding: '18px 22px 6px' }} className="relay-metrics">
+      {/* Metrics ribbon */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 10, padding: '14px 20px' }} className="relay-metrics">
         <MetricCard label="Awaiting review" value={items.length} hint="now" delta={atRisk ? `${atRisk} over SLA` : 'all within SLA'} deltaType={atRisk ? 'down' : 'neutral'} valueTone={items.length ? 'default' : 'success'} />
-        <MetricCard label="Median decision time" value={waitLabel(medianLatency)} hint="last 24h" delta="target under 3m" deltaType="neutral" />
-        <MetricCard label="Approval rate" value={`${approvalRate}%`} hint="last 24h" delta={`${approvals} of ${history.length} approved`} deltaType="up" valueTone="success" />
+        <MetricCard label="Median decision time" value={waitLabel(medianLatency)} hint="24h" delta="target under 3m" deltaType="neutral" />
+        <MetricCard label="Approval rate" value={`${approvalRate}%`} hint="24h" delta={`${approvals} of ${history.length} approved`} deltaType="up" valueTone="success" />
         <MetricCard label="SLA at risk" value={atRisk} hint="pending" delta={atRisk ? 'needs attention' : 'clear'} deltaType={atRisk ? 'down' : 'neutral'} valueTone={atRisk ? 'warning' : 'default'} />
       </div>
 
-      <div style={{ padding: '6px 22px 28px' }}>
-        <div style={{ marginBottom: 16 }}>
-          <Tabs
-            variant="segmented"
-            value={tab}
-            onChange={setTab}
-            tabs={[
-              { value: 'queue', label: 'Review queue', count: items.length },
-              { value: 'log', label: 'Activity log', count: history.length },
-            ]}
-          />
-        </div>
-
-        {tab === 'queue' ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 340px) minmax(0, 1fr)', gap: 16, alignItems: 'start' }} className="relay-queue">
-            {/* Inbox list */}
-            <div style={{ border: `1px solid ${line}`, borderRadius: 12, overflow: 'hidden', background: surface }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderBottom: `1px solid ${line}`, background: surfaceAlt }}>
-                <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: faint }}>Inbox</span>
-                <Badge tone={items.length ? 'warning' : 'success'} dot>{items.length ? `${items.length} waiting` : 'Inbox zero'}</Badge>
-              </div>
-              {items.length === 0 ? (
-                <div style={{ padding: '44px 20px', textAlign: 'center', color: faint }}>
-                  <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={truth} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 10px' }}><path d={ICON.check} /></svg>
-                  <div style={{ fontWeight: 600, color: muted }}>All caught up</div>
-                  <div style={{ fontSize: 13, marginTop: 4 }}>No requests awaiting review. Simulate one to see the queue fill.</div>
-                </div>
-              ) : (
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0, maxHeight: 520, overflow: 'auto' }}>
-                  {items.map((it) => {
-                    const sel = it.key === selectedKey;
-                    const wait = liveWait(it);
-                    const over = wait > it.slaSec;
-                    return (
-                      <li key={it.key}>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedKey(it.key)}
-                          aria-pressed={sel}
-                          style={{ width: '100%', textAlign: 'left', display: 'block', padding: '12px 14px', border: 0, borderBottom: `1px solid ${line}`, borderLeft: `2px solid ${sel ? ink : 'transparent'}`, background: sel ? surfaceAlt : 'transparent', cursor: 'pointer', color: 'inherit' }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                            <Avatar name={it.requester} size="xs" tone="neutral" />
-                            <span style={{ fontWeight: 600, fontSize: 13.5, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.requester}</span>
-                            <Badge tone={RISK_TONE[it.risk]} size="sm">{it.risk}</Badge>
-                          </div>
-                          <div style={{ fontSize: 13, color: muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.subject}</div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7 }}>
-                            <span style={{ font: `11px ${mono}`, color: faint }}>{it.actionKind} · {it.channel}</span>
-                            <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5, font: `11px ${mono}`, color: over ? fault : faint, fontWeight: over ? 600 : 400 }}>
-                              <span style={{ width: 6, height: 6, borderRadius: 999, background: over ? fault : truth, animation: 'relay-pulse 1.6s ease-in-out infinite' }} />
-                              {waitLabel(wait)}{over ? ' · SLA' : ''}
-                            </span>
-                          </div>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+      {/* Mail client */}
+      <div style={{ margin: '0 20px 24px', border: `1px solid ${line}`, borderRadius: 12, overflow: 'hidden', background: surface, display: 'flex', height: CLIENT_H }} className="relay-mail">
+        {/* Folder rail */}
+        <nav style={{ width: railOpen ? 210 : 56, flex: '0 0 auto', borderRight: `1px solid ${line}`, background: surfaceAlt, display: 'flex', flexDirection: 'column', transition: 'width 0.18s ease' }} className="relay-rail" aria-label="Folders">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: railOpen ? 'space-between' : 'center', padding: '12px 10px 10px', gap: 6 }}>
+            {railOpen ? <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: faint, paddingLeft: 4 }}>Folders</span> : null}
+            <button type="button" onClick={() => setRailOpen((o) => !o)} aria-label={railOpen ? 'Collapse folders' : 'Expand folders'} aria-expanded={railOpen} title={railOpen ? 'Collapse' : 'Expand'} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, border: 0, background: 'transparent', color: muted, cursor: 'pointer' }}>
+              <Glyph d={railOpen ? ICON.chevronL : ICON.chevronR} size={16} />
+            </button>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: railOpen ? '0 8px' : '0 6px', overflowY: 'auto' }}>
+            {FOLDERS.map((f) => {
+              const active = folder === f.id;
+              const count = counts[f.id];
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => openFolder(f.id)}
+                  aria-current={active ? 'page' : undefined}
+                  title={!railOpen ? `${f.label}${count ? ` (${count})` : ''}` : undefined}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: railOpen ? 'flex-start' : 'center', padding: railOpen ? '8px 10px' : '8px 0', borderRadius: 7, border: 0, background: active ? surface : 'transparent', boxShadow: active ? 'inset 0 0 0 1px var(--border, #e4e4e7)' : 'none', color: active ? ink : muted, cursor: 'pointer', font: '500 13px var(--font-sans, ui-sans-serif, system-ui)', position: 'relative' }}
+                >
+                  <span style={{ display: 'inline-flex', color: active ? (f.id === 'inbox' ? accent : ink) : faint }}><Glyph d={f.icon} size={17} /></span>
+                  {railOpen ? <span style={{ flex: 1, textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.label}</span> : null}
+                  {count > 0 ? (
+                    railOpen
+                      ? <span style={{ font: `11px ${mono}`, fontWeight: 600, color: f.id === 'inbox' ? accent : faint }}>{count}</span>
+                      : <span style={{ position: 'absolute', top: 3, right: 6, minWidth: 15, height: 15, padding: '0 3px', borderRadius: 999, background: f.id === 'inbox' ? accent : faint, color: '#fff', font: `9px ${mono}`, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{count}</span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+          {railOpen ? (
+            <div style={{ marginTop: 'auto', padding: '12px 14px', borderTop: `1px solid ${line}`, fontSize: 11.5, color: faint, lineHeight: 1.5 }}>
+              Signed in as<br /><span style={{ color: muted, fontWeight: 600 }}>{REVIEWER}</span>
             </div>
+          ) : null}
+        </nav>
 
-            {/* Detail */}
-            {selected ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-                <div style={{ border: `1px solid ${line}`, borderRadius: 12, background: surface, padding: 18 }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                        <h2 style={{ font: '650 17px var(--font-sans, ui-sans-serif, system-ui)', margin: 0 }}>{selected.subject}</h2>
-                        <Badge tone={RISK_TONE[selected.risk]} size="md">{selected.risk} risk</Badge>
-                      </div>
-                      <div style={{ font: `12px ${mono}`, color: faint, marginTop: 6 }}>
-                        <span style={{ color: muted }}>{selected.key}</span> · {selected.requester} · {selected.channel} · {selected.actionKind}
-                      </div>
-                    </div>
-                    {(() => {
-                      const wait = liveWait(selected);
-                      const over = wait > selected.slaSec;
-                      return (
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ font: `650 19px ${mono}`, color: over ? fault : ink }}>{waitLabel(wait)}</div>
-                          <div style={{ fontSize: 11, color: faint }}>waiting · SLA {waitLabel(selected.slaSec)}</div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                  <p style={{ margin: '14px 0 0', fontSize: 14, lineHeight: 1.6, color: muted }}>{selected.context}</p>
-                </div>
-
-                <AIResponse
-                  model={selected.model}
-                  duration={selected.duration}
-                  tokens={selected.tokens}
-                  text={selected.proposal}
-                  thinking={selected.reasoning}
-                  thinkingLabel="Show agent reasoning"
-                  citations={[{ label: 'policy §4.2 — approval ceilings', note: 'Actions above the ceiling require human sign-off' }, { label: `confidence ${Math.round(selected.confidence * 100)}%` }]}
-                  onFeedback={(v) => v && flash(v === 'up' ? 'Thumbs up noted on the draft' : 'Thumbs down noted on the draft', v === 'up' ? 'success' : 'warning')}
-                  onCopy={() => flash('Proposed action copied', 'neutral')}
-                />
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 16 }} className="relay-detail-grid">
-                  <ExecutionTrace title="Agent trace" steps={selected.steps} calls={selected.calls} duration={selected.duration} tokens={selected.tokens} cost={selected.cost} />
-                  <InvariantPanel title="Guardrail checks" invariants={selected.checks} scope={selected.key} compact />
-                </div>
-
-                {/* Decision controls */}
-                <div style={{ border: `1px solid ${line}`, borderRadius: 12, background: surfaceAlt, padding: 16 }}>
-                  <label htmlFor="relay-feedback" style={{ display: 'block', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: faint, marginBottom: 8 }}>Reviewer feedback to the agent</label>
-                  <textarea
-                    id="relay-feedback"
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="Optional — attached to the decision and used to tune the agent. e.g. 'Approved; confirm the refund target next time.'"
-                    rows={2}
-                    style={{ width: '100%', resize: 'vertical', boxSizing: 'border-box', padding: '10px 12px', borderRadius: 8, border: `1px solid ${line}`, background: surface, color: ink, font: '13px var(--font-sans, ui-sans-serif, system-ui)', lineHeight: 1.5 }}
-                  />
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12, flexWrap: 'wrap' }}>
-                    <Button variant="filled" iconPath={ICON.check} onClick={() => decide('approved')}>Approve &amp; execute</Button>
-                    <Button variant="outline" iconPath={ICON.pencil} onClick={() => decide('changes')}>Request changes</Button>
-                    <Button variant="destructive" iconPath={ICON.x} onClick={() => decide('rejected')}>Reject</Button>
-                    <span style={{ marginLeft: 'auto', fontSize: 12, color: faint }}>Decision is logged with the wait time and your note.</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div style={{ border: `1px dashed ${line}`, borderRadius: 12, background: surface, padding: '60px 24px', textAlign: 'center', color: faint }}>
-                <svg width={34} height={34} viewBox="0 0 24 24" fill="none" stroke={truth} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 12px' }}><path d={ICON.check} /></svg>
-                <div style={{ fontWeight: 600, color: muted, fontSize: 15 }}>Inbox zero</div>
-                <div style={{ fontSize: 13.5, marginTop: 6, maxWidth: 360, marginInline: 'auto', lineHeight: 1.6 }}>Every request has been reviewed. Use <span style={{ color: ink, fontWeight: 600 }}>Simulate incoming</span> to watch a new approval land in the queue.</div>
-              </div>
-            )}
+        {folder === 'activity' ? (
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+            <ListHeader title="Activity log" meta={`${history.length} decisions`} />
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <AuditLog title="" events={auditEvents} now={auditNow} defaultRange="all" defaultSort="desc" height={CLIENT_H - 46} />
+            </div>
           </div>
         ) : (
-          <AuditLog title="Decision history" events={auditEvents} now={auditNow} defaultRange="all" defaultSort="desc" height={520} />
+          <>
+            {/* Message list */}
+            <div style={{ width: 352, flex: '0 0 auto', borderRight: `1px solid ${line}`, display: 'flex', flexDirection: 'column', minWidth: 0 }} className="relay-list">
+              <ListHeader
+                title={activeFolderMeta.label}
+                meta={folder === 'inbox' ? (items.length ? `${items.length} waiting` : 'Inbox zero') : `${decidedList.length}`}
+                tone={folder === 'inbox' && items.length ? 'warning' : undefined}
+              />
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <div style={{ padding: '7px 14px 4px', font: `11px ${mono}`, color: faint, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{folder === 'inbox' ? 'Awaiting review' : 'Reviewed'}</div>
+                {listRows}
+              </div>
+            </div>
+
+            {/* Reading pane */}
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+              {pendingSelected ? (
+                <PendingReader it={pendingSelected} wait={liveWait(pendingSelected)} feedback={feedback} setFeedback={setFeedback} decide={decide} flash={flash} />
+              ) : decidedSelected ? (
+                <DecidedReader d={decidedSelected} />
+              ) : (
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: faint, padding: 24, textAlign: 'center' }}>
+                  <span style={{ color: truth, marginBottom: 12 }}><Glyph d={ICON.check} size={34} width={1.4} /></span>
+                  <div style={{ fontWeight: 650, color: muted, fontSize: 15 }}>{folder === 'inbox' ? 'Inbox zero' : 'Nothing selected'}</div>
+                  <div style={{ fontSize: 13.5, marginTop: 6, maxWidth: 340, lineHeight: 1.6 }}>
+                    {folder === 'inbox' ? <>Every request has been reviewed. Use <span style={{ color: ink, fontWeight: 600 }}>Simulate incoming</span> to watch a new approval land.</> : 'Pick a message from the list to read it.'}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
 
@@ -625,9 +694,149 @@ function RelayInner() {
 
       <style>{`
         @media (min-width: 720px){ .relay-metrics{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
-        @media (max-width: 1040px){ .relay-queue{ grid-template-columns: 1fr !important; } .relay-detail-grid{ grid-template-columns: 1fr !important; } }
+        @media (max-width: 920px){
+          .relay-mail{ flex-direction: column; height: auto !important; }
+          .relay-rail{ width: 100% !important; flex-direction: row !important; overflow-x: auto; align-items: center; }
+          .relay-rail > div{ flex-direction: row !important; }
+          .relay-list{ width: 100% !important; max-height: 320px; }
+        }
       `}</style>
     </div>
+  );
+}
+
+function ListHeader({ title, meta, tone }: { title: string; meta: string; tone?: BadgeProps['tone'] }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px', borderBottom: `1px solid ${line}`, background: surface }}>
+      <span style={{ fontWeight: 650, fontSize: 14 }}>{title}</span>
+      {tone ? <Badge tone={tone} dot>{meta}</Badge> : <span style={{ font: `12px ${mono}`, color: faint }}>{meta}</span>}
+    </div>
+  );
+}
+
+function EmptyList({ label, sub }: { label: string; sub: string }) {
+  return (
+    <div style={{ padding: '40px 20px', textAlign: 'center', color: faint }}>
+      <span style={{ color: truth, display: 'inline-flex', marginBottom: 10 }}><Glyph d={ICON.check} size={26} width={1.5} /></span>
+      <div style={{ fontWeight: 650, color: muted }}>{label}</div>
+      <div style={{ fontSize: 13, marginTop: 4, lineHeight: 1.5 }}>{sub}</div>
+    </div>
+  );
+}
+
+function ReaderHeader({ subject, requester, channel, actionKind, risk, right }: { subject: string; requester: string; channel: string; actionKind: string; risk: Risk; right: React.ReactNode }) {
+  return (
+    <div style={{ padding: '16px 20px', borderBottom: `1px solid ${line}` }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <h2 style={{ font: '650 17px var(--font-sans, ui-sans-serif, system-ui)', margin: 0, letterSpacing: '-0.01em' }}>{subject}</h2>
+        {right}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
+        <Avatar name={requester} initials={initials(requester)} size="md" tone="neutral" />
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontWeight: 600, fontSize: 14 }}>{requester}</div>
+          <div style={{ font: `12px ${mono}`, color: faint }}>{channel} · {actionKind} · to <span style={{ color: muted }}>Relay approvals</span></div>
+        </div>
+        <span style={{ marginLeft: 'auto' }}><Badge tone={RISK_TONE[risk]} size="md">{risk} risk</Badge></span>
+      </div>
+    </div>
+  );
+}
+
+function PendingReader({ it, wait, feedback, setFeedback, decide, flash }: { it: PendingItem; wait: number; feedback: string; setFeedback: (v: string) => void; decide: (d: Decision) => void; flash: (t: string, tone: BadgeProps['tone']) => void }) {
+  const over = wait > it.slaSec;
+  return (
+    <>
+      <ReaderHeader
+        subject={it.subject}
+        requester={it.requester}
+        channel={it.channel}
+        actionKind={it.actionKind}
+        risk={it.risk}
+        right={
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ font: `650 18px ${mono}`, color: over ? fault : ink }}>{waitLabel(wait)}</div>
+            <div style={{ fontSize: 11, color: faint }}>waiting · SLA {waitLabel(it.slaSec)}</div>
+          </div>
+        }
+      />
+      <div style={{ flex: 1, overflowY: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: muted }}>{it.context}</p>
+        <AIResponse
+          model={it.model}
+          duration={it.duration}
+          tokens={it.tokens}
+          text={it.proposal}
+          thinking={it.reasoning}
+          thinkingLabel="Show agent reasoning"
+          citations={[{ label: 'policy §4.2 — approval ceilings', note: 'Actions above the ceiling require human sign-off' }, { label: `confidence ${Math.round(it.confidence * 100)}%` }]}
+          onFeedback={(v) => v && flash(v === 'up' ? 'Thumbs up noted on the draft' : 'Thumbs down noted on the draft', v === 'up' ? 'success' : 'warning')}
+          onCopy={() => flash('Proposed action copied', 'neutral')}
+        />
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 16 }}>
+          <ExecutionTrace title="Agent trace" steps={it.steps} calls={it.calls} duration={it.duration} tokens={it.tokens} cost={it.cost} />
+          <InvariantPanel title="Guardrail checks" invariants={it.checks} scope={it.key} compact />
+        </div>
+      </div>
+      {/* Sticky action bar */}
+      <div style={{ borderTop: `1px solid ${line}`, background: surfaceAlt, padding: 14 }}>
+        <textarea
+          id="relay-feedback"
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+          placeholder="Reply to the agent — attached to the decision and used to tune it. e.g. 'Approved; confirm the refund target next time.'"
+          rows={2}
+          aria-label="Reviewer feedback to the agent"
+          style={{ width: '100%', resize: 'none', boxSizing: 'border-box', padding: '9px 12px', borderRadius: 8, border: `1px solid ${line}`, background: surface, color: ink, font: '13px var(--font-sans, ui-sans-serif, system-ui)', lineHeight: 1.5 }}
+        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
+          <Button variant="filled" iconPath={ICON.check} onClick={() => decide('approved')}>Approve &amp; execute</Button>
+          <Button variant="outline" iconPath={ICON.pencil} onClick={() => decide('changes')}>Request changes</Button>
+          <Button variant="destructive" iconPath={ICON.x} onClick={() => decide('rejected')}>Reject</Button>
+          <span style={{ marginLeft: 'auto', fontSize: 11.5, color: faint }}>Logged with the wait time and your note.</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function DecidedReader({ d }: { d: DecidedItem }) {
+  const meta = DECISION_META[d.decision];
+  const snap = d.snapshot;
+  return (
+    <>
+      <ReaderHeader
+        subject={d.subject}
+        requester={d.requester}
+        channel={d.channel}
+        actionKind={d.actionKind}
+        risk={d.risk}
+        right={<Badge tone={meta.tone} size="md" dot>{meta.label}</Badge>}
+      />
+      <div style={{ flex: 1, overflowY: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 10, border: `1px solid ${line}`, borderLeft: `3px solid ${meta.color}`, background: surfaceAlt }}>
+          <span style={{ color: meta.color, display: 'inline-flex' }}><Glyph d={d.decision === 'approved' ? ICON.check : d.decision === 'rejected' ? ICON.x : ICON.pencil} size={20} /></span>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontWeight: 600, fontSize: 13.5 }}>{meta.label} by {d.reviewer}</div>
+            <div style={{ font: `12px ${mono}`, color: faint }}>decided in {waitLabel(d.latencySec)}</div>
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: faint, marginBottom: 6 }}>Proposed action</div>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: ink }}>{d.proposal}</p>
+        </div>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: faint, marginBottom: 6 }}>Reviewer note</div>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: muted }}>{d.feedback}</p>
+        </div>
+        {snap ? (
+          <>
+            <ExecutionTrace title="Agent trace" steps={snap.steps} calls={snap.calls} duration={snap.duration} tokens={snap.tokens} cost={snap.cost} />
+            <InvariantPanel title="Guardrail checks" invariants={snap.checks} scope={snap.key} compact />
+          </>
+        ) : null}
+      </div>
+    </>
   );
 }
 
