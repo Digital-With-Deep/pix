@@ -29,19 +29,14 @@
   --accent-bg: #27272a;
 }
 
-/* Flush the docs sidebar to the left edge (shadcn-style). Fumadocs centres the
-   content grid by splitting the slack into equal left/right margin columns, so
-   the sidebar floats inward on wide screens. Collapse the left margin to 0 and
-   send all the slack to the right instead. Only at md+, where the multi-column
-   grid is active (on mobile the sidebar is a drawer). */
+/* Flush the docs sidebar to the left edge (shadcn-style) while keeping the
+   content centred. Fumadocs centres the grid and then right-aligns the sidebar
+   nav within its (left-margin-inclusive) area, so the nav floats inward on wide
+   screens. Left-align the nav instead: it hugs the viewport's left edge while
+   the content stays centred. Desktop only — mobile uses a drawer. */
 @media (min-width: 768px) {
-  #nd-docs-layout {
-    grid-template-columns:
-      0
-      var(--fd-sidebar-col)
-      minmax(0, calc(var(--fd-layout-width, 97rem) - var(--fd-sidebar-width) - var(--fd-toc-width)))
-      var(--fd-toc-width)
-      minmax(0, 1fr) !important;
+  #nd-sidebar {
+    align-items: flex-start !important;
   }
 }
 
