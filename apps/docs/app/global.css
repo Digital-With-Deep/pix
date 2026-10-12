@@ -45,6 +45,15 @@
   }
 }
 
+/* White header and sidebar (shadcn-style). Fumadocs' neutral preset paints the
+   page background (--color-fd-background, used by the header) and the sidebar
+   card (--color-fd-card) a light grey; make both white in light mode, separated
+   by their borders. Dark mode keeps the preset's values. */
+:root:not(.dark):not([data-theme='dark']) {
+  --color-fd-background: #ffffff;
+  --color-fd-card: #ffffff;
+}
+
 html {
   scrollbar-gutter: stable;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
