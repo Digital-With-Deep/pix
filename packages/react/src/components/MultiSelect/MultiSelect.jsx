@@ -27,30 +27,38 @@ const MsGlyph = ({ option }) => {
 
 function matches(o, needle) { return !needle || [o.label, o.description, o.meta, o.group, ...(o.keywords || [])].some((t) => typeof t === "string" && t.toLowerCase().includes(needle)); }
 
+function Tile({ o, on, off, disabled, toggle }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button type="button" role="checkbox" aria-checked={on} aria-disabled={off || undefined} disabled={disabled || o.disabled} onClick={() => !off && toggle(o)}
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 10, textAlign: "left", minHeight: 120, padding: "16px 16px 14px", borderRadius: 6, cursor: off ? "default" : "pointer", opacity: o.disabled ? 0.5 : 1,
+        border: `1px solid ${on ? "var(--emerald-600, #059669)" : "var(--border, #e4e4e7)"}`, boxShadow: on ? "0 0 0 3px rgba(16,185,129,.14)" : "none",
+        background: on ? "var(--emerald-50, #ecfdf5)" : (!off && hover ? "var(--bg-muted, #f4f4f5)" : "var(--surface, #fff)"),
+        color: "var(--fg1, #18181b)", font: `400 13px ${msSans}`, transition: "border-color 120ms, box-shadow 120ms, background 120ms" }}>
+      <span style={{ position: "absolute", top: 12, right: 12 }}><MsCheckBadge on={on} /></span>
+      {(o.icon || o.tile) && <span style={{ display: "inline-flex", width: 34, height: 34, borderRadius: 6, alignItems: "center", justifyContent: "center", background: on ? "var(--surface, #fff)" : "var(--zinc-100, #f4f4f5)", color: "var(--fg1, #18181b)", border: "1px solid var(--divider, #f4f4f5)" }}>{o.icon || <MsGlyph option={o} />}</span>}
+      <span style={{ display: "block", font: `600 14px/1.3 ${msSans}`, paddingRight: 22 }}>{o.label}</span>
+      {o.description && <span style={{ display: "block", font: `400 12px/1.5 ${msSans}`, color: "var(--fg3, #71717a)" }}>{o.description}</span>}
+      {o.meta && <span style={{ display: "block", marginTop: "auto", font: `400 11px ${msMono}`, color: "var(--fg-muted, #a1a1aa)" }}>{o.meta}</span>}
+    </button>
+  );
+}
+
 function Tiles({ options, value, toggle, disabled, columns, max, id, minTile }) {
   const full = max != null && value.length >= max;
   return (
     <div role="group" aria-labelledby={id + "-l"} style={{ display: "grid", gridTemplateColumns: columns ? `repeat(${columns}, minmax(0, 1fr))` : `repeat(auto-fill, minmax(${minTile}px, 1fr))`, gap: 12 }}>
       {options.map((o) => {
         const on = value.includes(o.value); const off = disabled || o.disabled || (full && !on);
-        return (
-          <button key={o.value} type="button" role="checkbox" aria-checked={on} aria-disabled={off || undefined} disabled={disabled || o.disabled} onClick={() => !off && toggle(o)}
-            style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 10, textAlign: "left", minHeight: 120, padding: "16px 16px 14px", borderRadius: 6, cursor: off ? "default" : "pointer", opacity: o.disabled ? 0.5 : 1,
-              border: `1px solid ${on ? "var(--emerald-600, #059669)" : "var(--border, #e4e4e7)"}`, boxShadow: on ? "0 0 0 3px rgba(16,185,129,.14)" : "none", background: on ? "var(--emerald-50, #ecfdf5)" : "var(--surface, #fff)", color: "var(--fg1, #18181b)", font: `400 13px ${msSans}`, transition: "border-color 120ms, box-shadow 120ms, background 120ms" }}>
-            <span style={{ position: "absolute", top: 12, right: 12 }}><MsCheckBadge on={on} /></span>
-            {(o.icon || o.tile) && <span style={{ display: "inline-flex", width: 34, height: 34, borderRadius: 6, alignItems: "center", justifyContent: "center", background: on ? "var(--surface, #fff)" : "var(--zinc-100, #f4f4f5)", color: "var(--fg1, #18181b)", border: "1px solid var(--divider, #f4f4f5)" }}>{o.icon || <MsGlyph option={o} />}</span>}
-            <span style={{ display: "block", font: `600 14px/1.3 ${msSans}`, paddingRight: 22 }}>{o.label}</span>
-            {o.description && <span style={{ display: "block", font: `400 12px/1.5 ${msSans}`, color: "var(--fg3, #71717a)" }}>{o.description}</span>}
-            {o.meta && <span style={{ display: "block", marginTop: "auto", font: `400 11px ${msMono}`, color: "var(--fg-muted, #a1a1aa)" }}>{o.meta}</span>}
-          </button>
-        );
+        return <Tile key={o.value} o={o} on={on} off={off} disabled={disabled} toggle={toggle} />;
       })}
     </div>
   );
 }
 
 function Dropdown({ options, value, toggle, setAll, disabled, id, placeholder, searchPlaceholder, searchable, emptyMessage, maxHeight, footer, maxChips, error, max, selectAllLabel, clearLabel, onChange }) {
-  const [open, setOpen] = React.useState(false); const [q, setQ] = React.useState(""); const [active, setActive] = React.useState(0); const [focus, setFocus] = React.useState(false);
+  const [open, setOpen] = React.useState(false); const [q, setQ] = React.useState(""); const [active, setActive] = React.useState(0); const [focus, setFocus] = React.useState(false); const [rowHover, setRowHover] = React.useState(null);
   const host = React.useRef(null), input = React.useRef(null), list = React.useRef(null), trigger = React.useRef(null);
   const needle = q.trim().toLowerCase(); const shown = options.filter((o) => matches(o, needle));
   const full = max != null && value.length >= max;
@@ -109,8 +117,10 @@ function Dropdown({ options, value, toggle, setAll, disabled, id, placeholder, s
               return (
                 <React.Fragment key={o.value}>
                   {head && <div style={{ padding: "8px 10px 4px", font: `600 10px ${msSans}`, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--fg3, #71717a)" }}>{head}</div>}
-                  <div id={`${id}-o${i}`} data-i={i} role="option" aria-selected={on} aria-disabled={off || undefined} onMouseEnter={() => !off && setActive(i)} onMouseDown={(e) => e.preventDefault()} onClick={() => !off && toggle(o)}
-                    style={{ display: "flex", alignItems: o.description ? "flex-start" : "center", gap: 10, padding: "7px 10px", borderRadius: 3, cursor: off ? "default" : "pointer", opacity: off ? 0.45 : 1, background: hot && !off ? "var(--zinc-100, #f4f4f5)" : "transparent" }}>
+                  <div id={`${id}-o${i}`} data-i={i} role="option" aria-selected={on} aria-disabled={off || undefined}
+                    onMouseEnter={() => { if (!off) setActive(i); setRowHover(i); }} onMouseLeave={() => setRowHover(null)} onMouseDown={(e) => e.preventDefault()} onClick={() => !off && toggle(o)}
+                    style={{ display: "flex", alignItems: o.description ? "flex-start" : "center", gap: 10, padding: "7px 10px", borderRadius: 3, cursor: off ? "default" : "pointer", opacity: off ? 0.45 : 1,
+                      background: off ? "transparent" : rowHover === i ? "var(--bg-muted, #f4f4f5)" : hot ? "var(--zinc-100, #f4f4f5)" : "transparent", transition: "background 120ms" }}>
                     <span style={{ paddingTop: o.description ? 2 : 0, display: "flex" }}><MsBox on={on} /></span>
                     <MsGlyph option={o} />
                     <span style={{ flex: 1, minWidth: 0 }}>

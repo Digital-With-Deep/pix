@@ -17,6 +17,24 @@ function TIcon({ path, size = 13 }) {
 
 const cell = { padding: "9px 14px", font: `400 13px ${tblFont}`, color: "var(--fg2, #52525b)", borderTop: "1px solid var(--divider, #f4f4f5)" };
 
+function DataTableRow({ r, columns, onRowClick }) {
+  const [hover, setHover] = useTableState(false);
+  return (
+    <tr onClick={() => onRowClick && onRowClick(r)}
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{ cursor: onRowClick ? "pointer" : "default", background: hover ? "var(--bg-muted, #f4f4f5)" : "transparent", transition: "background 120ms" }}>
+      {columns.map(c => (
+        <td key={c.key} style={{ ...cell, textAlign: c.align || "left",
+          fontVariantNumeric: c.numeric ? "tabular-nums" : "normal",
+          fontWeight: c.strong ? 600 : 400,
+          color: c.strong ? "var(--fg1, #18181b)" : cell.color }}>
+          {c.render ? c.render(r) : r[c.key]}
+        </td>
+      ))}
+    </tr>
+  );
+}
+
 function DataTableBase({
   columns = [], rows = [], searchable = true, searchPlaceholder = "Filter rows…",
   initialSort, filters = [], emptyMessage = "No rows match these filters.",
@@ -116,17 +134,7 @@ function DataTableBase({
           </thead>
           <tbody>
             {view.map((r, i) => (
-              <tr key={r.id ?? i} onClick={() => onRowClick && onRowClick(r)}
-                style={{ cursor: onRowClick ? "pointer" : "default" }}>
-                {columns.map(c => (
-                  <td key={c.key} style={{ ...cell, textAlign: c.align || "left",
-                    fontVariantNumeric: c.numeric ? "tabular-nums" : "normal",
-                    fontWeight: c.strong ? 600 : 400,
-                    color: c.strong ? "var(--fg1, #18181b)" : cell.color }}>
-                    {c.render ? c.render(r) : r[c.key]}
-                  </td>
-                ))}
-              </tr>
+              <DataTableRow key={r.id ?? i} r={r} columns={columns} onRowClick={onRowClick} />
             ))}
             {view.length === 0 && (
               <tr><td colSpan={columns.length} style={{ ...cell, textAlign: "center", color: "var(--fg3, #71717a)", padding: "28px 14px" }}>{emptyMessage}</td></tr>

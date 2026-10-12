@@ -5,6 +5,7 @@ const rgSans = "var(--font-sans, ui-sans-serif, system-ui, sans-serif)";
 function RadioGroupBase({ options = [], value, onChange, label, name, disabled = false, style }) {
   const gid = React.useMemo(() => name || "rg" + Math.random().toString(36).slice(2, 8), [name]);
   const [focus, setFocus] = React.useState(null);
+  const [hover, setHover] = React.useState(null);
   return (
     <div role="radiogroup" aria-labelledby={label ? gid + "-l" : undefined} style={{ fontFamily: rgSans, ...style }}>
       {label && <div id={gid + "-l"} style={{ marginBottom: 8, font: `600 11px ${rgSans}`, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--fg3, #71717a)" }}>{label}</div>}
@@ -12,7 +13,9 @@ function RadioGroupBase({ options = [], value, onChange, label, name, disabled =
         {options.map((o) => {
           const on = o.value === value, off = disabled || o.disabled;
           return (
-            <label key={o.value} style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: off ? "default" : "pointer", opacity: off ? 0.5 : 1 }}>
+            <label key={o.value} onMouseEnter={() => !off && setHover(o.value)} onMouseLeave={() => setHover(null)}
+              style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: off ? "default" : "pointer", opacity: off ? 0.5 : 1,
+                background: !off && !on && hover === o.value ? "var(--bg-muted, #f4f4f5)" : "transparent", transition: "background 120ms" }}>
               <input type="radio" name={gid} value={o.value} checked={on} disabled={off} onChange={() => onChange && onChange(o.value, o)}
                 onFocus={() => setFocus(o.value)} onBlur={() => setFocus(null)} style={{ position: "absolute", opacity: 0, width: 1, height: 1 }} />
               <span aria-hidden="true" style={{ width: 16, height: 16, marginTop: 1, flexShrink: 0, borderRadius: 999, boxSizing: "border-box", background: "var(--surface, #fff)",

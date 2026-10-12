@@ -39,7 +39,7 @@ function TabsBase({ tabs = [], value, defaultValue, onChange, variant = "underli
       {items.map(t => {
         const on = t.value === active;
         return (
-          <button key={t.value} onClick={() => !t.disabled && pick(t.value)} disabled={t.disabled}
+          <button key={t.value} onClick={() => !t.disabled && pick(t.value)} disabled={t.disabled} data-pix-tab=""
             style={{ font: `${on ? 600 : 500} ${fs}px ${tabsFont}`, padding: pad, paddingBottom: size === "sm" ? 7 : 9, border: 0, background: "transparent",
               borderBottom: `2px solid ${on ? "var(--zinc-900, #18181b)" : "transparent"}`, marginBottom: -1,
               color: on ? "var(--zinc-900, #18181b)" : "var(--zinc-500, #71717a)", cursor: t.disabled ? "not-allowed" : "pointer", opacity: t.disabled ? 0.5 : 1,
