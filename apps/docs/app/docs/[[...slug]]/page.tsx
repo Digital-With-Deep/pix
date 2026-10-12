@@ -27,7 +27,10 @@ function Chevron({ d }: { d: string }) {
 }
 
 // Compact arrow buttons for the top action row (shadcn-style prev/next).
-function NavArrow({ dir, url, name }: { dir: 'prev' | 'next'; url: string; name: React.ReactNode }) {
+// `name` is typed `unknown` (only read for the aria-label, never rendered) so
+// it doesn't depend on which @types/react copy fumadocs' findNeighbour resolves
+// — the two can diverge in the monorepo and break the type check otherwise.
+function NavArrow({ dir, url, name }: { dir: 'prev' | 'next'; url: string; name: unknown }) {
   return (
     <Link
       href={url}
