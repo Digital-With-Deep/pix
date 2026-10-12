@@ -29,6 +29,17 @@
   --accent-bg: #27272a;
 }
 
+/* Flush the docs sidebar to the left edge (shadcn-style) while keeping the
+   content centred. Fumadocs centres the grid and then right-aligns the sidebar
+   nav within its (left-margin-inclusive) area, so the nav floats inward on wide
+   screens. Left-align the nav instead: it hugs the viewport's left edge while
+   the content stays centred. Desktop only — mobile uses a drawer. */
+@media (min-width: 768px) {
+  #nd-sidebar {
+    align-items: flex-start !important;
+  }
+}
+
 html {
   scrollbar-gutter: stable;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
