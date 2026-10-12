@@ -29,14 +29,19 @@
   --accent-bg: #27272a;
 }
 
-/* Flush the docs sidebar to the left edge (shadcn-style) while keeping the
-   content centred. Fumadocs centres the grid and then right-aligns the sidebar
-   nav within its (left-margin-inclusive) area, so the nav floats inward on wide
-   screens. Left-align the nav instead: it hugs the viewport's left edge while
-   the content stays centred. Desktop only — mobile uses a drawer. */
+/* Full-bleed docs layout (shadcn-style). Fumadocs centres a fixed-width grid,
+   which leaves large empty margins on wide screens. Instead: pin the sidebar to
+   the left edge (0 left margin), let the main column grow to fill, and pin the
+   TOC to the right edge (0 right margin). The article inside keeps its readable
+   max-width, centred in the main column. Desktop only — mobile uses a drawer. */
 @media (min-width: 768px) {
-  #nd-sidebar {
-    align-items: flex-start !important;
+  #nd-docs-layout {
+    grid-template-columns:
+      0
+      var(--fd-sidebar-col)
+      minmax(0, 1fr)
+      var(--fd-toc-width)
+      0 !important;
   }
 }
 
