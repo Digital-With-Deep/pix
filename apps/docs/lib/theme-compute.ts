@@ -131,5 +131,7 @@ export function toCss(t: ComputedTheme): string {
 // dots, avatars) to the chosen radius, so the preview and themed shells reflect
 // it. The exported CSS still drives @pix-ui/css class-based components natively.
 export function radiusCss(scope: string): string {
-  return `${scope} [style*="border-radius"]:not([style*="999"]), ${scope} button, ${scope} input, ${scope} textarea, ${scope} select { border-radius: var(--radius-lg) !important; }`;
+  // Underline-variant tabs (data-pix-tab) are excluded: rounding the tab
+  // button curves the 2px underline indicator, which looks broken.
+  return `${scope} [style*="border-radius"]:not([style*="999"]):not([data-pix-tab]), ${scope} button:not([data-pix-tab]), ${scope} input, ${scope} textarea, ${scope} select { border-radius: var(--radius-lg) !important; }`;
 }

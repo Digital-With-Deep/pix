@@ -8,10 +8,37 @@ import {
   ViewOptionsPopover,
 } from 'fumadocs-ui/layouts/docs/page';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { findNeighbour } from 'fumadocs-core/page-tree';
 import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
+
+const CHEVRON_L = 'M15 18l-6-6 6-6';
+const CHEVRON_R = 'M9 18l6-6-6-6';
+
+function Chevron({ d }: { d: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d={d} />
+    </svg>
+  );
+}
+
+// Compact arrow buttons for the top action row (shadcn-style prev/next).
+function NavArrow({ dir, url, name }: { dir: 'prev' | 'next'; url: string; name: React.ReactNode }) {
+  return (
+    <Link
+      href={url}
+      aria-label={`${dir === 'prev' ? 'Previous' : 'Next'}: ${typeof name === 'string' ? name : ''}`}
+      className="inline-flex size-8 items-center justify-center rounded-md border text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+    >
+      <Chevron d={dir === 'prev' ? CHEVRON_L : CHEVRON_R} />
+    </Link>
+  );
+}
+
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -20,6 +47,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
+  const neighbours = findNeighbour(source.getPageTree(), page.url);
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
@@ -31,6 +59,10 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           markdownUrl={markdownUrl}
           githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
         />
+        <div className="ms-auto flex items-center gap-1.5">
+          {neighbours.previous ? <NavArrow dir="prev" url={neighbours.previous.url} name={neighbours.previous.name} /> : null}
+          {neighbours.next ? <NavArrow dir="next" url={neighbours.next.url} name={neighbours.next.name} /> : null}
+        </div>
       </div>
       <DocsBody>
         <MDX
