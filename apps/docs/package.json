@@ -1,6 +1,6 @@
 {
   "name": "@pix-ui/docs",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "private": true,
   "scripts": {
     "predev": "node scripts/build-changelog.mjs && node scripts/build-registry.mjs && node scripts/build-props.mjs && node scripts/build-blocks.mjs",
