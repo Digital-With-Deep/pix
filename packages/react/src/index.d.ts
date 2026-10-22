@@ -34,6 +34,7 @@ export * from "./components/RateBars/RateBars";
 export * from "./components/SavedSearch/SavedSearch";
 export * from "./components/SearchField/SearchField";
 export * from "./components/Select/Select";
+export * from "./components/Sidebar/Sidebar";
 export * from "./components/Skeleton/Skeleton";
 export * from "./components/StageFlow/StageFlow";
 export * from "./components/Stepper/Stepper";

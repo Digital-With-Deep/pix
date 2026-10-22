@@ -20,6 +20,7 @@ const BLOCKS = [
   { slug: "beacon", title: "Beacon", kind: "LLM observability", blurb: "Production monitoring for a deployed model: request volume, latency and cost metrics, per-route success, a request log and a drift alert.", parts: ["MetricCard", "BarChart", "RateBars", "AuditLog", "UsageMeter", "Alert", "Tabs"] },
   { slug: "guardrail", title: "Guardrail", kind: "Safety review queue", blurb: "Triage flagged generations: a review queue, the model output under policy, pass/fail invariant checks and a claim-against-truth verdict.", parts: ["DataTable", "InvariantPanel", "Callout", "Alert", "ExecutionTrace", "Badge", "Avatar"] },
   { slug: "relay", title: "Relay", kind: "Human-in-the-loop inbox", blurb: "An approval inbox for an agent's proposed actions — live wait timers, decision-latency metrics, the agent trace and guardrail checks, approve/reject with feedback, and an activity log. Fully interactive.", parts: ["MetricCard", "AIResponse", "ExecutionTrace", "InvariantPanel", "AuditLog", "Tabs", "Avatar", "Button"] },
+  { slug: "lynx", title: "Lynx", kind: "Supply chain command center", blurb: "An app shell built around the Sidebar primitive — icon nav with Supply and Sales expanding into smoothly animated submenus, an AI ask bar, a quick summary, critical alerts, and orders/fulfillment charts.", parts: ["Sidebar", "SearchField", "Avatar", "Badge", "BarChart", "Button"] },
 ];
 
 if (import.meta.url === `file://${process.argv[1]}`) {
