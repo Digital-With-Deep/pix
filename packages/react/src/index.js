@@ -34,6 +34,7 @@ export * from "./components/RateBars/RateBars.jsx";
 export * from "./components/SavedSearch/SavedSearch.jsx";
 export * from "./components/SearchField/SearchField.jsx";
 export * from "./components/Select/Select.jsx";
+export * from "./components/Sidebar/Sidebar.jsx";
 export * from "./components/Skeleton/Skeleton.jsx";
 export * from "./components/StageFlow/StageFlow.jsx";
 export * from "./components/Stepper/Stepper.jsx";
