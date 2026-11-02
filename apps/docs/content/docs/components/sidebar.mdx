@@ -1,0 +1,114 @@
+---
+title: Sidebar
+description: An app navigation rail with icon rows, sections, and animated submenus.
+---
+
+Sidebar is the primary navigation rail for an app shell: a vertical column of
+icon rows with an active state, optional section headings and trailing badges,
+and nested groups that expand into **smoothly animated submenus**. The brand,
+a search field and the account area live in free `header` and `footer` slots,
+so the same primitive carries everything from a plain three-item nav to a full
+product chrome.
+
+## When to use
+
+- Use **Sidebar** for persistent, app-level navigation — the left rail that
+  stays put while the main pane changes. It tracks one active destination and
+  can nest related routes into collapsible groups.
+- Use **Menu** for a transient dropdown of actions or links that opens from a
+  trigger and closes on choice — not for standing navigation.
+- Use **Tabs** to switch between views *within* a single page or pane, where
+  all options are peers shown at once.
+- Use **TaxonomyTree** to display or browse a deep, data-driven hierarchy (a
+  control taxonomy, a file tree), rather than a fixed set of app routes.
+
+## Basic
+
+Top-level rows with a leading icon, an active destination, a trailing count
+badge, and a muted section heading. Without `activeKey`, Sidebar tracks its
+own selection — pass `defaultActiveKey` to set the first one.
+
+<Preview title="BASIC" name="sidebar-overview" />
+
+## Animated submenus
+
+Give an item an `items` array and it becomes a collapsible group: clicking the
+row toggles the submenu, which animates its height open and closed and rotates
+the chevron. Groups nest to any depth, and `defaultOpen` starts one expanded.
+The animation respects `prefers-reduced-motion` — it collapses to an instant
+toggle when the user asks for reduced motion.
+
+<Preview title="SUBMENUS" name="sidebar-submenus" />
+
+## Header and footer
+
+`header` and `footer` are free slots pinned to the top and bottom of the rail.
+Use the header for the brand mark and a search field, and the footer for the
+signed-in account — a divider separates the footer from the nav. Everything
+between scrolls independently when the nav grows tall.
+
+<Preview title="CHROME" name="sidebar-chrome" />
+
+## Loading
+
+Pass `loading` to render a skeleton in the rail's own footprint — a stack of
+glyph-and-label rows at the same width — so the chrome holds its place while
+the navigation for a workspace or a permission set resolves.
+
+<Preview title="LOADING" name="sidebar-loading" />
+
+## Anatomy
+
+```tsx
+<Sidebar
+  defaultActiveKey="agents.live"
+  onNavigate={(key, item) => router.push(key)}
+  items={[
+    { key: "home", label: "Home", iconPath: ICON.home },
+    {
+      key: "agents", label: "Agents", iconPath: ICON.bots, defaultOpen: true,
+      items: [
+        { key: "agents.live", label: "Live", badge: 4 },
+        { key: "agents.drafts", label: "Drafts" },
+      ],
+    },
+    { heading: true, label: "Account" },
+    { key: "settings", label: "Settings", iconPath: ICON.settings },
+  ]}
+/>
+```
+
+- **`items`** — the navigation tree. A leaf is a selectable row; an item with
+  `items` is a collapsible group (its own click toggles the submenu rather than
+  selecting); an item with `heading: true` renders a muted uppercase label.
+- **`key`** — the id reported to `onNavigate` and matched against the active
+  row; it defaults to the `label` when that is a string.
+- **`iconPath`** — the `d` of a 2px-stroke outline icon (Heroicons-style),
+  shown on top-level rows. **`badge`** is a trailing count or pill.
+- **`activeKey` / `defaultActiveKey`** — the selected leaf. Pass `activeKey` to
+  control selection from the router; pass `defaultActiveKey` to let Sidebar
+  track it internally.
+- **`onNavigate(key, item)`** — fired when a leaf is chosen, with its key and
+  the full item. An item's own **`onSelect`** fires too. A leaf with an
+  **`href`** renders as a real link.
+- **`header` / `footer`** — slots for the brand, search and account areas.
+  **`width`** sets a fixed rail width (default `248`).
+
+## Accessibility
+
+- The rail is a `<nav aria-label="Sidebar">`. Leaf rows are `<button>`s, or
+  real `<a>` links when given an `href`; the active leaf carries
+  `aria-current="page"`.
+- A group toggle sets `aria-expanded` and `aria-controls` pointing at its
+  submenu, so the collapsed/expanded state is exposed to assistive technology,
+  not just animated visually.
+- Rows are keyboard-reachable in order with visible focus, hover and active
+  styles that each meet contrast; disabled rows are dimmed, skipped by
+  pointer and marked `aria-disabled`.
+- The height animation is driven by a transition that the global
+  reduced-motion rule zeroes, so `prefers-reduced-motion: reduce` turns every
+  expand/collapse into an instant toggle.
+
+## Props
+
+<PropsTable component="Sidebar" />
