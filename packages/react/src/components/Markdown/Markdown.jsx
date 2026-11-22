@@ -90,7 +90,7 @@ function parse(src) {
       continue;
     }
     const li = line.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
-    if (li) {
+    if (li && li[1].length < 2) {
       const ordered = /\d/.test(li[2]);
       const items = [];
       while (i < lines.length) {
@@ -103,7 +103,8 @@ function parse(src) {
       blocks.push({ t: "list", ordered, start: ordered ? parseInt(li[2], 10) : 1, items });
       continue;
     }
-    const para = [];
+    // Always take the current line, so a stray "|" or an indented list item can't stall the loop mid-stream.
+    const para = [lines[i++].trim()];
     while (i < lines.length && lines[i].trim() && !/^\s*(```|~~~|#{1,4}\s|>|\|)/.test(lines[i]) && !/^(\s*)([-*+]|\d+[.)])\s+/.test(lines[i])) para.push(lines[i++].trim());
     blocks.push({ t: "p", text: para.join("\n") });
   }
