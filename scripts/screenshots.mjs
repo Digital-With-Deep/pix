@@ -337,13 +337,21 @@ async function main() {
           /* storage unavailable */
         }
       }, theme);
-      const page = await context.newPage();
-      page.on("pageerror", (err) => console.warn(`[${theme}] page error: ${err.message.split("\n")[0]}`));
+      // A fresh tab for every capture, so one page that crashes can't take the rest down with it.
+      const withPage = async (fn) => {
+        const page = await context.newPage();
+        page.on("pageerror", (err) => console.warn(`[${theme}] page error: ${err.message.split("\n")[0]}`));
+        try {
+          return await fn(page);
+        } finally {
+          await page.close().catch(() => {});
+        }
+      };
 
       for (const [slug, keep] of COMPONENTS) {
         if (opts.only && !opts.only.has(slug)) continue;
         try {
-          const files = await captureComponent(page, origin, slug, keep, theme, outDir, failures);
+          const files = await withPage((page) => captureComponent(page, origin, slug, keep, theme, outDir, failures));
           written.push(...files);
           console.log(`✓ ${slug} (${theme}): ${files.length} shots`);
         } catch (err) {
@@ -354,7 +362,7 @@ async function main() {
       for (const slug of BLOCKS) {
         if (opts.only && !opts.only.has(slug)) continue;
         try {
-          written.push(await captureBlock(page, origin, slug, theme, outDir));
+          written.push(await withPage((page) => captureBlock(page, origin, slug, theme, outDir)));
           console.log(`✓ block ${slug} (${theme})`);
         } catch (err) {
           failures.push(`block ${slug} (${theme}): ${err.message.split("\n")[0]}`);
