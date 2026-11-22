@@ -1,0 +1,53 @@
+---
+title: PlanView
+description: An agent's plan before it acts, then its live progress.
+---
+
+PlanView shows what an agent intends to do before it does anything, and gives the person three ways to respond: let it proceed, change the plan, or take the task back. Once the agent runs, the same card becomes its progress: the current step carries a pulsing marker, finished steps are checked off, and a summary line closes it out.
+
+<Preview name="plan-view-proposed" />
+
+## When to use
+
+- Before an agent takes actions that change data, send messages or spend money, so a person can read the plan and approve it with `onProceed`.
+- To keep showing the same plan while it runs, so the person can see where the agent is and what is left.
+- Prefer ThinkingTrace for the model's reasoning, and ExecutionTrace for the tool calls behind a finished run. PlanView is the agent's intent, step by step, in plain words.
+
+## States
+
+`proposed` numbers the steps and shows the three actions: **Proceed**, **Edit plan** and **Do it myself**. Nothing is marked as started, and a line under the header says nothing runs until the person proceeds.
+
+`running` swaps the numbers for status markers. The current step is bold, says "In progress" in words, and has a pulsing marker; the header shows "Step 3 of 4" and the elapsed time in monospace.
+
+<Preview title="RUNNING" name="plan-view-running" />
+
+`done` adds a summary line under the steps, counting finished and skipped steps and the time taken. Skipped steps are struck through and say "Skipped".
+
+<Preview title="DONE" name="plan-view-done" />
+
+`failed` names the step that stopped the run in the claim colour and says how far it got. Steps after it stay not started.
+
+<Preview title="FAILED" name="plan-view-failed" />
+
+Pass `loading` to render a skeleton in the card's footprint while the plan is being drafted.
+
+<Preview title="LOADING" name="plan-view-loading" />
+
+## Anatomy
+
+- **Header** — `title`, the plan's status in words, the step count or progress, and `elapsed`.
+- **Steps** — an ordered list of `{ id, label, detail?, status, substeps? }`. Substeps are numbered under their parent (2.1, 2.2) with smaller markers.
+- **Summary** — generated once the plan is `done` or `failed`; pass `summary` to write your own.
+- **Actions** — only while `proposed`: `onProceed` (primary), `onEditPlan` (outline) and `onTakeOver` (quiet). Rename them with `proceedLabel`, `editLabel` and `takeOverLabel`.
+
+## Accessibility
+
+- The card is a labelled `section`; steps are an ordered list, and the running step carries `aria-current="step"`.
+- Every step's status is written in words, visibly for running, failed and skipped steps and as screen-reader text for the rest, so colour and icons are never the only signal.
+- A polite live region announces the current step as it changes, and the summary when the plan finishes.
+- The pulse turns off under `prefers-reduced-motion`; the running marker stays filled and labelled.
+- The three actions are real buttons with a visible focus ring.
+
+## Props
+
+<PropsTable component="PlanView" />

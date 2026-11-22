@@ -1,0 +1,56 @@
+---
+title: ConfidenceBadge
+description: How far to trust an AI answer, in words, colour and icon.
+---
+
+ConfidenceBadge tells the reader how much weight an answer can bear. Each of its four states has its own colour, icon and label, and it can carry a score, what the confidence rests on, and a reason in a tooltip.
+
+<Preview name="confidence-badge-states" />
+
+## When to use
+
+- Next to an AI answer, figure or table cell that a person might act on, so they know whether to act, check or escalate.
+- With a `scope` when the confidence depends on what was checked: "checked against 3 sources".
+- With a `reason` when the state is anything but confident, so the reader knows what to look at.
+- Prefer Badge for statuses that are not about trust, and Callout when the reason needs a full sentence on screen.
+
+## States
+
+| State | Label | Colour |
+| --- | --- | --- |
+| `confident` | Confident | Emerald (`--confidence-high`) |
+| `low` | Low confidence | Amber (`--confidence-low`) |
+| `review` | Needs review | Blue |
+| `failed` | Check failed | Red (`--claim`) |
+
+`score` adds a monospace percentage (0.62 shows "62%"). `label` overrides the words, but keep them in words: the colour is never the only signal.
+
+`size="standalone"` is a larger block for a summary panel, with the scope on its own line.
+
+<Preview title="STANDALONE" name="confidence-badge-standalone" />
+
+The default `inline` size sits in a sentence or a table cell.
+
+<Preview title="INLINE" name="confidence-badge-inline" />
+
+<Preview title="LOADING" name="confidence-badge-loading" />
+
+A React Native `ConfidenceBadge` in `@pix-ui/react-native` takes the same props; there the reason appears when the badge is tapped.
+
+## Anatomy
+
+- **Icon** — check, alert, eye or cross, by state.
+- **Label** — the state in words, or `label`.
+- **Score** — optional, monospace.
+- **Scope** — optional plain-words note on what was checked.
+- **Reason** — optional; shown in a tooltip on hover or focus.
+
+## Accessibility
+
+- The state is always written out; the icon is decorative.
+- When `reason` is set, the badge joins the tab order, the reason opens on focus as a `role="tooltip"`, and screen readers get it through `aria-describedby`. Escape closes it.
+- Each state's text meets 4.5:1 against its tint in light and dark.
+
+## Props
+
+<PropsTable component="ConfidenceBadge" />
