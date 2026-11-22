@@ -9,9 +9,12 @@
     "bar-chart",
     "button",
     "callout",
+    "card",
+    "checkbox",
     "code-editor",
     "coverage-matrix",
     "data-table",
+    "dialog",
     "disclosure",
     "empty-state",
     "execution-trace",
@@ -28,6 +31,7 @@
     "next-steps",
     "page",
     "plan-card",
+    "popover",
     "prompt-input",
     "provider-config",
     "radio-group",
@@ -42,7 +46,11 @@
     "switch",
     "tabs",
     "taxonomy-tree",
+    "text-field",
+    "textarea",
     "thinking-trace",
+    "toast",
+    "tooltip",
     "usage-meter"
   ]
 }

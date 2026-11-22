@@ -1,0 +1,60 @@
+---
+title: Toast
+description: A brief, non-blocking message about something that just happened.
+---
+
+Toasts confirm an action or report a result without interrupting the work. Mount `ToastProvider` once near the root, then call `toast()` from `useToast()` anywhere below it. The provider queues toasts, dismisses them on a timer and announces them in a polite live region.
+
+<Preview name="toast-overview" />
+
+## When to use
+
+- To confirm an action finished, such as "Export started" or "Run archived".
+- To report a result that arrived in the background, such as a finished verification.
+- Prefer Alert or Callout for anything the user must read or act on, and Dialog for anything they must decide. A toast can be missed.
+
+## Variants
+
+`tone` matches PIX's verification colors: `info` for neutral news, `truth` for a verified result, `claim` for an unverified or failed model output and `warn` for something that needs attention. A claim and the truth never share a color. Each tone has its own stripe and icon, and the title should still say what happened in words.
+
+<Preview title="TONES" name="toast-tones" />
+
+An `action` adds one button, such as Undo. Pressing it runs your handler and dismisses the toast. A toast with an action stays until dismissed unless you set `duration`, so there's time to reach it with the keyboard.
+
+<Preview title="ACTION" name="toast-action" />
+
+## Anatomy
+
+- The stripe and icon — set by `tone`.
+- `title` — what happened, in a few words.
+- `description` — one more line of detail.
+- `action` — an optional button, verb first.
+- The close button — always present on queued toasts.
+
+## Behavior
+
+- At most `max` toasts show at once (3 by default). Later ones wait and appear as earlier ones leave.
+- Each toast dismisses itself after `duration` milliseconds (5000 by default). Timers pause while the pointer is over the stack or keyboard focus is inside it.
+- Passing an existing `id` replaces that toast in place, which suits "Saving" followed by "Saved".
+- `dismiss(id)` removes one toast; `dismiss()` removes them all.
+
+## Accessibility
+
+- The stack is a region named "Notifications" with `aria-live="polite"`, so new toasts are announced without interrupting.
+- The stack renders into `document.body` after mount, never during server rendering.
+- Toasts don't take focus. Keep anything essential out of a toast or repeat it elsewhere on the page.
+- Entry motion is skipped when the user prefers reduced motion.
+
+## Props
+
+### Toast
+
+<PropsTable component="Toast" />
+
+### ToastProvider
+
+<PropsTable component="ToastProvider" />
+
+### toast() options
+
+<PropsTable component="ToastOptions" />

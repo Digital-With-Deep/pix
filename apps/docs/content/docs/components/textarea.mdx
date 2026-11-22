@@ -1,0 +1,40 @@
+---
+title: Textarea
+description: A multi-line text input with a label, hint, error and character count.
+---
+
+Textarea is TextField for longer text: a reviewer note, a system prompt, a description. It shares TextField's label, hint, error and count, and adds `rows` and `resize`.
+
+<Preview name="textarea-overview" />
+
+## When to use
+
+- For free text that may run to several lines.
+- Prefer TextField for a single short value.
+- Prefer PromptInput for composing a message to a model, which adds send and tool controls.
+
+## States
+
+`rows` sets the visible height (4 by default) and `resize` lets the user drag it taller (`vertical`, the default), in both directions (`both`) or not at all (`none`). `maxLength` adds a count, `error` replaces the hint and sets `aria-invalid`, and `disabled` blocks editing.
+
+<Preview title="STATES" name="textarea-states" />
+
+<Preview title="LOADING" name="textarea-loading" />
+
+## Anatomy
+
+- `label` — sits above the textarea.
+- The textarea — native attributes you pass reach it.
+- `hint` or `error` — one line underneath.
+- The count — right-aligned underneath when `maxLength` is set.
+
+## Accessibility
+
+- The label is a real `<label>`; without one, pass `aria-label`.
+- Hint, error and count are linked with `aria-describedby`.
+- Keep `resize` on unless the layout can't take it, so people who enlarge text can still see what they wrote.
+- Focus shows a 2px accent ring in both themes.
+
+## Props
+
+<PropsTable component="Textarea" />
