@@ -56,11 +56,14 @@ ok(typeof ctx.PIX?.Button === "function" && typeof ctx.PIX?.AIResponse === "func
 
 const legacy = /PortfolioOSDesignSystem|Recon ?Bench|\bPACT\b|__rb_/;
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
+const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
 ok(leaks.length === 0, `no legacy names in published output${leaks.length ? ": " + leaks.join(", ") : ""}`);
 
 const rn = await import("../packages/tokens/dist/react-native/index.js");
 ok(typeof rn.rnTokens.space["space-4"] === "number", "react-native tokens: unitless numbers");
+
+const mcpData = JSON.parse(readFileSync("packages/mcp/dist/data.json", "utf8"));
+ok(mcpData.components.length >= 45 && mcpData.components.every((c) => c.props.length && c.docs), `mcp: data bundle covers ${mcpData.components.length} components with props and docs`);
 
 if (fail) { console.error(`\n${fail} check(s) failed`); process.exit(1); }
 console.log("\nall checks passed");

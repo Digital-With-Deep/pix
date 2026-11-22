@@ -11,6 +11,12 @@ on the docs site — edit here, not there.
 
 ### Added
 
+- `@pix-ui/mcp`, an MCP (Model Context Protocol) server for AI coding tools. `npx @pix-ui/mcp`
+  gives an agent tools to list PIX components, read a component's props, docs and examples, and
+  suggest components for a plain-language description of a UI.
+- A shadcn-compatible registry: `npx shadcn add https://pixui.digitalwithdeep.com/r/<example>.json`
+  installs `@pix-ui/react` and adds that docs example to the project.
+- A "Use PIX with AI coding tools" docs page covering the registry, the MCP server and `llms.txt`.
 - Component pages now show multiple captioned states and variants per component, with usage
   guidance (when to use, anatomy, accessibility) alongside the live preview and prop table.
 - A component showcase on the docs home page, built from real PIX components in light and dark.

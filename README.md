@@ -20,6 +20,7 @@ AI interfaces have their own primitives: a response that streams, a trace of wha
 | [`@pix-ui/css`](packages/css) | Any web framework or plain HTML — `pix-*` classes | `npm i @pix-ui/css` |
 | [`@pix-ui/react`](packages/react) | React 18+ / Next.js — 67 components | `npm i @pix-ui/react` |
 | [`@pix-ui/react-native`](packages/react-native) | iOS & Android via React Native / Expo | `npm i @pix-ui/react-native` |
+| [`@pix-ui/mcp`](packages/mcp) | AI coding tools (Claude Code, Cursor) — an MCP server for the PIX docs | `npx @pix-ui/mcp` |
 
 ## Quick start
 
@@ -98,6 +99,16 @@ Minimal per-framework starters, each installing PIX from npm:
 | [`examples/nextjs`](examples/nextjs) | Next.js (App Router) | `@pix-ui/react` |
 | [`examples/vite-react`](examples/vite-react) | Vite + React | `@pix-ui/react` |
 | [`examples/angular`](examples/angular) | Angular (standalone components) | `@pix-ui/css` |
+
+## AI coding tools
+
+PIX is installable from AI coding tools such as Claude Code and Cursor:
+
+- **shadcn registry** — `npx shadcn add https://pixui.digitalwithdeep.com/r/button-variants.json` installs `@pix-ui/react` and drops a working example into your project. Every docs example is an item.
+- **MCP (Model Context Protocol) server** — [`@pix-ui/mcp`](packages/mcp) lets your agent list components, read props and examples, and get suggestions: `claude mcp add pix -- npx -y @pix-ui/mcp`.
+- **llms.txt** — the docs as plain text at [`/llms.txt`](https://pixui.digitalwithdeep.com/llms.txt) and [`/llms-full.txt`](https://pixui.digitalwithdeep.com/llms-full.txt).
+
+See [Use PIX with AI coding tools](https://pixui.digitalwithdeep.com/docs/ai-tools/) for setup in each tool.
 
 ## Documentation
 

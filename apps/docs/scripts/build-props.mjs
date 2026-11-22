@@ -7,13 +7,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const componentsDir = join(here, "..", "..", "..", "packages", "react", "src", "components");
+export const componentsDir = join(here, "..", "..", "..", "packages", "react", "src", "components");
 const outDir = join(here, "..", "registry", "__generated__");
 
 // Each entry is a prop-table key. A bare string uses `<Name>/<Name>.d.ts` and
 // `<Name>Props`; an object spells out the file/interface for the dirs that
 // export more than one component (Avatar, CodeEditor, Layout).
-const COMPONENTS = [
+export const COMPONENTS = [
   // Curated set
   "Button", "Badge", "Callout", "Alert", "Tabs", "Select", "DataTable", "MetricCard", "AIResponse", "PromptInput",
   // Agent interfaces
@@ -65,7 +65,9 @@ export function parsePropsFromDts(file, interfaceName) {
   return rows;
 }
 
-function entry(e) {
+// Resolves a COMPONENTS entry to { name, file, iface }. Exported so other build
+// scripts (the shadcn registry, the @pix-ui/mcp data bundle) use the same list.
+export function componentEntry(e) {
   if (typeof e === "string") return { name: e, file: `${e}/${e}.d.ts`, iface: `${e}Props` };
   return e;
 }
@@ -73,7 +75,7 @@ function entry(e) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const out = {};
   for (const e of COMPONENTS) {
-    const { name, file, iface } = entry(e);
+    const { name, file, iface } = componentEntry(e);
     const dts = join(componentsDir, file);
     if (!existsSync(dts)) throw new Error(`missing .d.ts for ${name}: ${dts}`);
     out[name] = parsePropsFromDts(dts, iface);
