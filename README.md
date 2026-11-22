@@ -100,6 +100,21 @@ Minimal per-framework starters, each installing PIX from npm:
 | [`examples/vite-react`](examples/vite-react) | Vite + React | `@pix-ui/react` |
 | [`examples/angular`](examples/angular) | Angular (standalone components) | `@pix-ui/css` |
 
+## Layouts
+
+Full screens built only from PIX components, ready to copy as a starting point. Preview each one at any width and read its source on the **[Blocks](https://pixui.digitalwithdeep.com/blocks/)** page; the source lives in [`apps/docs/app/(home)/blocks`](apps/docs/app/(home)/blocks).
+
+| Layout | What it is | Built with |
+| --- | --- | --- |
+| [Copilot](https://pixui.digitalwithdeep.com/blocks/copilot/) | Agent chat app | `Conversation` `ToolCall` `ApprovalCard` `PlanView` `Markdown` `PromptInput` |
+| [Approvals](https://pixui.digitalwithdeep.com/blocks/approvals/) | Agent approvals desk | `ApprovalCard` `ActionHistory` `AutonomySetting` `Dialog` `ToastProvider` |
+| [Research](https://pixui.digitalwithdeep.com/blocks/research/) | Cited research assistant | `InlineCitation` `SourcePanel` `ConfidenceBadge` `Tooltip` `Markdown` |
+| [Workspace](https://pixui.digitalwithdeep.com/blocks/workspace/) | Agent settings | `Card` `TextField` `Textarea` `Checkbox` `AutonomySetting` `Popover` `Dialog` |
+| [Relay](https://pixui.digitalwithdeep.com/blocks/relay/) | Human-in-the-loop inbox | `AIResponse` `ExecutionTrace` `InvariantPanel` `AuditLog` `MetricCard` |
+| [Lumen](https://pixui.digitalwithdeep.com/blocks/lumen/) | AI chat assistant | `AIResponse` `ThinkingTrace` `PromptInput` `Menu` |
+
+More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
+
 ## AI coding tools
 
 PIX is installable from AI coding tools such as Claude Code and Cursor:
@@ -109,6 +124,14 @@ PIX is installable from AI coding tools such as Claude Code and Cursor:
 - **llms.txt** — the docs as plain text at [`/llms.txt`](https://pixui.digitalwithdeep.com/llms.txt) and [`/llms-full.txt`](https://pixui.digitalwithdeep.com/llms-full.txt).
 
 See [Use PIX with AI coding tools](https://pixui.digitalwithdeep.com/docs/ai-tools/) for setup in each tool.
+
+## Use with Claude
+
+- **Claude Code** — add the PIX MCP server so Claude looks up real props instead of guessing: `claude mcp add pix -- npx -y @pix-ui/mcp` (or `--scope project` to share it through `.mcp.json`).
+- **Any Claude chat** — paste [`/llms.txt`](https://pixui.digitalwithdeep.com/llms.txt), [`/llms-full.txt`](https://pixui.digitalwithdeep.com/llms-full.txt) or one component's Markdown page as context.
+- **Your repo** — a ready-made `CLAUDE.md` section that tells Claude to build UI with PIX components and tokens, plus starter prompts.
+
+See [Use PIX with Claude](https://pixui.digitalwithdeep.com/docs/use-with-claude/) for all of it.
 
 ## Documentation
 
