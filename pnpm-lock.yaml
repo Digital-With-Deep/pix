@@ -94,6 +94,12 @@ importers:
         specifier: workspace:^
         version: link:../tokens
 
+  packages/mcp:
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
   packages/react:
     dependencies:
       '@pix-ui/css':

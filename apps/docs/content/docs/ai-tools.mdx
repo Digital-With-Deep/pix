@@ -1,0 +1,60 @@
+---
+title: Use PIX with AI coding tools
+description: Install PIX examples with the shadcn CLI, give your coding agent the PIX MCP server, and point it at llms.txt.
+---
+
+AI coding tools such as Claude Code and Cursor write better PIX code when they can read the real component contracts instead of guessing. PIX offers three ways in: a shadcn-compatible registry, an MCP (Model Context Protocol) server, and plain-text docs at `llms.txt`.
+
+## Add examples with the shadcn CLI
+
+Every example on these docs pages is also a registry item. Adding one installs `@pix-ui/react` and writes a working example to `components/pix/<example>.tsx`:
+
+```bash
+npx shadcn add https://pixui.digitalwithdeep.com/r/button-variants.json
+```
+
+The item name is the example's name, as shown in the code tab of each preview, for example `ai-response-answer` or `data-table-transactions`. The full list is in the [registry index](https://pixui.digitalwithdeep.com/r/registry.json).
+
+- The shadcn CLI expects a `components.json` in the project. If there is none, run `npx shadcn init` first.
+- PIX components are not copied into your project: they stay in the `@pix-ui/react` package, so updates arrive with `npm update`. Only the example file is yours to edit.
+- Import the stylesheet once at your app root with `import "@pix-ui/react/styles.css";`.
+
+## Connect the MCP server
+
+`@pix-ui/mcp` is a small MCP server that runs locally over stdio, with no network access and no runtime dependencies. It gives your agent three tools:
+
+- `list_components` — every component with a one-line description and its docs URL.
+- `get_component` — one component's props table (from its TypeScript contract), its docs page and its example source. Takes a `name`, such as `Button` or `AIResponse`.
+- `suggest_component` — takes a plain-language `description` of a UI, such as "show the model's reasoning while it streams", and an optional `limit`, and returns the best matching components.
+
+### Claude Code
+
+```bash
+claude mcp add pix -- npx -y @pix-ui/mcp
+```
+
+### Cursor and other clients
+
+Most MCP clients read an `mcpServers` object. In Cursor, put this in `.cursor/mcp.json` for one project or `~/.cursor/mcp.json` for all of them:
+
+```json
+{
+  "mcpServers": {
+    "pix": {
+      "command": "npx",
+      "args": ["-y", "@pix-ui/mcp"]
+    }
+  }
+}
+```
+
+Then ask your agent something like "Which PIX component should I use for a run history table?" and it will call the tools.
+
+## llms.txt
+
+The docs are also published as plain text for language models:
+
+- [`/llms.txt`](https://pixui.digitalwithdeep.com/llms.txt) — an index of every docs page with its description.
+- [`/llms-full.txt`](https://pixui.digitalwithdeep.com/llms-full.txt) — the full text of every page in one file.
+
+Paste either URL into a chat, or add it as a docs source in tools that support one, such as Cursor's `@Docs`.
