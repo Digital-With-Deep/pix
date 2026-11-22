@@ -18,6 +18,8 @@ const COMPONENTS = [
   "Button", "Badge", "Callout", "Alert", "Tabs", "Select", "DataTable", "MetricCard", "AIResponse", "PromptInput",
   // AI, trace and evaluation
   "ThinkingTrace", "ExecutionTrace", "InferenceChain", "FingerprintDiff", "InvariantPanel", "CoverageMatrix", "StageFlow", "TaxonomyTree",
+  // Trust loop: plans, sources, confidence, and what agents did
+  "PlanView", "InlineCitation", "SourcePanel", "ConfidenceBadge", "ActionHistory", "AutonomySetting",
   // Data and charts
   "BarChart", "RateBars", "UsageMeter", "AuditLog",
   // Inputs

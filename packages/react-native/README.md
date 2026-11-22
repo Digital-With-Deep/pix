@@ -20,6 +20,6 @@ export default function App() {
 }
 ```
 
-Components (v0.1): `PixProvider`, `usePixTheme`, `Text`, `Stack`, `Button`, `Badge`, `Card`, `MetricCard`, `Callout`, `Avatar`, `Switch`, `TextField`, `Skeleton`, `ThinkingTrace`, `AIResponse`, `PromptInput`. Raw tokens: `rnTokens`.
+Components (v0.1): `PixProvider`, `usePixTheme`, `Text`, `Stack`, `Button`, `Badge`, `Card`, `MetricCard`, `Callout`, `Avatar`, `Switch`, `TextField`, `Skeleton`, `ThinkingTrace`, `AIResponse`, `PromptInput`, `ConfidenceBadge`. Raw tokens: `rnTokens`.
 
 Parity with `@pix-ui/react` is tracked in the root README's component matrix.

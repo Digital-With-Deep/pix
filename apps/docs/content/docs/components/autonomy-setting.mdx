@@ -1,0 +1,47 @@
+---
+title: AutonomySetting
+description: How much an agent may do on its own, set per task.
+---
+
+AutonomySetting lets a person choose, for one task, how far an agent may go without them: from only suggesting, to acting on its own. Under the four levels, one plain sentence says what the chosen level means in practice.
+
+<Preview name="autonomy-setting-overview" />
+
+## When to use
+
+- In a task's or an agent's settings, so autonomy is chosen per task rather than once for everything.
+- Next to ActionHistory, so a person who lets an agent act on its own can see and undo what it did.
+- Prefer RadioGroup for choices that are not an ordered scale, and Switch for a plain on or off.
+
+## Levels
+
+| Value | Label | What it means |
+| --- | --- | --- |
+| `suggest` | Suggest only | The agent suggests what to do. You take every action yourself. |
+| `propose` | Plan and propose | The agent drafts a plan and waits. Nothing runs until you approve it. |
+| `confirm` | Act with confirmation | The agent carries out the plan and asks you before each step that changes anything. |
+| `autonomous` | Act on its own | The agent acts without asking. You review what it did afterwards in the action history. |
+
+A small meter on each option fills as autonomy rises, so the order reads at a glance. Use `descriptions` to rewrite any level's sentence for your product, for example to name the undo window.
+
+<Preview title="CUSTOM DESCRIPTION, UNCONTROLLED" name="autonomy-setting-custom" />
+
+<Preview title="LOADING" name="autonomy-setting-loading" />
+
+## Anatomy
+
+- **Label** — `label`, and "for {task}" when `task` is set.
+- **Levels** — four options in order, each with a meter and a label.
+- **Summary** — one sentence for the chosen level.
+- **Value** — controlled with `value` and `onChange`, or uncontrolled with `defaultValue` (default `propose`).
+
+## Accessibility
+
+- The levels are native radio inputs inside a `role="radiogroup"` labelled by `label`, so Tab reaches the group and arrow keys move between levels.
+- The summary is the group's description (`aria-describedby`) and a polite live region, so the new meaning is read when the level changes.
+- The focused option shows a 2px focus ring; the chosen one has a strong border and bold label, not colour alone.
+- Labels and the summary meet 4.5:1 in light and dark.
+
+## Props
+
+<PropsTable component="AutonomySetting" />

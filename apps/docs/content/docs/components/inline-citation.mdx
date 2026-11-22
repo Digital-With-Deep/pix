@@ -1,0 +1,39 @@
+---
+title: InlineCitation
+description: A numbered source marker inside answer text.
+---
+
+InlineCitation is the small number that sits right after a claim in an AI answer. Hover or focus it and a tooltip shows the source's title, its kind, its verification state and the passage the claim rests on, without leaving the sentence.
+
+<Preview name="inline-citation-overview" />
+
+## When to use
+
+- After each sentence or figure in an answer that comes from a source, so the reader can check it in place.
+- With SourcePanel, to tie each marker to a row in the full list of sources. Wire `onSelect` to the panel's `activeId` and the matching source is highlighted. See [SourcePanel](/docs/components/source-panel).
+- Prefer AIResponse's `citations` chips when you only need a list of sources under the answer and not markers inside the text.
+
+## Variants
+
+Without `href` the marker is a button that reports `onSelect`. With `href` it becomes a link to the source; `onSelect` still fires when it is followed.
+
+<Preview title="LINK" name="inline-citation-link" />
+
+Pass `state` (or a whole `source` object) to say in the tooltip whether the source was verified, left unverified or contradicts the answer. Verified uses the truth colour, contradicted the claim colour, and the state is always written out.
+
+## Anatomy
+
+- **Marker** — the `index`, in monospace, raised like a footnote. `active` draws it filled, to match the highlighted row in a SourcePanel.
+- **Tooltip** — the index, `type`, the state in words, the `title` and the `snippet`.
+- **Source** — pass `source` to read `id`, `title`, `type`, `snippet`, `href` and `state` from one object; explicit props win.
+
+## Accessibility
+
+- The marker is a real button or link, so it is in the tab order. Its accessible name is "Source 1: title", not just the number.
+- The tooltip has `role="tooltip"` and is wired with `aria-describedby`, so screen readers read the snippet as the marker's description.
+- The tooltip opens on hover and on keyboard focus, stays open while the pointer is over it, and closes with Escape.
+- The marker has a visible focus ring, and its text meets 4.5:1 in light and dark.
+
+## Props
+
+<PropsTable component="InlineCitation" />

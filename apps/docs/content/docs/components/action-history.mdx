@@ -1,0 +1,46 @@
+---
+title: ActionHistory
+description: What agents did, with Undo while each action can still be reversed.
+---
+
+ActionHistory lists the actions agents took, newest first, and offers Undo on each one while its undo window is open. It shows how long is left, then says "Locked" once the window closes. Filters narrow the list by agent and by status. It shares AuditLog's look, so the two read as one system.
+
+<Preview name="action-history-overview" />
+
+## When to use
+
+- Anywhere agents act on their own or with light confirmation, so a person can see what changed and take it back in time.
+- Beside an AutonomySetting, so raising an agent's autonomy comes with a clear way to review and reverse what it did.
+- Prefer AuditLog for the full, searchable, append-only record of every event. ActionHistory is the short, actionable view of changes a person may want to reverse.
+
+## States
+
+Each action has a `status`, shown as a monospace pill in words:
+
+- `done` — the action took effect. While `undoUntil` is in the future, the row shows the time left and an Undo button; afterwards it shows "Locked". With no `undoUntil`, the action cannot be undone and the column stays empty.
+- `undone` — reversed. Neutral.
+- `failed` — did not take effect. Claim colour, with a red bar on the row.
+- `pending` — waiting on something. Amber, with an amber bar.
+
+The clock ticks every second while any window is open. Pass `now` to fix it, as in the example above, for screenshots and tests. Here the windows start from your clock, so the first one locks within a minute:
+
+<Preview title="LIVE COUNTDOWN" name="action-history-live" />
+
+<Preview title="LOADING" name="action-history-loading" />
+
+## Anatomy
+
+- **Header** — `title`, how many actions match, and two filters: agent (built from the actions) and status (with counts).
+- **Row** — time in UTC, the agent in monospace, the action with its `target` in monospace and an optional `detail` line, the status, and the undo column.
+- **Undo** — calls `onUndo(id)`. The component does not change the action itself; set its `status` to `undone` once your undo succeeds.
+
+## Accessibility
+
+- The filters are native selects with accessible names.
+- Each Undo button names what it reverses ("Undo: Applied late fee to INV-20417"), and the time left is written beside it.
+- Status is written in words, never colour alone, and text meets 4.5:1 in light and dark.
+- The countdown is not announced each second; it is read with the row.
+
+## Props
+
+<PropsTable component="ActionHistory" />

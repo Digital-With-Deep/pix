@@ -1,0 +1,50 @@
+---
+title: SourcePanel
+description: The sources an answer rests on, each with its verification state.
+---
+
+SourcePanel lists the documents an AI answer cites, in citation order, and says for each one whether it was verified, left unverified, or contradicts the answer. It pairs with InlineCitation: selecting a marker in the text highlights the matching source.
+
+<Preview name="source-panel-overview" />
+
+## When to use
+
+- Beside or under an answer that cites sources, when the reader needs to see all of them and how far each one was checked.
+- When a source disagrees with the answer: mark it `contradicted` and say where in `note`, so the disagreement is the first thing a reviewer sees.
+- Prefer AIResponse's `citations` chips for a light list with no verification states.
+
+## States
+
+Each source has a `state`, always written out next to an icon:
+
+- `verified` uses the truth colour (`--truth`, `--truth-bg`).
+- `contradicted` uses the claim colour (`--claim`, `--claim-bg`), and its `note` is set in the claim colour too.
+- `unverified` stays neutral.
+
+The two colours are never shared, and the header counts each state in words.
+
+Selecting a source highlights it with a neutral bar, so selection never looks like verification. `activeId` makes the panel controlled; omit it (or set `defaultActiveId`) and it tracks its own selection. Here the markers and the panel share one state:
+
+<Preview title="LINKED TO CITATIONS" name="source-panel-linked" />
+
+Pass `loading` to render a skeleton list in the panel's footprint.
+
+<Preview title="LOADING" name="source-panel-loading" />
+
+## Anatomy
+
+- **Header** — `title`, the number of sources, and a count of each state.
+- **Row** — the citation number in monospace, the title (a button that selects it), an open link when `href` is set, the state, the `type`, the `snippet` as a quote, and an optional `note`.
+- **Empty** — `emptyLabel` when there are no sources.
+
+## Accessibility
+
+- The panel is a labelled `section` and the sources an ordered list, so numbers match the markers in the text.
+- Each title is a button with `aria-pressed`; the highlighted row carries `aria-current`.
+- The open link names the source and says it opens in a new tab.
+- State is written in words beside its icon, never colour alone; text meets 4.5:1 in light and dark.
+- A newly selected source scrolls into view if it is outside the panel.
+
+## Props
+
+<PropsTable component="SourcePanel" />
