@@ -41,3 +41,6 @@ apps/docs/next-env.d.ts
 
 # docs changelog page (generated from root CHANGELOG.md)
 apps/docs/content/docs/changelog.mdx
+
+# screenshots written by scripts/screenshots.mjs (published to the pix-screenshots branch by CI)
+screenshots/

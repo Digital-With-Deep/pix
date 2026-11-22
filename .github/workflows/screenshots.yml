@@ -1,0 +1,70 @@
+name: Screenshots
+
+# Renders light and dark PNGs of the agent and basics components and of the
+# block layouts from the static docs build (scripts/screenshots.mjs), then
+# publishes them as a single commit on the orphan branch `pix-screenshots`
+# so they can be reviewed without running a browser locally.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Every run force-pushes the same branch, so runs queue instead of racing.
+concurrency:
+  group: pix-screenshots
+  cancel-in-progress: false
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build            # builds @pix-ui/* so docs can consume workspace styles
+      - run: pnpm --filter docs build
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Capture screenshots
+        run: node scripts/screenshots.mjs --out screenshots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pix-screenshots
+          path: screenshots
+          if-no-files-found: warn
+
+      - name: Publish to the pix-screenshots branch
+        # Fork PRs get a read-only token, so only publish for this repository.
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_REF: ${{ github.event_name == 'pull_request' && format('PR #{0} ({1})', github.event.pull_request.number, github.event.pull_request.head.ref) || github.ref_name }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          cd screenshots
+          if ! ls ./*.png >/dev/null 2>&1; then
+            echo "No screenshots were produced; nothing to publish."
+            exit 1
+          fi
+          auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          echo "::add-mask::$auth"
+          git init -q -b pix-screenshots
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Screenshots for $SOURCE_REF at ${SOURCE_SHA:0:7}"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            push --force "https://github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/pix-screenshots
+          {
+            echo "### Screenshots"
+            echo ""
+            echo "$(ls ./*.png | wc -l) PNGs for $SOURCE_REF published to [\`pix-screenshots\`](https://github.com/${GITHUB_REPOSITORY}/tree/pix-screenshots)."
+          } >> "$GITHUB_STEP_SUMMARY"
