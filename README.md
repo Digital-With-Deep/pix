@@ -20,6 +20,7 @@ AI interfaces have their own primitives: a response that streams, a trace of wha
 | [`@pix-ui/css`](packages/css) | Any web framework or plain HTML — `pix-*` classes | `npm i @pix-ui/css` |
 | [`@pix-ui/react`](packages/react) | React 18+ / Next.js — 51 components | `npm i @pix-ui/react` |
 | [`@pix-ui/react-native`](packages/react-native) | iOS & Android via React Native / Expo | `npm i @pix-ui/react-native` |
+| [`@pix-ui/a2ui`](packages/a2ui) | Agents that speak A2UI (Agent-to-User Interface) — PIX catalog and React renderer | `npm i @pix-ui/a2ui` |
 
 ## Quick start
 
