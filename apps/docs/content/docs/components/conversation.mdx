@@ -1,0 +1,38 @@
+---
+title: Conversation
+description: A chat thread that keeps the latest message in view while an answer streams in.
+---
+
+A conversation is the scrolling list of turns between a person and an agent. It follows the newest content as it arrives, stops following as soon as the reader scrolls up to read something earlier, and offers a button to jump back down.
+
+<Preview name="conversation-thread" />
+
+## When to use
+
+- For any chat surface, from a side panel copilot to a full page assistant.
+- When turns mix text with other PIX components. A turn's `content` can be a string or any node, such as a ToolCall or an ApprovalCard.
+- Put the input in `footer` so it stays pinned under the thread.
+
+## Streaming
+
+Pass the text received so far as the assistant turn's `content`, with `streaming` set while it grows. The Markdown renderer holds back half-written syntax, like an unclosed `**`, so the reader never sees stray asterisks. The thread follows the new text as long as the reader is at the bottom.
+
+<Preview title="STREAMING" name="conversation-streaming" />
+
+## Anatomy
+
+- `messages`: turns, oldest first, each with `role`, `content`, and optional `author`, `time` and `avatar`.
+- User turns sit on the right in a bubble. Assistant turns are full width and rendered as Markdown. `system` turns are a small centred note.
+- `children`: extra content after the last turn, such as a typing indicator.
+- `follow`: turn off to stop the thread scrolling by itself.
+
+## Accessibility
+
+- The thread is a `log` region with `aria-live="polite"`, so new turns are announced without interrupting.
+- Each turn is an `article` named by its author and time.
+- The log is focusable, so keyboard users can scroll it with the arrow keys.
+- Scrolling jumps instantly instead of animating when the reader prefers reduced motion.
+
+## Props
+
+<PropsTable component="Conversation" />

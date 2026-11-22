@@ -16,6 +16,8 @@ const outDir = join(here, "..", "registry", "__generated__");
 const COMPONENTS = [
   // Curated set
   "Button", "Badge", "Callout", "Alert", "Tabs", "Select", "DataTable", "MetricCard", "AIResponse", "PromptInput",
+  // Agent interfaces
+  "ApprovalCard", "ToolCall", "Conversation", "Markdown",
   // AI, trace and evaluation
   "ThinkingTrace", "ExecutionTrace", "InferenceChain", "FingerprintDiff", "InvariantPanel", "CoverageMatrix", "StageFlow", "TaxonomyTree",
   // Data and charts

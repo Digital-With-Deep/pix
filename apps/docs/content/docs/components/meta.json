@@ -3,6 +3,7 @@
   "pages": [
     "ai-response",
     "alert",
+    "approval-card",
     "audit-log",
     "avatar",
     "badge",
@@ -10,6 +11,7 @@
     "button",
     "callout",
     "code-editor",
+    "conversation",
     "coverage-matrix",
     "data-table",
     "disclosure",
@@ -22,6 +24,7 @@
     "invariant-panel",
     "layout",
     "license-banner",
+    "markdown",
     "menu",
     "metric-card",
     "multi-select",
@@ -43,6 +46,7 @@
     "tabs",
     "taxonomy-tree",
     "thinking-trace",
+    "tool-call",
     "usage-meter"
   ]
 }

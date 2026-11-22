@@ -1,0 +1,43 @@
+---
+title: ApprovalCard
+description: The moment an agent stops and asks a person to approve what it is about to do.
+---
+
+An approval card shows what an agent wants to do, what will change, how risky it is and whether it can be undone, then asks a person to approve, reject or edit it. It is the human-in-the-loop (HITL) step in an agent workflow, built so the decision can be made from the card alone.
+
+<Preview name="approval-card-pending" />
+
+## When to use
+
+- Before an agent takes an action that is costly, visible to other people or hard to undo: paying, sending, deleting, changing a record.
+- When the reviewer should be able to adjust the action rather than only accept or refuse it. Pass `onEdit`, and set `editable: false` on any field the reviewer should not change.
+- Prefer a plain confirm dialog for a person's own action. ApprovalCard is for an action someone else, usually an agent, proposed.
+
+## States
+
+A pending card shows the actions. `expiresAt` adds a live countdown, and the card turns to expired once it passes. After a decision, pass `status` with `decidedBy` and `decidedAt` so the card stays in the record as a receipt.
+
+<Preview title="EDITABLE" name="approval-card-editable" />
+
+<Preview title="APPROVED AND REJECTED" name="approval-card-decided" />
+
+## Anatomy
+
+- `title` and `action`: what is about to happen, in words and as the identifier the agent will call.
+- `agent` and `target`: who is asking and what it acts on.
+- `risk`: `low`, `medium`, `high` or `critical`. Sets the left rule and the badge.
+- `reversible`: says plainly whether the action can be undone.
+- `changes`: a before and after table. In edit mode each field becomes an input, unless it sets `editable: false`.
+- `evidence`: what the agent relied on, as chips.
+- `requireRejectReason`: asks the reviewer to say why before a rejection goes through.
+
+## Accessibility
+
+- The card is a `section` named by its title, so it can be reached from a landmarks list.
+- Risk and reversibility are written out in text, not carried by color alone.
+- The countdown is not announced on every tick. Only the change to expired is.
+- Approve, Reject and Edit are real buttons in tab order. In edit mode, focus moves to the first editable field.
+
+## Props
+
+<PropsTable component="ApprovalCard" />

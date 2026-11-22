@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Skeleton } from "../Skeleton/Skeleton.jsx";
 import { ThinkingTrace } from "../ThinkingTrace/ThinkingTrace.jsx";
+import { Markdown } from "../Markdown/Markdown.jsx";
 const { useState: useRespState } = React;
 
 const rFont = "var(--font-sans, ui-sans-serif, system-ui, sans-serif)";
@@ -26,7 +27,7 @@ function ensureShimmer() {
   if (typeof document === "undefined" || document.getElementById(SKELETON_KEY)) return;
   const s = document.createElement("style");
   s.id = SKELETON_KEY;
-  s.textContent = "@keyframes pixShimmer{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}@keyframes pixPulse{0%,100%{opacity:1}50%{opacity:.45}}@keyframes pixReveal{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}";
+  s.textContent = "@keyframes pixShimmer{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}@keyframes pixPulse{0%,100%{opacity:1}50%{opacity:.45}}@keyframes pixReveal{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}@keyframes pixCaret{0%,49%{opacity:1}50%,100%{opacity:0}}@media (prefers-reduced-motion: reduce){[data-pix-caret]{animation:none!important}}";
   document.head.appendChild(s);
 }
 
@@ -43,8 +44,9 @@ const metaText = { font: `400 11px ${rFont}`, color: "var(--fg3, #71717a)" };
 function AIResponseBase({
   status = "done", text, children, thinking, thinkingLabel = "Show thinking",
   model, duration, tokens, error, stage = "Thinking…", stages = [], citations = [],
-  onStop, onRetry, onCopy, onFeedback, onReplayThinking, showActions = true, defaultThinkingOpen = false, style,
+  onStop, onRetry, onCopy, onFeedback, onReplayThinking, showActions = true, defaultThinkingOpen = false, markdown = true, style,
 }) {
+  const streaming = status === "streaming";
   const [vote, setVote] = useRespState(null);
   ensureShimmer();
 
@@ -116,15 +118,22 @@ function AIResponseBase({
     <div style={shell}>
       <div style={head}>
         <span style={mark()}><RIcon path={R_SPARK} size={13} /></span>
-        <span style={{ font: `600 12px ${rFont}`, color: "var(--fg1, #18181b)" }}>Response</span>
+        <span style={{ font: `600 12px ${rFont}`, color: "var(--fg1, #18181b)" }}>{streaming ? "Writing…" : "Response"}</span>
         <span style={{ flex: 1 }} />
         {model && <span style={metaText}>{model}</span>}
         {duration && <span style={metaText}>· {duration}</span>}
         {tokens && <span style={metaText}>· {tokens}</span>}
+        {streaming && onStop && (
+          <button onClick={onStop} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 8px", border: "1px solid var(--border, #e4e4e7)",
+            borderRadius: 3, background: "var(--surface, #fff)", font: `500 11px ${rFont}`, color: "var(--fg2, #52525b)", cursor: "pointer" }}>
+            <RIcon path={R_STOP} size={11} />Stop
+          </button>
+        )}
       </div>
 
-      <div style={{ padding: "14px", font: `400 13px ${rFont}`, color: "var(--fg2, #52525b)", lineHeight: 1.65, whiteSpace: children ? "normal" : "pre-wrap" }}>
-        {children || text}
+      <div aria-live={streaming ? "polite" : undefined} aria-busy={streaming || undefined} style={{ padding: "14px", font: `400 13px ${rFont}`, color: "var(--fg2, #52525b)", lineHeight: 1.65, whiteSpace: children || markdown ? "normal" : "pre-wrap" }}>
+        {children || (markdown ? <Markdown text={text || ""} streaming={streaming} /> : text)}
+        {streaming && <span data-pix-caret="" aria-hidden="true" style={{ display: "inline-block", width: 7, height: 14, marginLeft: 2, verticalAlign: "text-bottom", background: "var(--fg1, #18181b)", animation: "pixCaret 1s steps(1) infinite" }} />}
       </div>
 
       {citations.length > 0 && (
@@ -148,7 +157,7 @@ function AIResponseBase({
         </div>
       )}
 
-      {thinking && (
+      {thinking && !streaming && (
         <div style={{ borderTop: "1px solid var(--divider, #f4f4f5)", padding: "10px 14px 12px" }}>
           <ThinkingTrace
             steps={Array.isArray(thinking) ? thinking : String(thinking).split("\n").filter(Boolean).map(l => ({ label: l }))}
@@ -157,7 +166,7 @@ function AIResponseBase({
         </div>
       )}
 
-      {showActions && (onCopy || onRetry || onFeedback) && (
+      {!streaming && showActions && (onCopy || onRetry || onFeedback) && (
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, padding: "0 14px 12px" }}>
           {onCopy && (
             <button onClick={onCopy} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 8px", border: "1px solid var(--border, #e4e4e7)",

@@ -1,0 +1,37 @@
+---
+title: ToolCall
+description: One call an agent made to a tool, with its input, output and status.
+---
+
+A tool call card shows a single step an agent took: the tool's name, what it sent, what came back and how long it took. Collapsed, it is one line in a conversation. Open, it shows the full input and output.
+
+<Preview name="tool-call-states" />
+
+## When to use
+
+- Inside a Conversation or an AIResponse, to show the steps behind an answer.
+- When a step fails and the person should be able to retry it. Pass `onRetry`.
+- Prefer ExecutionTrace for a long run of steps shown as a timeline. ToolCall is for one step in place.
+
+## States
+
+`queued`, `running`, `done`, `failed` and `approval`. The card opens by itself while running, failed or waiting for approval, because those are the moments someone needs to look. Control it with `open` and `onOpenChange` when you need to.
+
+## Anatomy
+
+- `name`: the tool's identifier, set in monospace.
+- `description`: an optional plain-language line next to it.
+- `input` and `output`: objects are shown as formatted JSON (JavaScript Object Notation); strings as they are.
+- `error`: shown in place of the output when the call failed.
+- `duration`: shown as given.
+- `children`: any custom body, such as an ApprovalCard while the call waits.
+
+## Accessibility
+
+- The header is a button with `aria-expanded`, so screen readers announce whether the details are shown.
+- Status is written next to the name, not shown by color alone.
+- The running pulse stops when the reader prefers reduced motion.
+
+## Props
+
+<PropsTable component="ToolCall" />
