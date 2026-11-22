@@ -1,4 +1,4 @@
 {
   "title": "Docs",
-  "pages": ["index", "installation", "dark-mode", "principles", "components", "css-classes", "changelog"]
+  "pages": ["index", "installation", "guides", "dark-mode", "principles", "components", "css-classes", "changelog"]
 }

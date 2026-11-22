@@ -1,0 +1,9 @@
+[
+  { "id": "e1", "invocationId": "inv_1", "author": "ledger_agent", "partial": true, "content": { "role": "model", "parts": [{ "text": "Checking invoice " }] } },
+  { "id": "e2", "invocationId": "inv_1", "author": "ledger_agent", "partial": true, "content": { "role": "model", "parts": [{ "text": "`INV-20417`." }] } },
+  { "id": "e3", "invocationId": "inv_1", "author": "ledger_agent", "partial": false, "content": { "role": "model", "parts": [{ "text": "Checking invoice `INV-20417`." }] } },
+  { "id": "e4", "invocationId": "inv_1", "author": "ledger_agent", "content": { "role": "model", "parts": [{ "functionCall": { "id": "adk-fc-1", "name": "lookup_invoice", "args": { "invoice_id": "INV-20417" } } }] } },
+  { "id": "e5", "invocationId": "inv_1", "author": "ledger_agent", "content": { "role": "user", "parts": [{ "functionResponse": { "id": "adk-fc-1", "name": "lookup_invoice", "response": { "variance": 162.5 } } }] } },
+  { "id": "e6", "invocationId": "inv_1", "author": "ledger_agent", "longRunningToolIds": ["adk-fc-2"], "content": { "role": "model", "parts": [{ "functionCall": { "id": "adk-fc-2", "name": "request_payment_release", "args": { "invoice_id": "INV-20417", "amount": 4812.5 } } }] } },
+  { "id": "e7", "invocationId": "inv_1", "author": "ledger_agent", "content": { "role": "user", "parts": [{ "functionResponse": { "id": "adk-fc-2", "name": "request_payment_release", "response": { "status": "pending" } } }] } }
+]

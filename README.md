@@ -20,6 +20,7 @@ AI interfaces have their own primitives: a response that streams, a trace of wha
 | [`@pix-ui/css`](packages/css) | Any web framework or plain HTML — `pix-*` classes | `npm i @pix-ui/css` |
 | [`@pix-ui/react`](packages/react) | React 18+ / Next.js — 51 components | `npm i @pix-ui/react` |
 | [`@pix-ui/react-native`](packages/react-native) | iOS & Android via React Native / Expo | `npm i @pix-ui/react-native` |
+| [`@pix-ui/adapters`](packages/adapters) | Agent event streams (Vercel AI SDK, AG-UI, Google ADK) to PIX props, no dependencies | `npm i @pix-ui/adapters` |
 
 ## Quick start
 
@@ -98,6 +99,7 @@ Minimal per-framework starters, each installing PIX from npm:
 | [`examples/nextjs`](examples/nextjs) | Next.js (App Router) | `@pix-ui/react` |
 | [`examples/vite-react`](examples/vite-react) | Vite + React | `@pix-ui/react` |
 | [`examples/angular`](examples/angular) | Angular (standalone components) | `@pix-ui/css` |
+| [`examples/agent-starter`](examples/agent-starter) | Vite + React agent screen with a mock streaming agent (workspace package) | `@pix-ui/react`, `@pix-ui/adapters` |
 
 ## Documentation
 

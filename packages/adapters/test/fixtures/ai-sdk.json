@@ -1,0 +1,23 @@
+[
+  { "type": "start", "messageId": "msg_r1" },
+  { "type": "start-step" },
+  { "type": "text-start", "id": "txt_1" },
+  { "type": "text-delta", "id": "txt_1", "delta": "Checking invoice " },
+  { "type": "text-delta", "id": "txt_1", "delta": "`INV-20417` against its purchase order." },
+  { "type": "text-end", "id": "txt_1" },
+  { "type": "tool-input-start", "toolCallId": "call_lookup", "toolName": "invoices.lookup" },
+  { "type": "tool-input-delta", "toolCallId": "call_lookup", "inputTextDelta": "{\"invoiceId\":" },
+  { "type": "tool-input-delta", "toolCallId": "call_lookup", "inputTextDelta": "\"INV-20417\"}" },
+  { "type": "tool-input-available", "toolCallId": "call_lookup", "toolName": "invoices.lookup", "input": { "invoiceId": "INV-20417" } },
+  { "type": "tool-output-available", "toolCallId": "call_lookup", "output": { "vendor": "Harbor Lane Paper Co.", "amount": 4812.5, "poAmount": 4650, "variance": 162.5 } },
+  { "type": "finish-step" },
+  { "type": "start-step" },
+  { "type": "text-start", "id": "txt_1" },
+  { "type": "text-delta", "id": "txt_1", "delta": "The invoice is blocked by a price variance of $162.50." },
+  { "type": "text-end", "id": "txt_1" },
+  { "type": "tool-input-start", "toolCallId": "call_release", "toolName": "payments.release" },
+  { "type": "tool-input-available", "toolCallId": "call_release", "toolName": "payments.release", "input": { "invoiceId": "INV-20417", "amount": 4812.5 } },
+  { "type": "tool-approval-request", "approvalId": "apr_1", "toolCallId": "call_release" },
+  { "type": "finish-step" },
+  { "type": "finish", "finishReason": "tool-calls" }
+]
