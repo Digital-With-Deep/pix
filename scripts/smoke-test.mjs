@@ -40,6 +40,11 @@ ok(renderToString(React.createElement(pixEsm.Button, { variant: "filled" }, "Run
 {
   const md = renderToString(React.createElement(pixEsm.Markdown, { text: "A **bold** and *soft* [link](#x) with `code`.\n\n- one **two**" }));
   ok(md.includes("<strong") && md.includes("href=\"#x\"") && md.includes("<code"), "react: Markdown renders nested inline syntax");
+  // Every prefix of a streamed answer must render (a lone "|" or an indented list item used to stall the parser).
+  const streamed = "Open items:\n\n| Invoice | Due |\n|:--|--:|\n| A-1 | Nov 30 |\n\n  - nested first\n- one\n  - two\n> quoted\n\n#### Done";
+  let prefixes = 0;
+  for (let n = 0; n <= streamed.length; n++) { renderToString(React.createElement(pixEsm.Markdown, { text: streamed.slice(0, n), streaming: true })); prefixes++; }
+  ok(prefixes === streamed.length + 1, "react: Markdown renders every prefix of a streamed answer");
   const bad = "javascript:alert(1)";
   const unsafe = [
     renderToString(React.createElement(pixEsm.Markdown, { text: `[x](${bad})` })),
