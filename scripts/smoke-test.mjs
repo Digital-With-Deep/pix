@@ -37,6 +37,10 @@ for (const n of names) {
 ok(rendered >= names.length - crashed.length, `react: ${rendered}/${names.length} render on the server with minimal props`);
 if (crashed.length) console.log("   needs required props (expected for data-driven components):\n   - " + crashed.join("\n   - "));
 ok(renderToString(React.createElement(pixEsm.Button, { variant: "filled" }, "Run")).includes("Run"), "react: Button renders its label");
+{
+  const md = renderToString(React.createElement(pixEsm.Markdown, { text: "A **bold** and *soft* [link](#x) with `code`.\n\n- one **two**" }));
+  ok(md.includes("<strong") && md.includes("href=\"#x\"") && md.includes("<code"), "react: Markdown renders nested inline syntax");
+}
 
 const ctx = { React, ReactDOM: {} };
 ctx.window = ctx; ctx.self = ctx;

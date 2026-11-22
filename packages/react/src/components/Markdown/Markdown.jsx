@@ -22,8 +22,9 @@ const INLINE = /(`+)([^`]*?)\1|\*\*([^*]+?)\*\*|__([^_]+?)__|~~([^~]+?)~~|\*([^*
 function inline(text, keyBase) {
   const out = [];
   let last = 0, m, i = 0;
-  INLINE.lastIndex = 0;
-  while ((m = INLINE.exec(text))) {
+  // A fresh regex per call: the nested calls below would otherwise reset a shared lastIndex and loop forever.
+  const re = new RegExp(INLINE.source, "g");
+  while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index));
     const k = `${keyBase}-${i++}`;
     if (m[1]) out.push(<code key={k} style={{ font: `400 0.92em ${mMono}`, padding: "1px 4px", borderRadius: 3, background: "var(--zinc-100, #f4f4f5)", color: "var(--fg1, #18181b)" }}>{m[2]}</code>);
@@ -36,7 +37,7 @@ function inline(text, keyBase) {
         ? <a key={k} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" style={{ color: "var(--accent-ink, var(--emerald-700, #047857))", textDecoration: "underline", textUnderlineOffset: 2 }}>{inline(m[8], k)}</a>
         : <span key={k}>{m[8]}</span>);
     }
-    last = INLINE.lastIndex;
+    last = re.lastIndex;
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
