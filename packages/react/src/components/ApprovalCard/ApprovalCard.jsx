@@ -1,4 +1,5 @@
 import * as React from "react";
+import { safeHref } from "../Markdown/safeHref.js";
 import { Skeleton } from "../Skeleton/Skeleton.jsx";
 const { useState, useEffect, useId } = React;
 
@@ -144,7 +145,7 @@ function ApprovalCardBase({
           <span style={{ ...label, marginRight: 2 }}>Evidence</span>
           {evidence.map((e, i) => {
             const lbl = typeof e === "string" ? e : e.label;
-            const href = typeof e === "object" ? e.href : undefined;
+            const href = typeof e === "object" ? safeHref(e.href) || undefined : undefined;
             const Tag = href ? "a" : "span";
             return <Tag key={lbl + i} href={href} style={{ padding: "2px 7px", border: "1px solid var(--border, #e4e4e7)", borderRadius: 3, background: "var(--zinc-50, #fafafa)", font: `500 11px ${aMono}`, color: "var(--fg2, #52525b)", textDecoration: "none" }}>{lbl}</Tag>;
           })}
