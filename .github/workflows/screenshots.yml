@@ -45,7 +45,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SOURCE_REF: ${{ github.event_name == 'pull_request' && format('PR #{0} ({1})', github.event.pull_request.number, github.event.pull_request.head.ref) || github.ref_name }}
+          SOURCE_REF: ${{ github.event_name == 'pull_request' && format('PR {0} ({1})', github.event.pull_request.number, github.event.pull_request.head.ref) || github.ref_name }}
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
