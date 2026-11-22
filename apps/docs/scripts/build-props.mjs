@@ -28,6 +28,8 @@ const COMPONENTS = [
   "MultiSelect", "RadioGroup", "Switch", "SearchField", "SavedSearch", "FormActions", "ProviderConfig", "Menu", "Sidebar",
   // Feedback, content and onboarding
   "EmptyState", "Skeleton", "Disclosure", "LicenseBanner", "GettingStarted", "NextSteps", "PlanCard", "Stepper", "Page",
+  // Basics pack
+  "Card", "Checkbox", "Dialog", "Popover", "TextField", "Textarea", "Tooltip", "Toast",
   // Multi-export directories
   { name: "Avatar", file: "Avatar/Avatar.d.ts", iface: "AvatarProps" },
   { name: "AvatarGroup", file: "Avatar/Avatar.d.ts", iface: "AvatarGroupProps" },
@@ -36,6 +38,8 @@ const COMPONENTS = [
   { name: "Grid", file: "Layout/Grid.d.ts", iface: "GridProps" },
   { name: "Stack", file: "Layout/Stack.d.ts", iface: "StackProps" },
   { name: "Split", file: "Layout/Grid.d.ts", iface: "SplitProps" },
+  { name: "ToastProvider", file: "Toast/Toast.d.ts", iface: "ToastProviderProps" },
+  { name: "ToastOptions", file: "Toast/Toast.d.ts", iface: "ToastOptions" },
 ];
 
 export function parsePropsFromDts(file, interfaceName) {
