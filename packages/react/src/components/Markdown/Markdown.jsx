@@ -1,4 +1,5 @@
 import * as React from "react";
+import { safeHref } from "./safeHref.js";
 
 const mSans = "var(--font-sans, ui-sans-serif, system-ui, sans-serif)";
 const mMono = "var(--font-mono, ui-monospace, Menlo, monospace)";
@@ -11,11 +12,6 @@ const mMono = "var(--font-mono, ui-monospace, Menlo, monospace)";
 // trailing marker (`**`, a lone backtick, an open link) is held back so partial
 // text never flashes raw syntax, and an unclosed code fence renders as code.
 
-function safeHref(href) {
-  const h = String(href || "").trim();
-  if (/^(https?:|mailto:)/i.test(h) || h.startsWith("/") || h.startsWith("#")) return h;
-  return null;
-}
 
 const INLINE = /(`+)([^`]*?)\1|\*\*([^*]+?)\*\*|__([^_]+?)__|~~([^~]+?)~~|\*([^*\s][^*]*?)\*|_([^_\s][^_]*?)_|\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 

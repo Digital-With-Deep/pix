@@ -1,4 +1,5 @@
 import * as React from "react";
+import { safeHref } from "../Markdown/safeHref.js";
 import { Skeleton } from "../Skeleton/Skeleton.jsx";
 import { ThinkingTrace } from "../ThinkingTrace/ThinkingTrace.jsx";
 import { Markdown } from "../Markdown/Markdown.jsx";
@@ -142,7 +143,7 @@ function AIResponseBase({
           {citations.map((c, i) => {
             const label = typeof c === "string" ? c : c.label;
             const note = typeof c === "object" ? c.note : null;
-            const href = typeof c === "object" ? c.href : null;
+            const href = typeof c === "object" ? safeHref(c.href) : null;
             const Tag = href ? "a" : "span";
             return (
               <Tag key={label} href={href || undefined} title={note || undefined}

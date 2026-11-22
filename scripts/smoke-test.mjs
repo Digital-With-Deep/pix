@@ -40,6 +40,13 @@ ok(renderToString(React.createElement(pixEsm.Button, { variant: "filled" }, "Run
 {
   const md = renderToString(React.createElement(pixEsm.Markdown, { text: "A **bold** and *soft* [link](#x) with `code`.\n\n- one **two**" }));
   ok(md.includes("<strong") && md.includes("href=\"#x\"") && md.includes("<code"), "react: Markdown renders nested inline syntax");
+  const bad = "javascript:alert(1)";
+  const unsafe = [
+    renderToString(React.createElement(pixEsm.Markdown, { text: `[x](${bad})` })),
+    renderToString(React.createElement(pixEsm.AIResponse, { text: "a", citations: [{ label: "s", href: bad }] })),
+    renderToString(React.createElement(pixEsm.ApprovalCard, { title: "t", evidence: [{ label: "e", href: bad }] })),
+  ];
+  ok(unsafe.every((h) => !h.includes("javascript:")), "react: unsafe link schemes are never rendered as links");
 }
 
 const ctx = { React, ReactDOM: {} };
