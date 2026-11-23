@@ -106,6 +106,7 @@ Full screens built only from PIX components, ready to copy as a starting point. 
 
 | Layout | What it is | Built with |
 | --- | --- | --- |
+| [Helm](https://pixui.digitalwithdeep.com/blocks/helm/) | Executive command center (a system of action) | `ApprovalCard` `ToolCall` `PlanView` `ActionHistory` `AutonomySetting` `Conversation` |
 | [Copilot](https://pixui.digitalwithdeep.com/blocks/copilot/) | Agent chat app | `Conversation` `ToolCall` `ApprovalCard` `PlanView` `Markdown` `PromptInput` |
 | [Approvals](https://pixui.digitalwithdeep.com/blocks/approvals/) | Agent approvals desk | `ApprovalCard` `ActionHistory` `AutonomySetting` `Dialog` `ToastProvider` |
 | [Research](https://pixui.digitalwithdeep.com/blocks/research/) | Cited research assistant | `InlineCitation` `SourcePanel` `ConfidenceBadge` `Tooltip` `Markdown` |
@@ -113,7 +114,7 @@ Full screens built only from PIX components, ready to copy as a starting point. 
 | [Relay](https://pixui.digitalwithdeep.com/blocks/relay/) | Human-in-the-loop inbox | `AIResponse` `ExecutionTrace` `InvariantPanel` `AuditLog` `MetricCard` |
 | [Lumen](https://pixui.digitalwithdeep.com/blocks/lumen/) | AI chat assistant | `AIResponse` `ThinkingTrace` `PromptInput` `Menu` |
 
-More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
+More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Helm, Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
 
 ## AI coding tools
 
