@@ -104,6 +104,17 @@ Minimal per-framework starters, each installing PIX from npm:
 
 Full screens built only from PIX components, ready to copy as a starting point. Preview each one at any width and read its source on the **[Blocks](https://pixui.digitalwithdeep.com/blocks/)** page; the source lives in [`apps/docs/app/(home)/blocks`](apps/docs/app/(home)/blocks).
 
+<a href="https://pixui.digitalwithdeep.com/blocks/helm/">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/marketing/helm-hero-dark.png">
+  <img src="assets/marketing/helm-hero-light.png" alt="Helm, a PIX layout: an executive's morning in a system of action, with metrics, a decision queue of agent proposals and the agents running now">
+</picture>
+</a>
+
+**Helm** shows what a system of action looks like: agents do the work overnight, and the executive only makes the decisions they bring forward. Every agent action is logged with an undo window, and each agent's autonomy is set per decision type.
+
+<img src="assets/marketing/helm-trust-dark.png" alt="Helm's action history with undo, and per-agent autonomy settings">
+
 | Layout | What it is | Built with |
 | --- | --- | --- |
 | [Helm](https://pixui.digitalwithdeep.com/blocks/helm/) | Executive command center (a system of action) | `ApprovalCard` `ToolCall` `PlanView` `ActionHistory` `AutonomySetting` `Conversation` |
