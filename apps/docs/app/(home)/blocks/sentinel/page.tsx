@@ -2,6 +2,8 @@
 import { ThemedShell } from '@/components/ThemedShell';
 import { useMemo, useState } from 'react';
 import {
+  ActionHistory,
+  AutonomySetting,
   Badge,
   Button,
   StageFlow,
@@ -18,6 +20,8 @@ import {
   type AuditEvent,
   type Invariant,
   type TaxonomyNode,
+  type AgentAction,
+  type AutonomyLevel,
 } from '@pix-ui/react';
 
 // Sentinel dogfoods PIX: every surface below is a real @pix-ui/react
@@ -225,8 +229,24 @@ const AUDIT_EVENTS: AuditEvent[] = [
   { id: 'evt_14', ts: '2026-10-07T08:02:15Z', message: 'AP lead opened run #4402 for review', agent: 'dana.reyes@finance', identity: 'dana.reyes@finance', kind: 'auth', outcome: 'ok', run_id: 'run_4402' },
 ];
 
+// Reversible changes the agents made, for the action history. A fixed clock
+// keeps the undo windows the same on every load.
+const ACTIONS_NOW = '2026-10-07T10:05:00Z';
+const AGENT_ACTIONS: AgentAction[] = [
+  { id: 'act_31', at: '2026-10-07T10:03:44Z', agent: 'ap-reconciliation-agent', action: 'Started three-way match for', target: 'INV-88344', status: 'pending', detail: 'Run #4418 · waiting on the ledger tolerance check.' },
+  { id: 'act_30', at: '2026-10-07T09:12:24Z', agent: 'ap-reconciliation-agent', action: 'Scheduled payment for', target: 'INV-88213', status: 'done', undoUntil: '2026-10-07T10:12:24Z', detail: '$42,318.00 · can be pulled until the payment run is cut.' },
+  { id: 'act_29', at: '2026-10-07T09:12:23Z', agent: 'ap-reconciliation-agent', action: 'Released payment block on', target: 'INV-88213', status: 'done', undoUntil: '2026-10-07T09:27:23Z' },
+  { id: 'act_28', at: '2026-10-06T17:24:47Z', agent: 'ap-escalation-agent', action: 'Notified AP lead about', target: 'INV-87990', status: 'done', detail: 'Messages cannot be recalled.' },
+  { id: 'act_27', at: '2026-10-06T16:48:21Z', agent: 'ap-reconciliation-agent', action: 'Posted payment hold on', target: 'INV-87990', status: 'done', undoUntil: '2026-10-06T17:48:21Z' },
+  { id: 'act_26', at: '2026-10-06T16:47:58Z', agent: 'ap-reconciliation-agent', action: 'Wrote variance note on', target: 'INV-87990', status: 'undone', detail: 'Reversed by the AP lead: the variance was computed in-process.' },
+];
+
 function ExampleInner() {
   const [selectedId, setSelectedId] = useState<string>(RUNS[0].id);
+  const [actions, setActions] = useState<AgentAction[]>(AGENT_ACTIONS);
+  const [autonomy, setAutonomy] = useState<AutonomyLevel>('confirm');
+  const undoAction = (id: string) =>
+    setActions((list) => list.map((a) => (a.id === id ? { ...a, status: 'undone' as const } : a)));
   const run = useMemo(() => RUNS.find((r) => r.id === selectedId) ?? RUNS[0], [selectedId]);
 
   return (
@@ -376,6 +396,33 @@ function ExampleInner() {
 
                 <TaxonomyTree caption="Classification" hint={run.label} nodes={run.taxonomy} />
               </Stack>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0, 1fr) 320px',
+                gap: 24,
+                alignItems: 'start',
+              }}
+            >
+              <ActionHistory actions={actions} now={ACTIONS_NOW} onUndo={undoAction} />
+
+              <div
+                style={{
+                  background: 'var(--surface, #fff)',
+                  border: '1px solid var(--border, #e7e5e4)',
+                  borderRadius: 4,
+                  padding: 14,
+                }}
+              >
+                <AutonomySetting
+                  label="Agent autonomy"
+                  task="AP reconciliation"
+                  value={autonomy}
+                  onChange={setAutonomy}
+                />
+              </div>
             </div>
 
             <AuditLog

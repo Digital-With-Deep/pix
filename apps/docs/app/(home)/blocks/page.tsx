@@ -4,7 +4,7 @@ import { BlockViewer } from '@/components/BlockViewer';
 export const metadata: Metadata = {
   title: 'Blocks — PIX',
   description:
-    'Composition patterns built entirely from PIX components — an AI chat assistant, an LLM eval console, an agent run console and an AI code-review surface. Preview, read the code, copy.',
+    'Composition patterns built entirely from PIX components — an executive command center where agents act and you decide, an AI chat assistant, an agent copilot, an approvals desk, a cited research assistant, agent settings, eval and run consoles and more. Preview, read the code, copy.',
 };
 
 const faint = 'var(--fg3, #78716c)';
