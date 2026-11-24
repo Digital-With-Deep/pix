@@ -1,0 +1,48 @@
+---
+title: Card
+description: A bordered surface that groups related content under an optional header and footer.
+---
+
+Card is the plain container behind most panels in a console: a title and one supporting line, a trailing action, a body, and a footer row for buttons. It has no opinion about its content, so it works for a summary, a short form, or a list that runs edge to edge.
+
+<Preview name="card-overview" />
+
+## When to use
+
+- To group content that belongs together and can be read on its own, such as a run summary or a settings section.
+- To give a short form or list a header and a footer row of actions.
+- Prefer MetricCard for a single number with a delta, and PlanCard for a pricing tier; both are cards with a fixed layout.
+- Don't nest cards. Use dividers or Disclosure inside one card instead.
+
+## Variants
+
+`padding` sets the body gutter: `sm`, `md` (the default) or `lg`. With `padding="none"` the body runs flush to the border, which suits a list or a table; the header and footer keep their gutter.
+
+<Preview title="FLUSH BODY" name="card-flush" />
+
+With `loading`, Card renders a panel skeleton in its own footprint.
+
+<Preview title="LOADING" name="card-loading" />
+
+The same layout is available as classes from `@pix-ui/css`.
+
+<Preview title="CSS CLASSES" name="card-classes" />
+
+## Anatomy
+
+- `title` — the heading, rendered as `h3` by default; set `headingLevel` to fit the page outline.
+- `description` — one supporting line under the title.
+- `action` — a trailing control in the header, such as a small Button, a Menu or a Badge.
+- `children` — the body.
+- `footer` — a right-aligned row on a subtle background, usually one or two Buttons.
+
+## Accessibility
+
+- With a `title`, the card renders `role="group"` named by its heading, so screen reader users hear the card's name when they move into it. Pass `role="region"` to make an important card a landmark, sparingly.
+- Pick `headingLevel` so headings stay in order on the page; a card's title should sit one level below the section it lives in.
+- Card itself isn't interactive. If the whole card should act as a link, put a real link in the title rather than a click handler on the surface.
+- Body text and the description meet 4.5:1 in light and dark themes.
+
+## Props
+
+<PropsTable component="Card" />

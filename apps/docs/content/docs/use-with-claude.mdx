@@ -1,0 +1,124 @@
+---
+title: Use PIX with Claude
+description: Give Claude Code the PIX MCP server, install examples from the PIX registry, paste PIX context into any chat, and start from a CLAUDE.md snippet and a few prompts.
+---
+
+Claude writes better PIX code when it can read the real component contracts instead of guessing them. This page covers the four ways in that this repo supports, plus a `CLAUDE.md` snippet and some prompts to start from. For Cursor and other editors, see [Use PIX with AI coding tools](/docs/ai-tools).
+
+## 1. Claude Code: add the PIX MCP server
+
+`@pix-ui/mcp` is an MCP (Model Context Protocol) server for PIX. It runs on your machine over stdio, makes no network requests and has no runtime dependencies: the component data is bundled into the package when it is built. It gives Claude three tools:
+
+| Tool | Input | What Claude gets back |
+| --- | --- | --- |
+| `list_components` | none | Every PIX component with a one-line description and its docs URL. |
+| `get_component` | `name`, such as `ApprovalCard` or `data-table` | The props table from the component's hand-written TypeScript contract, the docs page text and the example source, each example with its `npx shadcn add` command. |
+| `suggest_component` | `description` in plain language, optional `limit` from 1 to 10 (default 3) | The best matching components, ranked by keyword relevance. |
+
+Add it to Claude Code from your project folder:
+
+```bash
+claude mcp add pix -- npx -y @pix-ui/mcp
+```
+
+To share it with everyone who works in the repo, add it at project scope instead. Claude Code then writes it to `.mcp.json` at the project root, which you commit:
+
+```bash
+claude mcp add --scope project pix -- npx -y @pix-ui/mcp
+```
+
+Or write `.mcp.json` by hand:
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "pix": {
+      "command": "npx",
+      "args": ["-y", "@pix-ui/mcp"]
+    }
+  }
+}
+```
+
+Run `/mcp` inside Claude Code to check that `pix` is connected, then ask something like "Which PIX component should I use to ask a person before an agent issues a refund?". Claude calls `suggest_component`, then `get_component` for the props before it writes code.
+
+### Run the server from a clone
+
+If `npx` cannot find `@pix-ui/mcp` on npm yet, run the server from a clone of this repo. It reads the data that `pnpm build` writes to `packages/mcp/dist/data.json`:
+
+```bash
+git clone https://github.com/Digital-With-Deep/pix.git
+cd pix
+pnpm install
+pnpm build
+claude mcp add pix -- node "$(pwd)/packages/mcp/src/server.js"
+```
+
+Rebuild after you pull new components so the server sees them.
+
+## 2. Install examples from the PIX registry
+
+Every example on these docs pages is also an item in a shadcn-compatible registry, served as static JSON files under `/r/`. Adding one installs `@pix-ui/react` and writes the example to `components/pix/<item>.tsx`, ready to edit:
+
+```bash
+npx shadcn add https://pixui.digitalwithdeep.com/r/approval-card-pending.json
+```
+
+- The item name is the example's name, which you can see in the Code tab of each preview, for example `approval-card-pending`, `tool-call-states` or `source-panel-linked`. The [registry index](https://pixui.digitalwithdeep.com/r/registry.json) lists them all, and `get_component` in the MCP server prints the command for each example of a component.
+- The shadcn CLI expects a `components.json` in the project. If there is none, run `npx shadcn init` first.
+- The components themselves stay in the `@pix-ui/react` package. Only the example file is copied into your project.
+- Import the stylesheet once at your app root: `import "@pix-ui/react/styles.css";`.
+
+Claude Code can run these commands for you. Ask it to "add the PIX approval-card-pending example and wire it to our refunds endpoint".
+
+## 3. Paste PIX context into any chat
+
+The docs are published as plain text for language models, so you can give PIX context to Claude in any chat, without an MCP server:
+
+- [`/llms.txt`](https://pixui.digitalwithdeep.com/llms.txt) is an index of every docs page with its description.
+- [`/llms-full.txt`](https://pixui.digitalwithdeep.com/llms-full.txt) is the full text of every docs page in one file.
+- Each page is also available on its own as Markdown under `/llms.mdx/docs/`, for example [`/llms.mdx/docs/components/approval-card/content.md`](https://pixui.digitalwithdeep.com/llms.mdx/docs/components/approval-card/content.md).
+
+Paste the URL, or the text itself, at the start of the conversation and say which components you want to use. `llms-full.txt` is long, so for one screen it is usually enough to paste the pages of the components you need.
+
+## 4. Tell Claude to build with PIX: a CLAUDE.md snippet
+
+Claude Code reads `CLAUDE.md` at the root of your repo at the start of every session. Drop this section into yours so it reaches for PIX first:
+
+```md title="CLAUDE.md"
+## UI: build with PIX
+
+This app's UI uses PIX (`@pix-ui/react`), a design system for AI products.
+
+- Use PIX components before writing custom UI. For agent and AI surfaces use
+  AIResponse, Conversation, Markdown, ToolCall, ApprovalCard, PlanView,
+  InlineCitation, SourcePanel, ConfidenceBadge, ActionHistory and AutonomySetting.
+  For everyday UI use Button, TextField, Textarea, Checkbox, Select, Card,
+  Dialog, Popover, Tooltip and ToastProvider with useToast.
+- Before using a component, look up its props with the `pix` MCP server
+  (`get_component`), or read its page under https://pixui.digitalwithdeep.com/docs/components/.
+  Do not guess prop names.
+- Import the stylesheet once at the app root: `import "@pix-ui/react/styles.css";`.
+- Style with PIX CSS variables and always give a fallback, for example
+  `color: var(--fg1, #1c1917)` or `border: 1px solid var(--border, #e4e4e7)`.
+  Never hard-code a raw hex color without the `var(--token, …)` wrapper.
+- Dark mode comes from `data-theme="dark"` on `<html>`; do not add a second theme system.
+- A model's claim and the verified truth never share a color: use the
+  `--claim` and `--truth` variables, and `--fault` for authored faults.
+- Put identifiers, ids, amounts, model names and tool names in monospace.
+- Sentence case, no exclamation marks, no emoji in product chrome.
+- Every PIX component takes `loading` to show a skeleton in its own footprint;
+  use it instead of custom spinners.
+```
+
+## 5. Starter prompts
+
+Ready-made layouts to start from are on the [Blocks](/blocks) page: each one is a full screen built only from PIX components, with its source in the Code tab. With the MCP server connected, prompts like these work well in Claude Code:
+
+- "Build an approvals screen with PIX `ApprovalCard` and `ActionHistory`: a queue of pending actions, approve or reject each one, and undo from the history while the window is open."
+- "Turn our support chat into an agent chat with PIX `Conversation`, `ToolCall` and `PromptInput`. Show each tool call inline and stop on an `ApprovalCard` before any refund."
+- "Show the agent's plan with PIX `PlanView` before it runs, with Proceed, Edit plan and Do it myself, then live progress."
+- "Add citations to our answer view with PIX `InlineCitation` and `SourcePanel`, and a `ConfidenceBadge` on each claim."
+- "Build an agent settings page from PIX `Card`, `TextField`, `Textarea`, `Checkbox` and `AutonomySetting`, and confirm saves with `useToast`."
+- "Use the Approvals block from the PIX docs as the starting point for our expense approvals page. Keep the components, replace the data with our API."
+- "Which PIX components fit a screen that shows what an agent did today and lets me undo it?"

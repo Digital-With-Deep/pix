@@ -1,0 +1,39 @@
+---
+title: Popover
+description: A small panel anchored to a trigger for extra detail or a quick edit.
+---
+
+Popover opens a panel next to the element you pass as its child. It's non-modal: the rest of the page stays usable, and the panel closes on a click outside, on Escape or when focus leaves it.
+
+<Preview name="popover-overview" />
+
+## When to use
+
+- To explain a value or a setting in more detail than a Tooltip allows, including links.
+- For a quick edit of one or two fields next to the thing they change.
+- Prefer Tooltip for a short text label with nothing to interact with.
+- Prefer Menu for a list of commands, and Dialog when the user must finish or cancel before going on.
+
+## Variants
+
+`placement` opens the panel below (the default) or above the trigger, and `align` lines it up with the trigger's `start`, `center` or `end` edge. Control it with `open` and `onOpenChange` when an action inside should close it, as the form below does on submit.
+
+<Preview title="QUICK EDIT" name="popover-form" />
+
+## Anatomy
+
+- `children` — the trigger, usually a Button. Clicking it toggles the panel.
+- `title` — an optional heading at the top of the panel; it also names the panel.
+- `content` — what the panel holds.
+- `width` — the panel width, 280px by default.
+
+## Accessibility
+
+- The trigger gets `aria-haspopup="dialog"`, `aria-expanded` and, while open, `aria-controls`. The panel has `role="dialog"` and is named by `title`, or by `label` when there's no visible title.
+- On open, focus moves to the first focusable element in the panel, or the panel itself. Set `initialFocus={false}` to leave focus on the trigger.
+- Escape closes the panel and returns focus to the trigger. Tabbing out of the panel closes it.
+- Keep content short. Anything the user must complete belongs in a Dialog, where focus is held.
+
+## Props
+
+<PropsTable component="Popover" />

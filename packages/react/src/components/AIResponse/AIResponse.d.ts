@@ -8,10 +8,13 @@ export interface AIResponseStage {
 export interface AIResponseProps {
   /** Render the skeleton for this component in its footprint (see Skeleton). */
   loading?: boolean;
-  /** `generating` shows the shimmer skeleton, `done` the answer, `error` the failure card. @default "done" */
-  status?: "generating" | "done" | "error";
-  /** Answer text. Rendered with preserved line breaks. */
+  /** `generating` shows the shimmer skeleton before the first token, `streaming` renders `text` as it arrives with a caret and Stop,
+   *  `done` the answer, `error` the failure card. @default "done" */
+  status?: "generating" | "streaming" | "done" | "error";
+  /** Answer text, rendered as Markdown (see the Markdown component). Set `markdown={false}` for plain text with preserved line breaks. */
   text?: string;
+  /** Render `text` as Markdown. @default true */
+  markdown?: boolean;
   /** Rich answer content. Takes precedence over `text`. */
   children?: React.ReactNode;
   /** Reasoning trace, rendered with the ThinkingTrace component. A string is
@@ -43,7 +46,7 @@ export interface AIResponseProps {
    *  A string is the label; an object adds a hover `note` and an optional `href`. @default [] */
   citations?: (string | { label: string; note?: string; href?: string })[];
 
-  /** Adds a Stop button while generating. */
+  /** Adds a Stop button while generating or streaming. */
   onStop?: () => void;
   /** Adds Regenerate (done) / Retry (error). */
   onRetry?: () => void;

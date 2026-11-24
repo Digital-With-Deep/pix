@@ -31,6 +31,13 @@
 
 /* ---------- Card / MetricCard ---------- */
 .pix-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); }
+.pix-card__header { display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3); }
+.pix-card__heading { flex: 1; min-width: 0; }
+.pix-card__title { margin: 0; font: 600 15px/1.35 var(--font-sans); color: var(--fg1); }
+.pix-card__description { margin: 2px 0 0; font: 400 13px/1.5 var(--font-sans); color: var(--fg2); }
+.pix-card__action { flex-shrink: 0; display: flex; align-items: center; gap: var(--space-2); }
+.pix-card__body { font: 400 14px/1.55 var(--font-sans); color: var(--fg1); }
+.pix-card__footer { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) calc(-1 * var(--space-4)) calc(-1 * var(--space-4)); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); background: var(--bg-subtle); border-radius: 0 0 var(--radius-md) var(--radius-md); }
 .pix-metric { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
 .pix-metric__label { font: 600 11px var(--font-sans); text-transform: uppercase; letter-spacing: .06em; color: var(--fg3); }
 .pix-metric__value { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; margin-top: 8px; color: var(--fg1); }
@@ -54,7 +61,26 @@
 .pix-input, .pix-select, .pix-textarea { width: 100%; font: 400 14px/1.4 var(--font-sans); color: var(--fg1); background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 8px 10px; transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
 .pix-input::placeholder, .pix-textarea::placeholder { color: var(--fg-muted); }
 .pix-input:focus, .pix-select:focus, .pix-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
-.pix-input[aria-invalid="true"] { border-color: var(--red-500); }
+.pix-input[aria-invalid="true"], .pix-textarea[aria-invalid="true"] { border-color: var(--red-500); }
+.pix-input:disabled, .pix-textarea:disabled { background: var(--bg-subtle); color: var(--fg2); cursor: not-allowed; }
+.pix-textarea { min-height: 88px; line-height: 1.5; resize: vertical; }
+.pix-field__required { margin-left: 2px; color: var(--fg2); }
+.pix-field__meta { display: flex; align-items: flex-start; gap: var(--space-2); }
+.pix-field__meta > .pix-field__hint, .pix-field__meta > .pix-field__error { flex: 1; min-width: 0; }
+.pix-field__count { margin-left: auto; flex-shrink: 0; font: 500 11px/1.6 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--fg2); }
+.pix-field__count--limit { color: var(--fault); }
+
+/* ---------- Checkbox (use on <input type="checkbox">; set .indeterminate from script for the mixed state) ---------- */
+.pix-checkbox { display: flex; align-items: flex-start; gap: 10px; font-family: var(--font-sans); cursor: pointer; }
+.pix-checkbox__input { appearance: none; -webkit-appearance: none; position: relative; flex-shrink: 0; width: 16px; height: 16px; margin: 1px 0 0; border: 1.5px solid var(--fg3); border-radius: 3px; background: var(--surface); cursor: pointer; transition: background var(--dur-fast), border-color var(--dur-fast); }
+.pix-checkbox__input:checked, .pix-checkbox__input:indeterminate { background: var(--emerald-600); border-color: var(--emerald-600); }
+.pix-checkbox__input:checked::after { content: ""; position: absolute; left: 3.5px; top: 0.5px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.pix-checkbox__input:indeterminate::after { content: ""; position: absolute; left: 2.5px; top: 5px; width: 8px; height: 2px; border: 0; border-radius: 1px; background: #fff; transform: none; }
+.pix-checkbox__input:focus-visible { outline: 2px solid var(--accent-fg); outline-offset: 2px; }
+.pix-checkbox__input[aria-invalid="true"] { border-color: var(--red-500); }
+.pix-checkbox__input:disabled, .pix-checkbox__input:disabled ~ * { opacity: .5; cursor: not-allowed; }
+.pix-checkbox__label { display: block; font: 500 13px/1.4 var(--font-sans); color: var(--fg1); }
+.pix-checkbox__description { display: block; margin-top: 2px; font: 400 12px/1.5 var(--font-sans); color: var(--fg2); }
 
 /* ---------- Switch (use on <button role="switch" aria-checked>) ---------- */
 .pix-switch { position: relative; width: 32px; height: 18px; padding: 0; border: 0; border-radius: 999px; background: var(--zinc-300); cursor: pointer; transition: background var(--dur-fast); flex-shrink: 0; }

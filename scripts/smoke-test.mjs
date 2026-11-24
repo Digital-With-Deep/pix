@@ -37,6 +37,22 @@ for (const n of names) {
 ok(rendered >= names.length - crashed.length, `react: ${rendered}/${names.length} render on the server with minimal props`);
 if (crashed.length) console.log("   needs required props (expected for data-driven components):\n   - " + crashed.join("\n   - "));
 ok(renderToString(React.createElement(pixEsm.Button, { variant: "filled" }, "Run")).includes("Run"), "react: Button renders its label");
+{
+  const md = renderToString(React.createElement(pixEsm.Markdown, { text: "A **bold** and *soft* [link](#x) with `code`.\n\n- one **two**" }));
+  ok(md.includes("<strong") && md.includes("href=\"#x\"") && md.includes("<code"), "react: Markdown renders nested inline syntax");
+  // Every prefix of a streamed answer must render (a lone "|" or an indented list item used to stall the parser).
+  const streamed = "Open items:\n\n| Invoice | Due |\n|:--|--:|\n| A-1 | Nov 30 |\n\n  - nested first\n- one\n  - two\n> quoted\n\n#### Done";
+  let prefixes = 0;
+  for (let n = 0; n <= streamed.length; n++) { renderToString(React.createElement(pixEsm.Markdown, { text: streamed.slice(0, n), streaming: true })); prefixes++; }
+  ok(prefixes === streamed.length + 1, "react: Markdown renders every prefix of a streamed answer");
+  const bad = "javascript:alert(1)";
+  const unsafe = [
+    renderToString(React.createElement(pixEsm.Markdown, { text: `[x](${bad})` })),
+    renderToString(React.createElement(pixEsm.AIResponse, { text: "a", citations: [{ label: "s", href: bad }] })),
+    renderToString(React.createElement(pixEsm.ApprovalCard, { title: "t", evidence: [{ label: "e", href: bad }] })),
+  ];
+  ok(unsafe.every((h) => !h.includes("javascript:")), "react: unsafe link schemes are never rendered as links");
+}
 
 const ctx = { React, ReactDOM: {} };
 ctx.window = ctx; ctx.self = ctx;
@@ -45,11 +61,14 @@ ok(typeof ctx.PIX?.Button === "function" && typeof ctx.PIX?.AIResponse === "func
 
 const legacy = /PortfolioOSDesignSystem|Recon ?Bench|\bPACT\b|__rb_/;
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
+const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
 ok(leaks.length === 0, `no legacy names in published output${leaks.length ? ": " + leaks.join(", ") : ""}`);
 
 const rn = await import("../packages/tokens/dist/react-native/index.js");
 ok(typeof rn.rnTokens.space["space-4"] === "number", "react-native tokens: unitless numbers");
+
+const mcpData = JSON.parse(readFileSync("packages/mcp/dist/data.json", "utf8"));
+ok(mcpData.components.length >= 45 && mcpData.components.every((c) => c.props.length && c.docs), `mcp: data bundle covers ${mcpData.components.length} components with props and docs`);
 
 if (fail) { console.error(`\n${fail} check(s) failed`); process.exit(1); }
 console.log("\nall checks passed");

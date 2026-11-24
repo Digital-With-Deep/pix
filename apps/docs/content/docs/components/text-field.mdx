@@ -1,0 +1,48 @@
+---
+title: TextField
+description: A single-line text input with a label, hint, error and character count.
+---
+
+TextField pairs a native input with its label, a hint, an error message and an optional character count, and wires them together with `for`, `id` and `aria-describedby`. It works controlled or uncontrolled.
+
+<Preview name="text-field-overview" />
+
+## When to use
+
+- For short free-text values: a name, an email address, a URL, an amount.
+- Prefer Textarea for more than one line, and PromptInput for a message to a model.
+- Prefer Select when the value must come from a known list, and SearchField for filtering.
+
+## States
+
+`required` adds an asterisk and the native `required` attribute. `maxLength` turns on a `12/40` count under the field, which turns amber at the limit; set `showCount={false}` to keep the limit without the count. `error` replaces the hint, turns the border red and sets `aria-invalid`. `disabled` dims the value and blocks editing.
+
+<Preview title="STATES" name="text-field-states" />
+
+Pass `value` and `onChange` to control it. `onChange` receives the new string first and the event second, so you can pass a state setter directly. Amounts and identifiers read best in monospace, set here with `inputStyle`.
+
+<Preview title="CONTROLLED" name="text-field-controlled" />
+
+<Preview title="LOADING" name="text-field-loading" />
+
+The field layout is also available as classes from `@pix-ui/css`.
+
+<Preview title="CSS CLASSES" name="text-field-classes" />
+
+## Anatomy
+
+- `label` — sits above the input; clicking it focuses the input.
+- The input — every native input attribute you pass, such as `name`, `autoComplete` or `inputMode`, reaches it.
+- `hint` or `error` — one line under the input.
+- The count — right-aligned under the input when `maxLength` is set.
+
+## Accessibility
+
+- The label is a real `<label>` tied to the input. Without a visible `label`, pass `aria-label`.
+- The hint or error and the count are linked through `aria-describedby`, so screen readers read them on focus. The count reads as "12 of 40 characters used".
+- Errors set `aria-invalid` and are written as what to do next, not only what went wrong.
+- Focus shows a 2px accent ring at 3:1 or more in both themes. Label, hint and error text meet 4.5:1.
+
+## Props
+
+<PropsTable component="TextField" />

@@ -26,6 +26,10 @@ While `status="generating"`, the header label pulses and an optional `stages` ch
 
 Once `status="done"`, the answer renders from `text` (or richer `children`), followed by citation chips and the thinking trace — collapsed by default. This is the resting state for most answers: the reasoning is there, one click away, without competing with the answer for attention.
 
+Once the first token arrives, set `status="streaming"` and pass the text so far. The answer renders as Markdown with a blinking caret, holds back half-written syntax, and keeps the Stop button in view.
+
+<Preview title="STREAMING" name="ai-response-streaming" />
+
 <Preview title="GENERATED — THINKING PANE COLLAPSED" name="ai-response-answer" />
 
 ### Generated, thinking pane open

@@ -1,0 +1,45 @@
+---
+title: Checkbox
+description: Turn one option on or off, or pick several from a list.
+---
+
+Checkbox is a native checkbox with a PIX box, a label you can click, an optional description and an error line. It supports an `indeterminate` state for a "select all" row whose children are only partly selected.
+
+<Preview name="checkbox-states" />
+
+## When to use
+
+- To pick any number of options from a list, including none.
+- For a single agreement or opt-in that's submitted with a form, such as confirming a policy.
+- Prefer Switch for a setting that takes effect immediately with no save step.
+- Prefer RadioGroup when exactly one option must be picked.
+
+## States
+
+Checkbox is controlled with `checked` and `onChange`, or uncontrolled with `defaultChecked`. `indeterminate` shows a dash and reports "mixed" to assistive tech; it's visual only, so you decide what a click does and clear it yourself, as the "All sources" row does here.
+
+<Preview title="SELECT ALL" name="checkbox-group" />
+
+`description` adds a second line under the label. `error` adds a message, turns the border red and sets `aria-invalid`; `required` adds an asterisk and the native `required` attribute.
+
+<Preview title="DESCRIPTION AND ERROR" name="checkbox-description" />
+
+<Preview title="LOADING" name="checkbox-loading" />
+
+## Anatomy
+
+- The box — a 16px square drawn over a visually hidden native input, so forms, `name` and `value` work as usual.
+- `label` — clicking it toggles the box.
+- `description` — a second line, linked with `aria-describedby`.
+- `error` — a message under the label, also linked.
+
+## Accessibility
+
+- The control is a real `<input type="checkbox">`, so Space toggles it and screen readers announce checked, unchecked and mixed states without extra ARIA.
+- The box border uses `--fg3` and the checked fill `--emerald-600`, both above 3:1 against the surface in light and dark. A 2px focus ring appears on keyboard focus.
+- Without a `label`, pass `aria-label` so the box has an accessible name.
+- Group related checkboxes in a `fieldset` with a `legend` that names the group.
+
+## Props
+
+<PropsTable component="Checkbox" />

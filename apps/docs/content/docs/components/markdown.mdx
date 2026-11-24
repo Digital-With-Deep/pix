@@ -1,0 +1,28 @@
+---
+title: Markdown
+description: Renders model output written in Markdown, safely and while it is still streaming.
+---
+
+Markdown turns the text a model writes into headings, lists, tables, code and links. It builds React elements directly and never injects HTML, so model output cannot run script in your page. It is what AIResponse and Conversation use to render answers.
+
+<Preview name="markdown-basic" />
+
+## When to use
+
+- To render any model output written in Markdown.
+- Set `streaming` while text is still arriving. Unfinished bold, code or link syntax is held back until it closes.
+- Prefer a full Markdown library if you need footnotes, raw HTML or plugins. This one covers what models write day to day, with no dependencies.
+
+## What it supports
+
+Headings, paragraphs, bold, italic, strikethrough, inline code, fenced code blocks, ordered and unordered lists one level deep, block quotes, tables with column alignment, horizontal rules and links.
+
+## Accessibility
+
+- Links only allow `http`, `https`, `mailto` and in-page addresses. Anything else renders as plain text.
+- External links open in a new tab with `rel="noopener noreferrer"`.
+- Tables keep real header cells, so screen readers can announce the column for each value.
+
+## Props
+
+<PropsTable component="Markdown" />
