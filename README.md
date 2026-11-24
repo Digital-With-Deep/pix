@@ -104,8 +104,20 @@ Minimal per-framework starters, each installing PIX from npm:
 
 Full screens built only from PIX components, ready to copy as a starting point. Preview each one at any width and read its source on the **[Blocks](https://pixui.digitalwithdeep.com/blocks/)** page; the source lives in [`apps/docs/app/(home)/blocks`](apps/docs/app/(home)/blocks).
 
+<a href="https://pixui.digitalwithdeep.com/blocks/helm/">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/marketing/helm-hero-dark.png">
+  <img src="assets/marketing/helm-hero-light.png" alt="Helm, a PIX layout: an executive's morning in a system of action, with metrics, a decision queue of agent proposals and the agents running now">
+</picture>
+</a>
+
+**Helm** shows what a system of action looks like: agents do the work overnight, and the executive only makes the decisions they bring forward. Every agent action is logged with an undo window, and each agent's autonomy is set per decision type.
+
+<img src="assets/marketing/helm-trust-dark.png" alt="Helm's action history with undo, and per-agent autonomy settings">
+
 | Layout | What it is | Built with |
 | --- | --- | --- |
+| [Helm](https://pixui.digitalwithdeep.com/blocks/helm/) | Executive command center (a system of action) | `ApprovalCard` `ToolCall` `PlanView` `ActionHistory` `AutonomySetting` `Conversation` |
 | [Copilot](https://pixui.digitalwithdeep.com/blocks/copilot/) | Agent chat app | `Conversation` `ToolCall` `ApprovalCard` `PlanView` `Markdown` `PromptInput` |
 | [Approvals](https://pixui.digitalwithdeep.com/blocks/approvals/) | Agent approvals desk | `ApprovalCard` `ActionHistory` `AutonomySetting` `Dialog` `ToastProvider` |
 | [Research](https://pixui.digitalwithdeep.com/blocks/research/) | Cited research assistant | `InlineCitation` `SourcePanel` `ConfidenceBadge` `Tooltip` `Markdown` |
@@ -113,7 +125,7 @@ Full screens built only from PIX components, ready to copy as a starting point. 
 | [Relay](https://pixui.digitalwithdeep.com/blocks/relay/) | Human-in-the-loop inbox | `AIResponse` `ExecutionTrace` `InvariantPanel` `AuditLog` `MetricCard` |
 | [Lumen](https://pixui.digitalwithdeep.com/blocks/lumen/) | AI chat assistant | `AIResponse` `ThinkingTrace` `PromptInput` `Menu` |
 
-More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
+More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Helm, Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
 
 ## AI coding tools
 

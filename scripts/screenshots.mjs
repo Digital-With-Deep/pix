@@ -55,7 +55,7 @@ export const COMPONENTS = [
 // Overlay components: also capture the first preview with its overlay open.
 const OPEN_SHOTS = { dialog: "click", popover: "click", tooltip: "focus" };
 
-export const BLOCKS = ["copilot", "approvals", "research", "workspace", "relay", "lumen"];
+export const BLOCKS = ["helm", "copilot", "approvals", "research", "workspace", "relay", "lumen"];
 export const THEMES = ["light", "dark"];
 const WIDTH = 1600;
 const HEIGHT = 1000;
