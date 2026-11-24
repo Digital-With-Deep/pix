@@ -1,0 +1,41 @@
+---
+title: Tooltip
+description: A short text label that appears on hover or keyboard focus.
+---
+
+Tooltip names or explains a control in a few words. It opens after a short hover delay and straight away on keyboard focus, and it stays in the DOM as the trigger's description so screen readers read it either way.
+
+<Preview name="tooltip-overview" />
+
+## When to use
+
+- To name an icon-only button, alongside its `aria-label`.
+- To add one short hint to a control or a status, such as what "Verified" means.
+- Prefer Popover for anything longer than a phrase or anything with a link or button. A tooltip can't be clicked into.
+- Don't hide information the user needs to finish a task in a tooltip; touch screens can't hover.
+
+## Variants
+
+`placement` puts the tooltip on the `top` (the default), `bottom`, `left` or `right` of the trigger. `delay` sets how long the pointer must rest before it opens (400ms by default).
+
+<Preview title="PLACEMENTS" name="tooltip-placements" />
+
+Use `open` and `onOpenChange` to control it, or `defaultOpen` to start it open, as here.
+
+<Preview title="DESCRIBING A STATUS" name="tooltip-describes" />
+
+## Anatomy
+
+- `children` — one focusable element, such as a Button or link.
+- `content` — the text, kept to a phrase.
+
+## Accessibility
+
+- The tooltip has `role="tooltip"` and the trigger gets `aria-describedby` pointing at it. Because it stays in the DOM while hidden, screen readers read it on focus.
+- It opens on keyboard focus, closes on blur, and Escape dismisses it without moving focus.
+- Hovering the tooltip itself keeps it open, so it can be read at high zoom.
+- Inverse colors (`--fg-inverse` text on `--zinc-900`) meet 4.5:1 in both themes. The fade is skipped when the user prefers reduced motion.
+
+## Props
+
+<PropsTable component="Tooltip" />

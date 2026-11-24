@@ -1,0 +1,42 @@
+---
+title: Dialog
+description: A modal window for a focused task or a confirmation that blocks the page.
+---
+
+Dialog opens a panel above a dimmed page and keeps keyboard focus inside it until it closes. It renders into `document.body` once the page has mounted, so it never breaks server rendering, and it returns focus to whatever opened it.
+
+<Preview name="dialog-overview" />
+
+## When to use
+
+- For a short task the user has to finish or cancel before going on, like renaming a run.
+- To confirm a destructive or costly action, with `role="alertdialog"`.
+- Prefer Popover for light, non-blocking content next to a control.
+- Prefer a full page for long forms or anything the user may want to link to.
+
+## Variants
+
+Pass `trigger` and Dialog manages its own state. Or control it with `open` and `onOpenChange`, which is the better fit for a confirmation that runs your own logic. `size` sets the maximum width: `sm` (400px), `md` (560px) or `lg` (760px).
+
+A confirmation uses `role="alertdialog"`, says what will happen in the `description`, names the buttons by their action and turns off `closeOnOverlayClick` so a stray click doesn't dismiss it.
+
+<Preview title="CONFIRMATION" name="dialog-confirm" />
+
+## Anatomy
+
+- `title` — the heading; it names the dialog.
+- `description` — one line under the title; it describes the dialog.
+- The close button — top right, named by `closeLabel`. Hide it with `hideCloseButton`; Escape still closes.
+- `children` — the body, which scrolls when it outgrows the viewport.
+- `footer` — a right-aligned row for the actions, secondary first and primary last.
+
+## Accessibility
+
+- The panel has `role="dialog"` (or `alertdialog`) and `aria-modal="true"`, is labelled by `title` through `aria-labelledby` and described by `description` through `aria-describedby`. Without a visible title, pass `label`.
+- On open, focus moves to `initialFocusRef`, else the first focusable element in the body or footer, else the close button. Tab and Shift+Tab cycle inside the panel.
+- Escape closes the dialog, and focus returns to the element that opened it.
+- Page scroll is locked while the dialog is open. The fade and rise animations are skipped when the user prefers reduced motion.
+
+## Props
+
+<PropsTable component="Dialog" />

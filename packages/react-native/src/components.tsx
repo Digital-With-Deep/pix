@@ -248,3 +248,65 @@ export function PromptInput({ value, onChangeText, onSubmit, placeholder = "Ask 
     </View>
   );
 }
+
+// ---------- ConfidenceBadge ----------
+export type ConfidenceState = "confident" | "low" | "review" | "failed";
+export interface ConfidenceBadgeProps {
+  /** Render a skeleton in the badge's footprint. */
+  loading?: boolean;
+  /** How far to trust the answer; each state has its own colour, glyph and label. Default "confident". */
+  state?: ConfidenceState;
+  /** Optional score from 0 to 1, shown in monospace as a whole percentage. */
+  score?: number;
+  /** What the confidence rests on, such as "checked against 3 sources". */
+  scope?: string;
+  /** Why the badge says what it says. Tap to show it; screen readers get it as the hint. */
+  reason?: string;
+  /** "inline" pill or "standalone" block. Default "inline". */
+  size?: "inline" | "standalone";
+  /** Overrides the state's default label. */
+  label?: string;
+  style?: StyleProp<ViewStyle>;
+}
+const CONFIDENCE_LABEL: Record<ConfidenceState, string> = { confident: "Confident", low: "Low confidence", review: "Needs review", failed: "Check failed" };
+const CONFIDENCE_GLYPH: Record<ConfidenceState, string> = { confident: "✓", low: "!", review: "?", failed: "×" };
+export function ConfidenceBadge({ loading, state = "confident", score, scope, reason, size = "inline", label, style }: ConfidenceBadgeProps) {
+  const t = usePixTheme();
+  const k = t.color;
+  const [open, setOpen] = React.useState(false);
+  if (loading) return <Skeleton width={size === "standalone" ? 200 : 110} height={size === "standalone" ? 58 : 20} style={style} />;
+  const s = CONFIDENCE_LABEL[state] ? state : "confident";
+  const [bg, border, ink] = {
+    confident: [k["accent-bg"], k["emerald-200"], k["confidence-high"]],
+    low: [k["confidence-low-bg"], k["amber-200"], k["confidence-low"]],
+    review: [k["blue-50"], k["blue-100"], k["blue-700"]],
+    failed: [k["claim-bg"], k["red-200"], k.claim],
+  }[s];
+  const text = label ?? CONFIDENCE_LABEL[s];
+  const pct = typeof score === "number" && isFinite(score) ? `${Math.round(Math.max(0, Math.min(1, score)) * 100)}%` : null;
+  const big = size === "standalone";
+  const glyph = (
+    <View style={{ width: big ? 18 : 13, height: big ? 18 : 13, borderRadius: 999, borderWidth: 1.5, borderColor: ink, alignItems: "center", justifyContent: "center" }}>
+      <RNText style={{ color: ink, fontSize: big ? 11 : 8, fontWeight: "700", lineHeight: big ? 13 : 10 }}>{CONFIDENCE_GLYPH[s]}</RNText>
+    </View>
+  );
+  const a11y = [text, pct, scope].filter(Boolean).join(", ");
+  return (
+    <Pressable disabled={!reason} onPress={() => setOpen(!open)} accessibilityRole={reason ? "button" : "text"} accessibilityLabel={a11y} accessibilityHint={reason}
+      accessibilityState={reason ? { expanded: open } : undefined}
+      style={[{ alignSelf: "flex-start", backgroundColor: bg, borderRadius: big ? 4 : 3, borderWidth: big ? 1 : 0, borderColor: border, paddingHorizontal: big ? 14 : 7, paddingVertical: big ? 10 : 2 }, style]}>
+      <View style={{ flexDirection: "row", alignItems: big ? "flex-start" : "center", gap: big ? 10 : 5 }}>
+        {glyph}
+        <View style={{ gap: 2, flexShrink: 1 }}>
+          <View style={{ flexDirection: "row", alignItems: "baseline", gap: big ? 8 : 4, flexWrap: "wrap" }}>
+            <RNText style={{ color: ink, fontSize: big ? 14 : 11, fontWeight: "600" }}>{text}</RNText>
+            {pct ? <RNText style={{ color: ink, fontSize: big ? 14 : 11, fontWeight: "600", fontFamily: t.fontFamily.mono }}>{pct}</RNText> : null}
+            {!big && scope ? <RNText style={{ color: ink, fontSize: 11 }}>· {scope}</RNText> : null}
+          </View>
+          {big && scope ? <RNText style={{ color: k.fg2, fontSize: 12, lineHeight: 18 }}>{scope}</RNText> : null}
+        </View>
+      </View>
+      {reason && open ? <RNText style={{ marginTop: 6, color: k.fg1, fontSize: 12, lineHeight: 18 }}>{reason}</RNText> : null}
+    </Pressable>
+  );
+}

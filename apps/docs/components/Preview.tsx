@@ -20,7 +20,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
   // are never clipped by the preview box; the rounded corners are preserved by
   // rounding the first and last panes directly, and the code pane clips itself.
   return (
-    <div style={{ border: "1px solid var(--border, #e4e4e7)", borderRadius: R, overflow: "visible", margin: "16px 0", background: "var(--surface, #fff)" }}>
+    <div data-preview={name} style={{ border: "1px solid var(--border, #e4e4e7)", borderRadius: R, overflow: "visible", margin: "16px 0", background: "var(--surface, #fff)" }}>
       {title ? (
         <div style={{ padding: "8px 12px", borderBottom: "1px solid var(--border, #e4e4e7)", background: "var(--surface-alt, #fafaf9)", font: "600 11px var(--font-sans, ui-sans-serif, system-ui)", letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--fg3, #78716c)", borderTopLeftRadius: R, borderTopRightRadius: R }}>
           {title}
@@ -30,7 +30,7 @@ export function Preview({ name, title }: { name: string; title?: string }) {
         {tabBtn("preview", "Preview")}{tabBtn("code", "Code")}
       </div>
       {tab === "preview" ? (
-        <div style={{ padding: 24, minHeight: 120, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--surface, #fff)", color: "var(--fg1, #1c1917)", overflow: "visible", borderBottomLeftRadius: R, borderBottomRightRadius: R }}>
+        <div data-preview-pane="" style={{ padding: 24, minHeight: 120, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--surface, #fff)", color: "var(--fg1, #1c1917)", overflow: "visible", borderBottomLeftRadius: R, borderBottomRightRadius: R }}>
           {entry.lang === "tsx"
             ? React.createElement(entry.Component)
             : <div dangerouslySetInnerHTML={{ __html: entry.html }} />}

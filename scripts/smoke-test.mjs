@@ -40,6 +40,11 @@ ok(renderToString(React.createElement(pixEsm.Button, { variant: "filled" }, "Run
 {
   const md = renderToString(React.createElement(pixEsm.Markdown, { text: "A **bold** and *soft* [link](#x) with `code`.\n\n- one **two**" }));
   ok(md.includes("<strong") && md.includes("href=\"#x\"") && md.includes("<code"), "react: Markdown renders nested inline syntax");
+  // Every prefix of a streamed answer must render (a lone "|" or an indented list item used to stall the parser).
+  const streamed = "Open items:\n\n| Invoice | Due |\n|:--|--:|\n| A-1 | Nov 30 |\n\n  - nested first\n- one\n  - two\n> quoted\n\n#### Done";
+  let prefixes = 0;
+  for (let n = 0; n <= streamed.length; n++) { renderToString(React.createElement(pixEsm.Markdown, { text: streamed.slice(0, n), streaming: true })); prefixes++; }
+  ok(prefixes === streamed.length + 1, "react: Markdown renders every prefix of a streamed answer");
   const bad = "javascript:alert(1)";
   const unsafe = [
     renderToString(React.createElement(pixEsm.Markdown, { text: `[x](${bad})` })),
@@ -56,7 +61,7 @@ ok(typeof ctx.PIX?.Button === "function" && typeof ctx.PIX?.AIResponse === "func
 
 const legacy = /PortfolioOSDesignSystem|Recon ?Bench|\bPACT\b|__rb_/;
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/a2ui/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
+const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist", "packages/a2ui/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
 ok(leaks.length === 0, `no legacy names in published output${leaks.length ? ": " + leaks.join(", ") : ""}`);
 
 const a2ui = await import("../packages/a2ui/dist/index.js");
@@ -66,6 +71,9 @@ ok(a2uiCatalog.catalogId === a2ui.PIX_CATALOG_ID && a2uiHtml.includes("Ready"), 
 
 const rn = await import("../packages/tokens/dist/react-native/index.js");
 ok(typeof rn.rnTokens.space["space-4"] === "number", "react-native tokens: unitless numbers");
+
+const mcpData = JSON.parse(readFileSync("packages/mcp/dist/data.json", "utf8"));
+ok(mcpData.components.length >= 45 && mcpData.components.every((c) => c.props.length && c.docs), `mcp: data bundle covers ${mcpData.components.length} components with props and docs`);
 
 if (fail) { console.error(`\n${fail} check(s) failed`); process.exit(1); }
 console.log("\nall checks passed");
