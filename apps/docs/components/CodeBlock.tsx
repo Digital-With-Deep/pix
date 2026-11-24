@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 
-// shadcn-style code block: a thin header with the language/filename and a copy
+// Code block: a thin header with the language/filename and a copy
 // button, over Shiki-highlighted code (flips light/dark via CSS). Falls back to
 // plain text if no highlighted HTML was generated.
 export function CodeBlock({ code, highlighted, lang = "tsx", filename, embedded }: { code: string; highlighted?: string; lang?: string; filename?: string; embedded?: boolean }) {
