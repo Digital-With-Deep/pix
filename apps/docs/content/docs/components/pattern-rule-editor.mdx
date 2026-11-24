@@ -1,0 +1,67 @@
+---
+title: Pattern rule editor
+description: Configure what pattern discovery investigates, start a run, and see what the last run covered.
+---
+
+PatternRuleEditor edits one discovery rule: the traces it investigates, the concerns it watches for, any custom instructions and how far back it looks. Run now starts an investigation without waiting for the schedule, and the panel under the form reports the last check and the last full investigation.
+
+<Preview name="pattern-rule-editor-overview" />
+
+## When to use
+
+- In the settings of a project that runs pattern discovery over its traces.
+- One editor per rule. Most concerns fit in one rule under Watch for; add a second rule when you need a different Scope, such as another agent, team or environment.
+
+## The fields
+
+- **Name** describes the rule's focus and appears on the patterns it finds. It is the only required field.
+- **Scope** is a filter expression in your own syntax. Empty means every trace. Pass `scopeMatches` to show how many traces match, so a filter that matches nothing is caught before a run.
+- **Watch for** holds concerns as removable chips: tool failures, user complaints, unusually high cost or latency. `watchSuggestions` offers one-press additions.
+- **Custom instructions** is free text for what to exclude or emphasize.
+- **Look back** is one of seven windows from 3 hours to 30 days. Each full investigation reads the whole window again, so the hint names the cost of the current choice. A saved value that is not one of the options is snapped to the nearest one; `nearestPatternLookBack` does the same in your own code.
+- **Alerts** is a read-only row that says where this rule's alerts go, with a Configure button when you pass `onConfigureAlerts`. Destinations are set in [PatternAlertSettings](/docs/components/pattern-alert-settings).
+
+## Runs
+
+`run` describes the rule's last activity. `checkedAt` is the last check for new traces and `finishedAt` the last full investigation; a check does not always mean an investigation ran or found anything. While `state` is `queued` or `running`, Run now is disabled. A finished run shows what it covered: traces read, searches run, and patterns created, updated and closed. `gaps` lists what the run could not cover, such as traces too large to read in full, and `error` explains a failed run.
+
+A run that finds nothing new says so in words, so an empty result does not read as a failure.
+
+## Creating a rule
+
+Without a `rule`, or with one that has no `id`, the editor is in "new rule" mode: the heading and the submit button change and Delete is hidden.
+
+<Preview title="NEW RULE" name="pattern-rule-editor-new" />
+
+## Loading
+
+<Preview title="LOADING" name="pattern-rule-editor-loading" />
+
+## Anatomy
+
+```tsx
+<PatternRuleEditor
+  rule={rule}
+  onSave={saveRule}
+  onRunNow={startRun}
+  run={lastRun}
+  scopeMatches={matchCount}
+  watchSuggestions={["User complaints", "Unusually high cost"]}
+  alerts="#agent-alerts and 1 webhook"
+  onConfigureAlerts={openAlertSettings}
+/>
+```
+
+The form keeps its own draft and resets whenever the `rule` object changes, so memoize it. `onSave` receives the draft only when the name is filled in; `onChange` receives it on every edit.
+
+## Accessibility
+
+- Every field has a visible label, and its hint is linked with `aria-describedby`.
+- A missing name is reported in text under the field with `role="alert"` and `aria-invalid`, not by colour alone.
+- Look back is a radio group; arrow keys move between the windows.
+- Each Watch for chip has a remove button named for the concern it removes.
+- The run status is a `role="status"` region, so "Investigating traces" and the result are announced. The pulsing dot stops under reduced motion.
+
+## Props
+
+<PropsTable component="PatternRuleEditor" />

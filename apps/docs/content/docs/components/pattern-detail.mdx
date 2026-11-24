@@ -1,0 +1,73 @@
+---
+title: Pattern detail
+description: One recurring problem in full, with its impact, the evidence behind it, a suggested fix and what to do next.
+---
+
+PatternDetail is the page for a single finding. It leads with what happens and who is affected, then gives the reader what they need to check the claim before acting on it: impact over time, a per-model comparison, example traces with the passage that matters highlighted, and source references. The Properties panel holds status, severity and categories, and the header holds the actions.
+
+<Preview name="pattern-detail-overview" />
+
+## When to use
+
+- Beside a [PatternList](/docs/components/pattern-list), as the detail of the selected finding.
+- On its own page, reached from an alert link.
+- Not for a single trace. Open the trace in an [ExecutionTrace](/docs/components/execution-trace) or an [AuditLog](/docs/components/audit-log) and link to it with `onOpenTrace`.
+
+## Check the evidence before acting
+
+A pattern is a claim made by whatever analysed the traces. The component is built so the claim can be checked:
+
+- **Evidence** lists example traces. `kind` says what each one shows: the `problem`, a `retry` that succeeded, or `contrast` behaviour that helps explain the finding. `highlight` marks a passage of the `excerpt`, and "Show reason" reveals why that passage supports the finding.
+- The **Code** tab lists source references with file, lines and revision. Links render only for http(s) and relative URLs.
+- **`cause`** labels the suggested fix as `confirmed` by evidence or as a `hypothesis` to confirm before acting. Set it honestly: a suggested fix without supporting evidence should say what to check, not what to change.
+- **Models** compares each model's share of the pattern's matches with its share of all traffic, and flags a model whose match share is at least 1.5 times its traffic share.
+
+## Act on a pattern
+
+- **Investigate** appears with `onInvestigate`. Start a deeper investigation with the pattern attached, and set the status to `investigating` while it runs.
+- **Copy as prompt** copies a Markdown brief for a coding agent: the finding, impact, suggested fix, evidence and source references. With `traceCommand` it adds one command per evidence trace, replacing `{{trace}}` with the trace id. `patternPrompt(pattern, options)` builds the same brief without the button.
+- **Copy link** appears with `href`.
+- **Properties** become editable when you pass `onStatusChange`, `onSeverityChange` and `onCategoriesChange`. Choosing a new status or severity opens an optional reason box; the callback fires when the reader presses Apply. Record the change and its reason in `activity`, where the next reader will look for it.
+- **Is this pattern useful?** appears with `onRate` while the pattern has no `rating`. No says that it dismisses and closes the pattern; close it in your handler.
+
+`readOnly` removes every editing control, for readers who can view patterns but not change them:
+
+<Preview title="READ ONLY, CAUSE NOT YET CONFIRMED" name="pattern-detail-read-only" />
+
+## Impact over time
+
+`impactSeries` draws one bar per period. When more than one unit has data the reader can count by traces, users or sessions, and when every point has a `total` they can switch between counts and percentages. With `onOpenPeriod` each bar is a button that opens the matching logs for that period.
+
+## Loading
+
+<Preview title="LOADING" name="pattern-detail-loading" />
+
+## Anatomy
+
+```tsx
+<PatternDetail
+  pattern={finding}
+  href={`https://app.example.com/patterns/${finding.id}`}
+  traceCommand="traces get {{trace}} --format json"
+  onInvestigate={startInvestigation}
+  onStatusChange={(status, reason) => save({ status }, reason)}
+  onSeverityChange={(severity, reason) => save({ severity }, reason)}
+  onRate={(rating, comment) => rate(finding.id, rating, comment)}
+  onOpenTrace={(evidence) => openTrace(evidence.traceId)}
+/>
+```
+
+The component is controlled: it shows `pattern` and reports intent. Update the pattern in your handlers.
+
+## Accessibility
+
+- The finding is an `article` named by the pattern, with the name as its heading.
+- Evidence is a tablist of Traces and Code; arrow keys move between the two tabs.
+- "Show reason" is a button with `aria-expanded` that controls the reason text.
+- Each bar of the impact chart has a text label with its period, value and unit. As a button it adds "Open matching logs".
+- Copying announces "Prompt copied" or "Link copied" through a live region.
+- The highlighted passage is a `mark` with an underline as well as a tint, so it does not rely on colour.
+
+## Props
+
+<PropsTable component="PatternDetail" />

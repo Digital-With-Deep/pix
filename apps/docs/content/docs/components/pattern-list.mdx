@@ -1,0 +1,72 @@
+---
+title: Pattern list
+description: A triage list of recurring problems found in traces, ranked by severity, impact and recency.
+---
+
+PatternList shows the recurring problems a discovery run found in your traces, so a person can decide which to look at first. Each row gives the severity, the name and a short summary, how many traces, users or sessions are affected, a trend, when the behaviour was last seen and its status. Search, severity and status filters, grouping and a "Hide closed" switch narrow the list.
+
+It is the first of four pattern components. PatternList picks a finding, [PatternDetail](/docs/components/pattern-detail) shows its evidence and what to do next, [PatternRuleEditor](/docs/components/pattern-rule-editor) controls what discovery looks for, and [PatternAlertSettings](/docs/components/pattern-alert-settings) controls who is told.
+
+<Preview name="pattern-list-overview" />
+
+## When to use
+
+- Use **PatternList** where an agent or analysis job groups many traces into a few named, recurring findings and a person triages them.
+- Use [AuditLog](/docs/components/audit-log) for the raw record: every event, searchable. A pattern is a conclusion drawn from many events; open its evidence in an AuditLog filtered to the trace.
+- Use **DataTable** for a list of records that has no severity, impact or status to triage by.
+
+## Severity and status
+
+Severity uses the deficiency scale: `high`, `medium` and `low` step from red through orange to amber, and `info` is neutral. Informational patterns are for behaviour worth knowing that is not a failure, such as an unmet user need. A pattern recorded without a severity shows "Unrated" and sorts and filters as low.
+
+Status says whether the behaviour still needs attention:
+
+- `open` needs attention.
+- `investigating` is being checked by a person or an agent. Violet, with a pulsing dot that stops under reduced motion.
+- `closed` no longer needs attention. It is drawn neutral, not in the truth colour: closing a pattern is a judgment about the evidence and does not verify a fix.
+- `duplicate` describes the same finding as another pattern.
+
+`reopened` and `severityRaised` add a small tag beside the name, the two changes that are worth a second look.
+
+## Impact
+
+`impact` carries counts for `traces`, `users` and `sessions`, and `impactUnit` chooses which one the column shows. A pattern without that count falls back to its trace count and says so. `share` is the fraction of all traffic, shown as a percentage, and `estimated` marks a count taken from a sample with a leading `~`. A pattern with no impact reads "Not measured".
+
+## Grouping and closed patterns
+
+Closed and duplicate patterns are hidden by default, with a footer line that says how many. Filtering to a status, or grouping by status, shows every status, because the reader asked for them. This example groups by status, counts users and sorts by impact:
+
+<Preview title="GROUPED BY STATUS" name="pattern-list-grouped" />
+
+## Loading
+
+<Preview title="LOADING" name="pattern-list-loading" />
+
+## Anatomy
+
+```tsx
+<PatternList
+  patterns={patterns}
+  selectedId={openId}
+  onSelect={setOpenId}
+  impactUnit="users"
+  defaultGroupBy="severity"
+/>
+```
+
+- **`patterns`** are the findings. Each needs `id` and `name`; `summary`, `severity`, `status`, `categories`, `rule`, `firstSeen`, `lastSeen`, `impact` and `trend` fill the row.
+- **`selectedId`** and **`onSelect`** make the list the master of a master-detail layout. The list does not own the selection.
+- **`sort`** orders rows by `severity` (then impact), `impact` or `lastSeen`.
+- **`now`** fixes the clock for the relative last-seen times. It defaults to the newest `lastSeen`, so a server render and the browser agree.
+
+## Accessibility
+
+- Each row is one button whose text is the row, and the open row carries `aria-current`.
+- Severity and status are words, never colour alone.
+- The trend is an image with a text alternative that lists its values.
+- The result count is a polite live region, so a filter change is announced.
+- The filters are native selects and a checkbox with accessible names.
+
+## Props
+
+<PropsTable component="PatternList" />

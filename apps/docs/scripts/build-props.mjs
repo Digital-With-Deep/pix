@@ -24,6 +24,8 @@ export const COMPONENTS = [
   "PlanView", "InlineCitation", "SourcePanel", "ConfidenceBadge", "ActionHistory", "AutonomySetting",
   // Data and charts
   "BarChart", "RateBars", "UsageMeter", "AuditLog",
+  // Pattern discovery: recurring problems found in traces
+  "PatternList", "PatternDetail", "PatternRuleEditor", "PatternAlertSettings",
   // Inputs
   "MultiSelect", "RadioGroup", "Switch", "SearchField", "SavedSearch", "FormActions", "ProviderConfig", "Menu", "Sidebar",
   // Feedback, content and onboarding
