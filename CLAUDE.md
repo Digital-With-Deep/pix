@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-PIX (Primitives for Intelligent eXperiences) is an open-source design system for AI products, shipped from one token source to every platform. It's a pnpm monorepo (`packages/*`) publishing four npm packages under the `@pix-ui/*` scope.
+PIX (Primitives for Intelligent eXperiences) is an open-source design system for AI products, shipped from one token source to every platform. It's a pnpm monorepo (`packages/*`) publishing five npm packages under the `@pix-ui/*` scope.
 
 ## Commands
 
@@ -17,7 +17,7 @@ pnpm changeset      # add a changeset with your PR (required for release)
 ```
 
 - **Build one package:** `pnpm --filter @pix-ui/tokens run build` (same for `css`, `react`, `react-native`).
-- **No per-test runner.** `pnpm test` is a single smoke script — it loads every package (ESM + CJS), server-renders every React component with minimal props, checks `window.PIX` from the `<script>` bundle, verifies no legacy product names (`PACT`, `ReconBench`, etc.) leaked into `dist/`, and asserts token invariants (resolved aliases, unitless RN numbers). It reads from `dist/`, so **run `pnpm build` first** or it will fail on missing files.
+- **Mostly one smoke script.** `pnpm test` runs `scripts/smoke-test.mjs`, then the `node --test` unit tests of `@pix-ui/adapters` (`pnpm --filter @pix-ui/adapters test`). The smoke script loads every package (ESM + CJS), server-renders every React component with minimal props, checks `window.PIX` from the `<script>` bundle, verifies no legacy product names (`PACT`, `ReconBench`, etc.) leaked into `dist/`, and asserts token invariants (resolved aliases, unitless RN numbers). It reads from `dist/`, so **run `pnpm build` first** or it will fail on missing files.
 
 ## Build pipeline (order matters)
 
@@ -27,6 +27,7 @@ The packages form a strict chain — building out of order produces stale output
 2. **`@pix-ui/css`** — `build.mjs` reads `@pix-ui/tokens/css` from the tokens `dist/`, concatenates it with `src/base.css` + `src/components.css` into `dist/pix.css`.
 3. **`@pix-ui/react`** — `tsup` bundles ESM/CJS + a minified `pix.global.js` IIFE (exposes `window.PIX`, maps `react`/`react-dom` to page globals), then copies hand-written `.d.ts` files and `cp ../css/dist/pix.css dist/styles.css`. **Depends on `@pix-ui/css` being built.**
 4. **`@pix-ui/react-native`** — plain `tsc`; consumes tokens only (unitless RN export).
+5. **`@pix-ui/adapters`** — independent of the chain: zero runtime dependencies, no React. `tsup` bundles ESM and copies the hand-written `src/index.d.ts`. Turns agent event streams (Vercel AI SDK, AG-UI, Google ADK) into plain props for `Conversation`, `ToolCall` and `ApprovalCard`.
 
 ## Conventions
 

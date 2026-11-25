@@ -1,0 +1,175 @@
+---
+title: Connect an agent
+description: Turn an agent's event stream into Conversation, ToolCall and ApprovalCard props with @pix-ui/adapters.
+---
+
+`@pix-ui/adapters` reads the events an agent streams and keeps a thread you can render with PIX: text that grows as it streams, one `ToolCall` per tool call and one `ApprovalCard` per request for a person's approval. It understands three protocols:
+
+- **Vercel AI SDK** UI message stream parts (`adapter: "ai-sdk"`).
+- **AG-UI** (Agent-User Interaction protocol) events (`adapter: "ag-ui"`).
+- **Google ADK** (Agent Development Kit) events (`adapter: "adk"`).
+
+The package has no runtime dependencies and does not import React. It returns plain data, and you choose how to render it.
+
+## Install
+
+```bash
+npm i @pix-ui/react @pix-ui/adapters
+```
+
+## The thread
+
+`createThread` makes an empty thread for one protocol. `applyEvent(state, event)` is a pure reducer: it returns a new state with one event applied and ignores events it does not know. That makes it a ready-made `useReducer` reducer.
+
+```tsx
+import { useReducer } from "react";
+import { createThread, applyEvent, readEventStream } from "@pix-ui/adapters";
+
+const [thread, dispatch] = useReducer(applyEvent, undefined, () =>
+  createThread({ adapter: "ai-sdk", assistantName: "Ledger assistant" }),
+);
+
+async function ask(text: string) {
+  dispatch({ type: "pix:user-message", text });
+  const res = await fetch("/api/agent", { method: "POST", body: JSON.stringify({ text }) });
+  for await (const event of readEventStream(res)) dispatch(event);
+}
+```
+
+`readEventStream` reads a server-sent events (SSE) body and yields each JSON `data:` payload. It accepts a fetch `Response`, a `ReadableStream` or any async iterable, and skips `[DONE]`.
+
+The state holds:
+
+- `messages`: the turns in order. Each has a `kind`:
+  - `text`: `content` is a string and `streaming` is true while deltas arrive. A text message is already a valid `Conversation` message.
+  - `tool`: `props` are `ToolCall` props: `name`, `status`, `input`, `output` and `error`.
+  - `approval`: `props` are `ApprovalCard` props, plus `approvalId` and the `toolCallId` it holds.
+- `status`: `idle`, `running`, `done` or `error`.
+- `error`: the agent's error text, ready for `PromptInput`'s `error` prop.
+
+## Render it
+
+`toConversationMessages` passes text through and hands tool and approval messages to a function you supply. Keep that function in your app so the adapters never depend on a React version:
+
+```tsx
+import { Conversation, ToolCall, ApprovalCard } from "@pix-ui/react";
+import { toConversationMessages, type PartMessage } from "@pix-ui/adapters";
+
+function renderPart(m: PartMessage) {
+  if (m.kind === "tool") return <ToolCall {...m.props} />;
+  return (
+    <ApprovalCard
+      {...m.props}
+      onApprove={() => decide(m.approvalId, { approved: true })}
+      onReject={(reason) => decide(m.approvalId, { approved: false, reason })}
+    />
+  );
+}
+
+<Conversation messages={toConversationMessages(thread.messages, renderPart)} />;
+```
+
+## Approvals
+
+A tool call waiting on a person has status `approval`, and an approval message follows it. Record the decision with a `pix:approval-decision` event (or `resolveApproval(state, approvalId, decision)`), then send the decision to the agent the way its protocol expects. The sections below say how.
+
+```ts
+function decide(approvalId: string, decision: { approved: boolean; reason?: string }) {
+  dispatch({ type: "pix:approval-decision", approvalId, ...decision, decidedBy: "You" });
+  // then tell the agent, see your protocol below
+}
+```
+
+Approving moves the tool call back to `running` until its output arrives. Rejecting marks it `failed` with the reason. `pendingApprovals(state)` lists the cards still waiting.
+
+The events say which tool wants to run, not how risky it is. Pass `describeApproval` to fill in the card a reviewer decides from:
+
+```ts
+createThread({
+  adapter: "ai-sdk",
+  agent: "ledger-assistant",
+  describeApproval: ({ toolName, input }) =>
+    toolName === "payments.release"
+      ? { title: "Release a blocked invoice", target: (input as { invoiceId: string }).invoiceId, risk: "high", reversible: false }
+      : undefined,
+});
+```
+
+By default the card is titled from the tool name, or from the message the agent sent with the request, and lists each input field as a row in the before and after table.
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `adapter` | `"ai-sdk"` | The protocol: `"ai-sdk"`, `"ag-ui"` or `"adk"`. |
+| `assistantName` | none | Author shown on assistant turns. |
+| `agent` | none | Agent name on approval cards. |
+| `describeApproval` | none | Returns `ApprovalCard` props merged over the defaults. |
+| `approvalTools` | `[]` | AG-UI only. Tool names to hold for approval once their arguments end. |
+| `longRunningAsApproval` | `true` | ADK only. Treat long-running tool calls as waiting on a person. |
+
+Your app can also dispatch `pix:user-message`, `pix:approval-decision`, `pix:run-started`, `pix:run-finished` and `pix:run-error`.
+
+## Vercel AI SDK
+
+Use the AI SDK's UI message stream: the response of a route that returns `toUIMessageStreamResponse()`, read with `readEventStream`.
+
+| Stream part | Becomes |
+| --- | --- |
+| `start` | `status: "running"` |
+| `text-start`, `text-delta`, `text-end` | A text message that streams. A text id used again after `text-end` starts a new message. |
+| `tool-input-start`, `tool-input-delta` | A `queued` tool call whose input fills in as it streams. |
+| `tool-input-available` | The tool call moves to `running` with its full input. |
+| `tool-output-available` | `done` with the output. `preliminary: true` keeps it `running`. |
+| `tool-output-error`, `tool-input-error` | `failed` with `errorText`. |
+| `tool-approval-request` | The tool call moves to `approval` and an approval message is added, keyed by `approvalId`. |
+| `tool-approval-response` | The approval is marked approved or rejected. |
+| `tool-output-denied` | `failed`, not run. |
+| `finish`, `abort` | `status: "done"`. Open text stops streaming. |
+| `error` | `status: "error"` with `errorText`. |
+
+Reasoning, sources, files, `data-*` parts and step markers are ignored.
+
+To answer an approval, send it with the next request. With the AI SDK's own `useChat`, that is `addToolApprovalResponse({ id: approvalId, approved })`, with `sendAutomaticallyWhen` set to continue once every approval has an answer.
+
+## AG-UI
+
+Read the agent's SSE stream with `readEventStream`, or subscribe to an AG-UI client and dispatch each event.
+
+| Event | Becomes |
+| --- | --- |
+| `RUN_STARTED` | `status: "running"` and `runId` |
+| `TEXT_MESSAGE_START`, `TEXT_MESSAGE_CONTENT`, `TEXT_MESSAGE_END` | A text message that streams, keyed by `messageId`. |
+| `TEXT_MESSAGE_CHUNK` | The same, with `messageId` taken from the first chunk. |
+| `TOOL_CALL_START`, `TOOL_CALL_ARGS`, `TOOL_CALL_CHUNK` | A `queued` tool call whose arguments fill in as they stream. |
+| `TOOL_CALL_END` | `running` with the parsed arguments. |
+| `TOOL_CALL_RESULT` | `done` with `content`, parsed when it is JSON. |
+| `RUN_FINISHED` | `status: "done"`. With `outcome.type` of `"interrupt"`, each interrupt becomes an approval: `id` as the approval id, `message` as the title, and `toolCallId` and `expiresAt` carried over. |
+| `RUN_ERROR` | `status: "error"` with `message`. |
+
+State, snapshot, step, reasoning, activity, custom and raw events are ignored.
+
+To answer an interrupt, start the next run on the same thread with a `resume` entry for every open interrupt: `{ interruptId, status: "resolved", payload }`, or `status: "cancelled"`. If your agent uses frontend tools for approval instead, list them in `approvalTools`; the call is held when its arguments end, and you answer by sending the tool's result as a `tool` message in the next run.
+
+## Google ADK
+
+Dispatch the events from ADK's `/run_sse` endpoint, or the event objects your runner yields. Field names are read in camelCase (`functionCall`, `longRunningToolIds`) and in snake_case (`function_call`, `long_running_tool_ids`).
+
+| Event content | Becomes |
+| --- | --- |
+| `text` parts with `partial: true` | Deltas on one streaming text message per invocation and author. |
+| `text` parts without `partial` | The full text. It replaces the streamed deltas and ends the message. |
+| `functionCall` | A `running` tool call with `args` as input. |
+| `functionResponse` | `done` with `response` as output. A response that is only `{ error }` marks it `failed`. |
+| A `functionCall` whose id is in `longRunningToolIds` | The tool call moves to `approval` and an approval message is added. |
+| A `functionCall` named `adk_request_confirmation` | An approval on the original call, titled with the confirmation `hint`. |
+| `errorCode` or `errorMessage` | `status: "error"`. |
+| `turnComplete: true` | `status: "done"`. |
+
+Parts marked `thought: true` are ignored. ADK sends no event when a `/run_sse` stream ends, so dispatch `pix:run-finished` after your read loop.
+
+To answer, send a new message whose parts include a `functionResponse` with the same `id` as the call. For `adk_request_confirmation`, the response is `{ confirmed: true }` or `{ confirmed: false }`; for a long-running tool, it is the tool's final result.
+
+## A complete app
+
+The [agent starter](/docs/guides/agent-starter) wires all of this to a mock agent you can run without an API key.

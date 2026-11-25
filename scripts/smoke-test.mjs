@@ -59,9 +59,17 @@ ctx.window = ctx; ctx.self = ctx;
 vm.runInNewContext(readFileSync("packages/react/dist/pix.global.js", "utf8") + ";window.PIX = PIX;", ctx, { filename: "pix.global.js" });
 ok(typeof ctx.PIX?.Button === "function" && typeof ctx.PIX?.AIResponse === "function", "global: <script> bundle exposes window.PIX");
 
+const adapters = await import("../packages/adapters/dist/index.js");
+const thread = adapters.applyEvents(adapters.createThread({ adapter: "ai-sdk" }), [
+  { type: "text-start", id: "t" }, { type: "text-delta", id: "t", delta: "Hi" }, { type: "tool-input-available", toolCallId: "c", toolName: "x", input: {} }, { type: "tool-approval-request", approvalId: "a", toolCallId: "c" },
+]);
+ok(thread.messages.map((m) => m.kind).join() === "text,tool,approval", "adapters: ESM loads and maps text, tool and approval events");
+const adapterPkg = JSON.parse(readFileSync("packages/adapters/package.json", "utf8"));
+ok(!adapterPkg.dependencies && !adapterPkg.peerDependencies, "adapters: zero runtime dependencies");
+
 const legacy = /PortfolioOSDesignSystem|Recon ?Bench|\bPACT\b|__rb_/;
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
+const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist", "packages/adapters/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
 ok(leaks.length === 0, `no legacy names in published output${leaks.length ? ": " + leaks.join(", ") : ""}`);
 
 const rn = await import("../packages/tokens/dist/react-native/index.js");

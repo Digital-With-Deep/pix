@@ -1,4 +1,4 @@
 {
   "title": "Docs",
-  "pages": ["index", "installation", "use-with-claude", "dark-mode", "principles", "ai-tools", "components", "css-classes", "changelog"]
+  "pages": ["index", "installation", "use-with-claude", "guides", "dark-mode", "principles", "ai-tools", "components", "css-classes", "changelog"]
 }

@@ -1,0 +1,10 @@
+[
+  { "id": "c1", "invocation_id": "inv_2", "author": "ledger_agent", "content": { "role": "model", "parts": [{ "function_call": { "id": "fc-close", "name": "close_period", "args": { "period": "2026-10" } } }] } },
+  { "id": "c2", "invocation_id": "inv_2", "author": "ledger_agent", "long_running_tool_ids": ["fc-confirm"], "content": { "role": "model", "parts": [{ "function_call": { "id": "fc-confirm", "name": "adk_request_confirmation", "args": {
+    "original_function_call": { "id": "fc-close", "name": "close_period", "args": { "period": "2026-10" } },
+    "tool_confirmation": { "hint": "Close the October 2026 period", "confirmed": false }
+  } } }] } },
+  { "id": "c3", "invocation_id": "inv_2", "author": "user", "content": { "role": "user", "parts": [{ "function_response": { "id": "fc-confirm", "name": "adk_request_confirmation", "response": { "confirmed": true } } }] } },
+  { "id": "c4", "invocation_id": "inv_2", "author": "ledger_agent", "content": { "role": "user", "parts": [{ "function_response": { "id": "fc-close", "name": "close_period", "response": { "closed": true } } }] } },
+  { "id": "c5", "invocation_id": "inv_2", "author": "ledger_agent", "turn_complete": true, "content": { "role": "model", "parts": [{ "text": "October is closed." }] } }
+]

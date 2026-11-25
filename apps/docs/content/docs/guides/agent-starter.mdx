@@ -1,0 +1,58 @@
+---
+title: Agent starter
+description: A Vite + React app that streams a mock agent into Conversation, ToolCall, ApprovalCard and PromptInput.
+---
+
+The agent starter is the shortest path from install to a working agent screen. A mock agent, with no network and no API key, streams a fictional accounts payable scenario:
+
+1. The assistant explains it is checking a blocked invoice, and the text streams in.
+2. A lookup tool runs and returns the invoice, its purchase order and the price variance.
+3. The assistant proposes releasing the payment, and an `ApprovalCard` asks you to approve, edit or reject it.
+4. Your decision continues the stream: the release runs and the assistant confirms, or the invoice stays blocked.
+
+The mock speaks the Vercel AI SDK UI message stream protocol, and `@pix-ui/adapters` turns it into PIX props. See [Connect an agent](/docs/guides/connect-an-agent) for the API and the other protocols.
+
+## Run it
+
+In a clone of the PIX repository, from the root:
+
+```bash
+pnpm install && pnpm build
+pnpm --filter agent-starter dev
+```
+
+## Start your own app
+
+```bash
+npx degit Digital-With-Deep/pix/examples/agent-starter my-agent-app
+cd my-agent-app
+```
+
+The starter's `package.json` points at the monorepo with `workspace:*`. Outside the monorepo, replace those with published versions before installing:
+
+```bash
+npm pkg set "dependencies.@pix-ui/react=latest" "dependencies.@pix-ui/adapters=latest"
+npm install
+npm run dev
+```
+
+## What is in it
+
+| File | What it does |
+| --- | --- |
+| `src/App.tsx` | Keeps the thread with `useReducer(applyEvent, …)` and renders a `Conversation` with a `PromptInput` footer. |
+| `src/renderPart.tsx` | Renders tool calls with `ToolCall` and approvals with `ApprovalCard`. Copy it into your app. |
+| `src/mockAgent.ts` | Streams the scenario as AI SDK stream parts, then continues after your decision. |
+
+## Swap in a real agent
+
+Replace the mock with your agent's stream, and pick the adapter for its protocol:
+
+```ts
+const init = () => createThread({ adapter: "ag-ui" });
+
+const res = await fetch("/api/agent", { method: "POST", body: JSON.stringify({ text }) });
+for await (const event of readEventStream(res)) dispatch(event);
+```
+
+Then send the reviewer's decision back as your protocol expects, as described in [Connect an agent](/docs/guides/connect-an-agent#approvals).
