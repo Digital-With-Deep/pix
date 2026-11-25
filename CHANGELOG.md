@@ -10,9 +10,7 @@ on the docs site — edit here, not there.
 ## Unreleased
 
 PIX 0.2: components for agent interfaces, the everyday basics around them, and new ways to build
-with PIX from AI coding tools and agent frameworks. Each entry names its pull request. Pull
-requests [#36](https://github.com/Digital-With-Deep/pix/pull/36) and [#37](https://github.com/Digital-With-Deep/pix/pull/37) are still open and build on [#32](https://github.com/Digital-With-Deep/pix/pull/32), so their packages are not on
-the main line yet.
+with PIX from AI coding tools and agent frameworks. Each entry names its pull request.
 
 ### Added
 
@@ -68,16 +66,16 @@ the main line yet.
     and adds that example to the project.
   - A "Use PIX with AI coding tools" docs page covering the registry, the MCP server and
     `llms.txt`.
-- **`@pix-ui/adapters`**, in open pull request [#36](https://github.com/Digital-With-Deep/pix/pull/36): turns agent event streams into PIX
+- **`@pix-ui/adapters`** ([#36](https://github.com/Digital-With-Deep/pix/pull/36)): turns agent event streams into PIX
   props with a pure `applyEvent(state, event)` reducer that works with `useReducer`. It reads
   Vercel AI SDK (software development kit) UI message stream parts, AG-UI (Agent-User Interaction
   protocol) events and Google ADK (Agent Development Kit) events, and produces messages for
   `Conversation` and props for `ToolCall` and `ApprovalCard`, with helpers for resolving
   approvals and reading a server-sent events (SSE) stream. No dependencies and no React import.
-- **`examples/agent-starter`**, in the same pull request [#36](https://github.com/Digital-With-Deep/pix/pull/36): a Vite, React and TypeScript
+- **`examples/agent-starter`** ([#36](https://github.com/Digital-With-Deep/pix/pull/36)): a Vite, React and TypeScript
   project with a mock agent (no network, no keys) that streams text, runs a tool call and stops
   on an approval card before it acts. Docs gain "Connect an agent" and "Agent starter" guides.
-- **`@pix-ui/a2ui`**, in open pull request [#37](https://github.com/Digital-With-Deep/pix/pull/37): a PIX catalog and React renderer for A2UI
+- **`@pix-ui/a2ui`** ([#37](https://github.com/Digital-With-Deep/pix/pull/37)): a PIX catalog and React renderer for A2UI
   (Agent-to-User Interface) v1.0, the open protocol for interfaces that an agent describes. It
   handles surface, component and data model messages, resolves data bindings and functions, and
   sends approve, reject and edit on an `ApprovalCard` back to the agent as actions. A new docs page

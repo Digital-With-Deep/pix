@@ -69,8 +69,13 @@ ok(!adapterPkg.dependencies && !adapterPkg.peerDependencies, "adapters: zero run
 
 const legacy = /PortfolioOSDesignSystem|Recon ?Bench|\bPACT\b|__rb_/;
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist", "packages/adapters/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
+const leaks = ["packages/tokens/dist", "packages/css/dist", "packages/react/dist", "packages/react-native/dist", "packages/mcp/dist", "packages/adapters/dist", "packages/a2ui/dist"].flatMap(walk).filter((p) => !p.endsWith(".map") && legacy.test(readFileSync(p, "utf8")));
 ok(leaks.length === 0, `no legacy names in published output${leaks.length ? ": " + leaks.join(", ") : ""}`);
+
+const a2ui = await import("../packages/a2ui/dist/index.js");
+const a2uiCatalog = JSON.parse(readFileSync("packages/a2ui/dist/catalog.json", "utf8"));
+const a2uiHtml = renderToString(React.createElement(a2ui.A2UISurface, { messages: [{ version: "1.0", createSurface: { surfaceId: "s", catalogId: a2ui.PIX_CATALOG_ID, components: [{ id: "root", component: "Badge", text: "Ready", tone: "success" }] } }] }));
+ok(a2uiCatalog.catalogId === a2ui.PIX_CATALOG_ID && a2uiHtml.includes("Ready"), "a2ui: ESM loads, catalog.json ships, a surface renders");
 
 const rn = await import("../packages/tokens/dist/react-native/index.js");
 ok(typeof rn.rnTokens.space["space-4"] === "number", "react-native tokens: unitless numbers");
