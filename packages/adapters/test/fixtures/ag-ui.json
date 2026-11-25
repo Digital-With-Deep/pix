@@ -1,0 +1,21 @@
+[
+  { "type": "RUN_STARTED", "threadId": "th_1", "runId": "run_1" },
+  { "type": "TEXT_MESSAGE_START", "messageId": "m_1", "role": "assistant" },
+  { "type": "TEXT_MESSAGE_CONTENT", "messageId": "m_1", "delta": "Checking invoice " },
+  { "type": "TEXT_MESSAGE_CONTENT", "messageId": "m_1", "delta": "`INV-20417`." },
+  { "type": "TEXT_MESSAGE_END", "messageId": "m_1" },
+  { "type": "TOOL_CALL_START", "toolCallId": "tc_lookup", "toolCallName": "invoices.lookup", "parentMessageId": "m_1" },
+  { "type": "TOOL_CALL_ARGS", "toolCallId": "tc_lookup", "delta": "{\"invoiceId\":\"INV-" },
+  { "type": "TOOL_CALL_ARGS", "toolCallId": "tc_lookup", "delta": "20417\"}" },
+  { "type": "TOOL_CALL_END", "toolCallId": "tc_lookup" },
+  { "type": "TOOL_CALL_RESULT", "messageId": "m_2", "toolCallId": "tc_lookup", "content": "{\"variance\":162.5}", "role": "tool" },
+  { "type": "STATE_DELTA", "delta": [] },
+  { "type": "TEXT_MESSAGE_CHUNK", "messageId": "m_3", "role": "assistant", "delta": "A price variance " },
+  { "type": "TEXT_MESSAGE_CHUNK", "delta": "of $162.50 is holding it." },
+  { "type": "TOOL_CALL_START", "toolCallId": "tc_release", "toolCallName": "payments.release" },
+  { "type": "TOOL_CALL_ARGS", "toolCallId": "tc_release", "delta": "{\"invoiceId\":\"INV-20417\",\"amount\":4812.5}" },
+  { "type": "TOOL_CALL_END", "toolCallId": "tc_release" },
+  { "type": "RUN_FINISHED", "threadId": "th_1", "runId": "run_1", "outcome": { "type": "interrupt", "interrupts": [
+    { "id": "int_1", "reason": "tool_call", "toolCallId": "tc_release", "message": "Release INV-20417 for payment", "expiresAt": "2026-11-30T17:00:00Z" }
+  ] } }
+]
