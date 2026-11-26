@@ -2,12 +2,14 @@
 // An implementation receives a render context (see A2UIRenderContext in index.d.ts) and returns a React node.
 import * as React from "react";
 import {
-  AIResponse, Alert, ApprovalCard, Badge, Button, Callout, Conversation, DataTable, Grid, Markdown, MetricCard, Stack, ToolCall,
+  AIResponse, Alert, ApprovalCard, Badge, Button, Callout, Checkbox, Conversation, DataTable, DateField, Dialog, Grid, Markdown, MetricCard,
+  MultiSelect, RadioGroup, Select, Slider, Stack, Tabs, TextField, Textarea, ToolCall,
 } from "@pix-ui/react";
 import { PIX_CATALOG_ID } from "./catalog.js";
-import { pixFunctions, toText } from "./expressions.js";
+import { pixFunctions, toBool, toText } from "./expressions.js";
 
 const h = React.createElement;
+const { useEffect, useState } = React;
 const JUSTIFY = { start: "start", center: "center", end: "end", spaceBetween: "between", spaceAround: "around" };
 
 /** Agent-supplied links are limited to http, https, mailto and relative URLs, matching the PIX Markdown component. */
@@ -26,6 +28,88 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 const opt = (v) => (v === undefined || v === null ? undefined : v);
 const optText = (v) => (v === undefined || v === null ? undefined : toText(v));
 const oneOf = (v, allowed, fallback) => (allowed.includes(v) ? v : fallback);
+
+
+/** Image sources: http, https, relative paths and base64 raster data URLs. SVG data URLs and other schemes are dropped. */
+export function safeImageSrc(url) {
+  if (typeof url !== "string") return undefined;
+  const s = url.trim();
+  if (/^data:image\/(png|jpe?g|gif|webp|avif);base64,[a-z0-9+/=\s]+$/i.test(s)) return s;
+  return safeHref(s) && !/^mailto:/i.test(s) ? s : undefined;
+}
+
+const isEmptyInput = (v) => v === null || v === undefined || v === "" || v === false || (Array.isArray(v) && v.length === 0);
+const sameJson = (v) => JSON.stringify(v === undefined ? null : v);
+/** True when a component's @checks include a top-level `required` call, so the field shows the required marker. */
+const hasRequiredCheck = (def) => Array.isArray(def["@checks"]) && def["@checks"].some((r) => r && r.condition && r.condition["@call"] === "required");
+
+/**
+ * Hosts one input component. A value bound with {"@path"} is read from and written to the data model (two-way
+ * binding); a literal value is kept in local state so the field still works. Failed @checks show as the field's
+ * error once the person has changed or left the field, or at once when the field already holds a value.
+ */
+function InputHost({ value, bound, write, checks, render }) {
+  const [local, setLocal] = useState(value);
+  const [touched, setTouched] = useState(false);
+  const literalKey = bound ? "" : sameJson(value);
+  useEffect(() => { if (!bound) setLocal(value); }, [bound, literalKey]); // the agent replaced the literal
+  const current = bound ? value : local;
+  const set = (next) => {
+    setTouched(true);
+    if (bound) write(next); else setLocal(next);
+  };
+  const error = !checks.valid && (touched || !isEmptyInput(current))
+    ? (checks.messages.length ? checks.messages.join(" ") : "Check this value.")
+    : undefined;
+  return h("div", {
+    style: { display: "contents" },
+    onBlur: (e) => { if (!e.currentTarget.contains(e.relatedTarget)) setTouched(true); },
+  }, render(current, set, error));
+}
+
+function input(c, read, renderField) {
+  return h(InputHost, {
+    value: read(c.get("value")),
+    bound: c.bound("value") !== undefined,
+    write: (v) => c.setBound("value", v),
+    checks: c.checks(),
+    render: renderField,
+  });
+}
+
+const toNum = (v, fallback) => {
+  const n = typeof v === "number" ? v : typeof v === "string" && v.trim() !== "" ? Number(v) : NaN;
+  return Number.isFinite(n) ? n : fallback;
+};
+const toList = (v) => (Array.isArray(v) ? v.filter((x) => x !== null && x !== undefined).map(toText) : v === null || v === undefined || v === "" ? [] : [toText(v)]);
+
+/** Tabs keep the selected index locally and render only the selected child. */
+function A2UITabs({ titles, panels }) {
+  const [index, setIndex] = useState(0);
+  const active = Math.min(index, Math.max(0, titles.length - 1));
+  return h("div", { style: { display: "flex", flexDirection: "column", gap: 12, minWidth: 0 } },
+    h(Tabs, { tabs: titles.map((label, i) => ({ value: String(i), label })), value: String(active), onChange: (v) => setIndex(Number(v)) }),
+    h("div", { "aria-label": titles[active] || undefined, role: "group" }, panels[active] ?? null));
+}
+
+/** Modal: the trigger opens a PIX Dialog that holds the content child. Escape, the close button and the backdrop close it. */
+function A2UIModal({ trigger, content, title, label }) {
+  const [open, setOpen] = useState(false);
+  return h(React.Fragment, null,
+    h("span", { style: { display: "inline-flex" }, onClick: () => setOpen(true) }, trigger),
+    h(Dialog, { open, onOpenChange: setOpen, title: title || undefined, label: title ? undefined : label || "Details" }, content));
+}
+
+const IMAGE_SIZES = {
+  icon: { width: 24, height: 24, borderRadius: "var(--radius-md, 4px)" },
+  avatar: { width: 40, height: 40, borderRadius: "var(--radius-full, 9999px)" },
+  smallFeature: { width: 100, height: 100, borderRadius: "var(--radius-xl, 8px)" },
+  mediumFeature: { width: "100%", maxWidth: 300, height: "auto", borderRadius: "var(--radius-xl, 8px)" },
+  largeFeature: { width: "100%", maxHeight: 400, height: "auto", borderRadius: "var(--radius-xl, 8px)" },
+  header: { width: "100%", height: 200, borderRadius: "var(--radius-xl, 8px)" },
+};
+const FIT = { contain: "contain", cover: "cover", fill: "fill", none: "none", scaleDown: "scale-down" };
+const LIST_ALIGN = { start: "flex-start", center: "center", end: "flex-end", stretch: "stretch" };
 
 const text = {
   body: { margin: 0, font: "400 14px/1.55 var(--font-sans, ui-sans-serif, system-ui, sans-serif)", color: "var(--fg1, #18181b)" },
@@ -146,6 +230,78 @@ export const pixComponents = {
     const height = c.get("height");
     const extra = c.has("children") ? c.children("children") : null;
     return h(Conversation, { messages, label: optText(c.get("label")), height: typeof height === "number" ? height : undefined }, extra && extra.length ? extra : undefined);
+  },
+  TextField: (c) => {
+    const variant = oneOf(c.get("variant"), ["shortText", "longText", "number", "obscured"], "shortText");
+    const shared = { label: toText(c.get("label")), placeholder: optText(c.get("placeholder")), required: hasRequiredCheck(c.definition) };
+    return input(c, (v) => (v === null || v === undefined ? "" : toText(v)), (value, set, error) => (variant === "longText"
+      ? h(Textarea, { ...shared, value, error, onChange: set, rows: 4 })
+      : h(TextField, { ...shared, value, error, onChange: set, type: variant === "number" ? "number" : variant === "obscured" ? "password" : "text", inputMode: variant === "number" ? "decimal" : undefined, autoComplete: variant === "obscured" ? "off" : undefined })));
+  },
+  CheckBox: (c) => input(c, toBool, (value, set, error) =>
+    h(Checkbox, { label: toText(c.get("label")), checked: value === true, onChange: (checked) => set(checked === true), error, required: hasRequiredCheck(c.definition) })),
+  ChoicePicker: (c) => {
+    const options = arr(c.get("options")).filter((o) => o && typeof o === "object" && o.value !== undefined && o.value !== null)
+      .map((o) => ({ value: toText(o.value), label: toText(c.resolve(o.label === undefined ? o.value : o.label)) }));
+    const multiple = c.get("variant") === "multipleSelection";
+    const style = oneOf(c.get("displayStyle"), ["checkbox", "chips", "dropdown"], "checkbox");
+    const filterable = c.get("filterable") === true;
+    const label = optText(c.get("label"));
+    return input(c, toList, (value, set, error) => {
+      if (multiple) {
+        const dropdown = style === "dropdown" || filterable;
+        return h(MultiSelect, { label, options, value, error, variant: dropdown ? "dropdown" : "tiles", minTile: 160, searchable: filterable, onChange: (next) => set(toList(next)) });
+      }
+      const pick = (v) => set([v]);
+      if (style === "checkbox" && !filterable) return h(RadioGroup, { label, options, value: value[0] ?? null, error, onChange: pick });
+      return h(Select, { label, options, value: value[0] ?? null, error, searchable: filterable, onChange: pick });
+    });
+  },
+  Slider: (c) => {
+    const min = toNum(c.get("min"), 0);
+    const max = Math.max(min, toNum(c.get("max"), 100));
+    const steps = toNum(c.get("steps"), 0);
+    const step = steps >= 1 && max > min ? (max - min) / Math.floor(steps) : "any";
+    return input(c, (v) => Math.min(max, Math.max(min, toNum(v, min))), (value, set, error) =>
+      h(Slider, { label: optText(c.get("label")), value, min, max, step, showRange: true, error, onChange: set, required: hasRequiredCheck(c.definition) }));
+  },
+  DateTimeInput: (c) => {
+    const date = c.get("enableDate") === true, time = c.get("enableTime") === true;
+    const type = date && time ? "datetime" : time ? "time" : "date"; // neither set: a date picker
+    return input(c, (v) => (v === null || v === undefined ? "" : toText(v)), (value, set, error) =>
+      h(DateField, { type, label: optText(c.get("label")), value, min: optText(c.get("min")), max: optText(c.get("max")), error, onChange: set, required: hasRequiredCheck(c.definition) }));
+  },
+  Image: (c) => {
+    const src = safeImageSrc(toText(c.get("url")));
+    if (!src) return null;
+    const variant = oneOf(c.get("variant"), Object.keys(IMAGE_SIZES), "mediumFeature");
+    const fit = FIT[c.get("fit")] || (variant === "header" ? "cover" : "fill");
+    return h("img", {
+      src, alt: toText(c.get("description")), loading: "lazy", decoding: "async",
+      style: { display: "block", objectFit: fit, background: "var(--bg-muted, #f5f5f4)", flexShrink: 0, ...IMAGE_SIZES[variant] },
+    });
+  },
+  Tabs: (c) => {
+    const tabs = arr(c.definition.tabs).filter((t) => t && typeof t === "object");
+    return h(A2UITabs, { titles: tabs.map((t) => toText(c.resolve(t.title))), panels: tabs.map((t) => c.render(t.child)) });
+  },
+  Modal: (c) => {
+    const a11y = c.definition["@accessibility"];
+    return h(A2UIModal, {
+      trigger: c.child("trigger"),
+      content: c.child("content"),
+      title: optText(c.get("title")),
+      label: a11y && a11y.label !== undefined ? toText(c.resolve(a11y.label)) : undefined,
+    });
+  },
+  List: (c) => {
+    const horizontal = c.get("direction") === "horizontal";
+    const align = LIST_ALIGN[c.get("align")] || "stretch";
+    const items = c.children("children").filter(Boolean);
+    return h("div", {
+      role: "list",
+      style: { display: "flex", flexDirection: horizontal ? "row" : "column", alignItems: align, gap: 12, minWidth: 0, ...(horizontal ? { overflowX: "auto", scrollbarWidth: "thin", paddingBottom: 4 } : null) },
+    }, items.map((node, i) => h("div", { role: "listitem", key: node.key ?? i, style: horizontal ? { flex: "0 0 auto", maxWidth: 320, minWidth: 0 } : { minWidth: 0 } }, node)));
   },
   Button: (c) => {
     const variants = { default: "secondary", borderless: "ghost" };
