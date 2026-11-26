@@ -1,0 +1,68 @@
+---
+title: Message actions
+description: Copy, regenerate, feedback and branch buttons for one agent message.
+---
+
+Message actions is the compact row of icon buttons under an agent's answer: copy the text, regenerate it, mark it helpful or not, and branch a new thread from it. Every action is optional and appears only when you pass its handler, so the same component fits a chat bubble, an `AIResponse` card or a review queue.
+
+<Preview name="message-actions-overview" />
+
+## When to use
+
+- Under each finished assistant turn in a chat or agent surface, so people can reuse, rerun or rate it.
+- When you need feedback with a reason, such as for an evaluation pipeline or a review log.
+- Not for actions that change the world (approve, send, pay). Those belong in an `ApprovalCard` or a labelled `Button`, not behind an icon.
+
+## Copy
+
+Pass `text` and Copy writes it to the clipboard. It tries the asynchronous Clipboard API first and falls back to a hidden text field and `document.execCommand("copy")` where that API is blocked, such as in an insecure context or an older embedded browser. The icon turns into a check and the tooltip reads "Copied" for two seconds; if both paths fail it reads "Couldn't copy". `onCopy` is called with the text after a successful copy.
+
+`text` can also be a function, which is called at click time. Use it when the message is long or still changing and you'd rather not build the string on every render.
+
+## Feedback with a reason
+
+`onFeedback` adds thumbs up and down. It's called with `"up"`, `"down"`, or `null` when the person clears their vote. Control the vote with `feedback`, or set a starting value with `defaultFeedback`.
+
+Add `onFeedbackReason` and a thumbs down also opens a small picker: a row of reason chips (`feedbackReasons`), a free-text box and Send feedback. It reports `{ vote: "down", reason, comment }`. Pass `feedbackReasons={[]}` for a comment box only. Cancel or Escape closes the picker and keeps the vote.
+
+<Preview title="FEEDBACK WITH A REASON" name="message-actions-feedback" />
+
+## Under an AI response
+
+`AIResponse` takes an `actions` slot. Pass a `MessageActions` there and it replaces the built-in Copy, Regenerate and feedback buttons. It's hidden while the answer streams, the same as the built-in row.
+
+<Preview title="UNDER AN AI RESPONSE" name="message-actions-response" />
+
+## In a conversation
+
+Each `Conversation` message takes an `actions` node, rendered under the turn and hidden while that turn's `streaming` is set. Use `tooltipPlacement="bottom"` near the top of a scrolling thread so tooltips aren't clipped.
+
+<Preview title="IN A CONVERSATION" name="message-actions-conversation" />
+
+## Loading
+
+Set `loading` to render four button-sized placeholders in the row's footprint.
+
+<Preview title="LOADING" name="message-actions-loading" />
+
+## Anatomy
+
+- `text` and `onCopy`: Copy, with "Copied" feedback.
+- `onRegenerate`: Regenerate.
+- `feedback`, `defaultFeedback` and `onFeedback`: thumbs up and down.
+- `onFeedbackReason` and `feedbackReasons`: the reason picker after a thumbs down.
+- `onBranch`: Branch from here.
+- `children`: your own buttons, after the built-in ones.
+- `labels`: override any button name or picker text, for wording or translation.
+
+## Accessibility
+
+- The row is a `group` named "Message actions" (`label`). Each icon button is a native `<button>` with an `aria-label` and a `Tooltip` that opens on hover and straight away on keyboard focus.
+- Thumbs up and down set `aria-pressed`. Thumbs down sets `aria-expanded` while the reason picker is open.
+- When the picker opens, focus moves to its first reason. Escape or Cancel closes it and returns focus to thumbs down. Reasons are toggle buttons with `aria-pressed`, and `Ctrl+Enter` or `⌘+Enter` sends from the comment box.
+- "Copied", "Couldn't copy", vote changes and "Thanks for the feedback" are announced in a polite live region.
+- The thumbs use the truth and claim colors only once pressed; idle icons use `--fg3`, which meets 4.5:1 in light and dark.
+
+## Props
+
+<PropsTable component="MessageActions" />

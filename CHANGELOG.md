@@ -7,6 +7,34 @@ release notes are also written to `packages/*/CHANGELOG.md` by Changesets at pub
 This file is the source for the [changelog page](https://pixui.digitalwithdeep.com/docs/changelog)
 on the docs site — edit here, not there.
 
+## Unreleased — PIX 0.3
+
+PIX 0.3 work in progress. Each entry names its issue or pull request.
+
+### Added
+
+- **`MessageActions`** in `@pix-ui/react` ([#46](https://github.com/Digital-With-Deep/pix/issues/46)): a compact row of icon
+  buttons under an agent message. Copy writes to the clipboard, with a fallback for browsers
+  that block the Clipboard API, and shows "Copied". Regenerate, thumbs up and down, and Branch
+  from here are each optional. A thumbs down can open a reason picker with chips and a comment
+  box, reported through `onFeedbackReason`. Every button has an accessible name and a tooltip.
+- `AIResponse` takes an `actions` slot and `Conversation` messages take an `actions` node, so a
+  `MessageActions` row can sit under an answer or a chat turn (#46).
+- **`PromptInput` attachments** (#46), all optional and backwards compatible:
+  - A controlled list with `attachments` and `onAttachmentsChange`, or `defaultAttachments`
+    when uncontrolled. `onAttach` gets the new files, with their `File`, for uploading.
+  - Drag and drop onto the composer and pasting files or images into the text field.
+  - `accept`, `multiple` and `maxFileSize`. Files that don't fit appear as red chips with the
+    reason.
+  - Upload states on each chip: `status` (`uploading`, `done`, `error`) and `progress`, with a
+    progress bar. Send waits until uploads finish.
+  - `showAttachButton` for a paperclip button, and `onAddScreenshot` for a camera button that
+    attaches whatever your own capture function returns. PIX doesn't capture the screen.
+  - Accessible names for the text field and remove buttons, a live region for added, rejected
+    and removed files, and focus that stays put after a chip is removed.
+- `@pix-ui/css` gains `pix-attachment*`, `pix-message-action*` and `pix-prompt--dragging`
+  classes.
+
 ## Unreleased
 
 PIX 0.2: components for agent interfaces, the everyday basics around them, and new ways to build
