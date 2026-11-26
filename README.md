@@ -125,8 +125,8 @@ Full screens built only from PIX components, ready to copy as a starting point. 
 | [Approvals](https://pixui.digitalwithdeep.com/blocks/approvals/) | Agent approvals desk | `ApprovalCard` `ActionHistory` `AutonomySetting` `Dialog` `ToastProvider` |
 | [Research](https://pixui.digitalwithdeep.com/blocks/research/) | Cited research assistant | `InlineCitation` `SourcePanel` `ConfidenceBadge` `Tooltip` `Markdown` |
 | [Workspace](https://pixui.digitalwithdeep.com/blocks/workspace/) | Agent settings | `Card` `TextField` `Textarea` `Checkbox` `AutonomySetting` `Popover` `Dialog` |
-| [Relay](https://pixui.digitalwithdeep.com/blocks/relay/) | Human-in-the-loop inbox | `AIResponse` `ExecutionTrace` `InvariantPanel` `AuditLog` `MetricCard` |
-| [Lumen](https://pixui.digitalwithdeep.com/blocks/lumen/) | AI chat assistant | `AIResponse` `ThinkingTrace` `PromptInput` `Menu` |
+| [Relay](https://pixui.digitalwithdeep.com/blocks/relay/) | Human-in-the-loop inbox | `ApprovalCard` `ToolCall` `ActionHistory` `AutonomySetting` `PlanView` `AuditLog` |
+| [Lumen](https://pixui.digitalwithdeep.com/blocks/lumen/) | AI chat assistant | `Conversation` `AIResponse` `ToolCall` `InlineCitation` `SourcePanel` `PromptInput` |
 
 More on the Blocks page: Proofbench, Sentinel, Lens, Atlas, Forge, Beacon, Guardrail and Lynx. To copy one into a React app, take its `page.tsx`, swap the docs-only `ThemedShell` wrapper for a fragment, and import `@pix-ui/react/styles.css` once at the root. Helm, Copilot, Approvals, Research, Workspace and Relay style their layout inline; some of the others also use Tailwind utility classes.
 

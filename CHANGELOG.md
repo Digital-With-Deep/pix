@@ -7,6 +7,26 @@ release notes are also written to `packages/*/CHANGELOG.md` by Changesets at pub
 This file is the source for the [changelog page](https://pixui.digitalwithdeep.com/docs/changelog)
 on the docs site — edit here, not there.
 
+## Unreleased — PIX 0.3
+
+PIX 0.3: the older blocks rebuilt on the 0.2 agent components. Each entry names its issue or pull
+request.
+
+### Changed
+
+- **Relay**, the human-in-the-loop inbox, is rebuilt on the agent components ([#44](https://github.com/Digital-With-Deep/pix/issues/44)).
+  Each request is a `ToolCall` held for approval with an `ApprovalCard` inside: approve, edit the
+  values or reject with a reason. An approved call runs in place, an erasure runs as a `PlanView`,
+  and executed actions keep an Undo button in `ActionHistory` for ten minutes. A new Autonomy
+  folder sets, with `AutonomySetting`, which kinds of action the agent may take without asking,
+  and a `ConfidenceBadge` states how far to trust each proposal. The wait timers, metrics,
+  `AuditLog`, `ExecutionTrace` and `InvariantPanel` stay. Notifications now use `ToastProvider`.
+- **Lumen**, the AI chat assistant, is rebuilt on `Conversation` ([#44](https://github.com/Digital-With-Deep/pix/issues/44)). Each turn shows its
+  tool calls as `ToolCall` rows, then streams its answer token by token as Markdown in
+  `AIResponse`, with Stop and Regenerate. The first answer has numbered `InlineCitation` markers
+  that highlight the matching row in a `SourcePanel`, where each source is checked once the answer
+  lands. Follow-ups are asked in `PromptInput` or picked from suggestions.
+
 ## Unreleased
 
 PIX 0.2: components for agent interfaces, the everyday basics around them, and new ways to build
