@@ -327,7 +327,7 @@ function AuditLogBase({
         </div>
         <div role="img" aria-label={"Events over time, " + result.hits.length + " events"} style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 56 }} onMouseLeave={() => setHover(null)}>
           {result.buckets.map((n, b) => (
-            <button key={b} type="button" tabIndex={-1} onMouseEnter={() => setHover(b)}
+            <button key={b} type="button" tabIndex={-1} aria-label={alFmtBucket(result.from + b * result.step, result.step) + ", " + n + (n === 1 ? " event" : " events")} onMouseEnter={() => setHover(b)}
               onClick={() => { if (!n) return; setCustom([Math.floor(result.from + b * result.step), Math.ceil(result.from + (b + 1) * result.step)]); setRange("custom"); }}
               title={n ? "Zoom to this bucket" : undefined}
               style={{ flex: 1, minWidth: 0, height: "100%", padding: 0, border: 0, background: hover === b ? "var(--zinc-100, #f4f4f5)" : "transparent", display: "flex", flexDirection: "column", justifyContent: "flex-end", cursor: n ? "zoom-in" : "default" }}>

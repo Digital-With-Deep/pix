@@ -6,6 +6,10 @@ export interface SwitchProps {
   onChange?: (checked: boolean) => void;
   /** With a label the switch renders as a settings row: text left, track right. Without one, just the track (give it an accessible name yourself). */
   label?: string;
+  /** Accessible name for a bare track (no `label`), e.g. "Enable autosave". */
+  "aria-label"?: string;
+  /** Id of an element that names a bare track (no `label`). */
+  "aria-labelledby"?: string;
   description?: React.ReactNode;
   disabled?: boolean;
   /** Hairline above — set on every row but the first when stacking. */
