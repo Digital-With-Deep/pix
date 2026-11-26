@@ -18,7 +18,7 @@ AI interfaces have their own primitives: a response that streams, a trace of wha
 | --- | --- | --- |
 | [`@pix-ui/tokens`](packages/tokens) | Every platform: CSS vars, SCSS, JS/TS, JSON, **iOS** (Swift/SwiftUI), **Android** (XML + Compose), **Flutter**, React Native | `npm i @pix-ui/tokens` |
 | [`@pix-ui/css`](packages/css) | Any web framework or plain HTML — `pix-*` classes | `npm i @pix-ui/css` |
-| [`@pix-ui/react`](packages/react) | React 18+ / Next.js — 67 components | `npm i @pix-ui/react` |
+| [`@pix-ui/react`](packages/react) | React 18+ / Next.js — 69 components | `npm i @pix-ui/react` |
 | [`@pix-ui/react-native`](packages/react-native) | iOS & Android via React Native / Expo | `npm i @pix-ui/react-native` |
 | [`@pix-ui/mcp`](packages/mcp) | AI coding tools (Claude Code, Cursor) — an MCP server for the PIX docs | `npx @pix-ui/mcp` |
 | [`@pix-ui/adapters`](packages/adapters) | Agent event streams (Vercel AI SDK, AG-UI, Google ADK) to PIX props, no dependencies | `npm i @pix-ui/adapters` |
@@ -76,7 +76,7 @@ Dark mode everywhere: `data-theme="dark"` (web), device setting (native).
 | --- | --- | --- |
 | **AI** | `AIResponse` `Conversation` `Markdown` `ToolCall` `ApprovalCard` `ThinkingTrace` `PromptInput` `PlanView` `InlineCitation` `SourcePanel` `ConfidenceBadge` `AutonomySetting` `InferenceChain` `ExecutionTrace` `FingerprintDiff` `InvariantPanel` `CodeEditor` `InlineCode` | `AIResponse` `ThinkingTrace` `PromptInput` `ConfidenceBadge` |
 | **Data** | `DataTable` `MetricCard` `BarChart` `RateBars` `CoverageMatrix` `StageFlow` `TaxonomyTree` `AuditLog` `ActionHistory` `UsageMeter` | `MetricCard` |
-| **Inputs** | `Button` `TextField` `Textarea` `Checkbox` `Select` `MultiSelect` `RadioGroup` `Switch` `SearchField` `SavedSearch` `FormActions` `ProviderConfig` | `Button` `Switch` `TextField` |
+| **Inputs** | `Button` `TextField` `Textarea` `Checkbox` `Select` `MultiSelect` `RadioGroup` `Slider` `DateField` `Switch` `SearchField` `SavedSearch` `FormActions` `ProviderConfig` | `Button` `Switch` `TextField` |
 | **Feedback** | `Alert` `AlertAction` `Callout` `Badge` `Toast` `ToastProvider` `Tooltip` `EmptyState` `Skeleton` `LicenseBanner` | `Callout` `Badge` `Skeleton` |
 | **Layout & navigation** | `Page` `Stack` `Grid` `Split` `Card` `Dialog` `Popover` `Tabs` `Menu` `Sidebar` `Stepper` `Disclosure` `NextSteps` `GettingStarted` `PlanCard` `Avatar` `AvatarGroup` | `Stack` `Card` `Avatar` `Text` |
 

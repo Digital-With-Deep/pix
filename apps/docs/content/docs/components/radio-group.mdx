@@ -34,6 +34,12 @@ The whole group can also be disabled at once.
 
 <Preview title="DISABLED OPTION" name="radio-group-disabled-option" />
 
+## Error
+
+`error` shows a message under the options in claim red, outlines the unselected options in red and sets `aria-invalid` on the group. Pass `hint` for a neutral line in the same place. Write the error as what to do next.
+
+<Preview title="ERROR" name="radio-group-error" />
+
 ## Loading
 
 Pass `loading` to render a skeleton in the same footprint as the real group,
@@ -76,6 +82,7 @@ once data arrives.
   options are skipped entirely, matching native radio group behavior.
 - Each option's description is associated with its input, so screen readers
   announce the explanation along with the label.
+- `hint` and `error` are linked to the group through `aria-describedby`.
 
 ## Props
 

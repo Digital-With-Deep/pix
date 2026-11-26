@@ -1,9 +1,9 @@
 ---
 title: A2UI
-description: Let agents that speak A2UI render PIX components, and send what people do back to the agent.
+description: Let agents that speak A2UI render PIX components, forms included, and send what people do back to the agent.
 ---
 
-A2UI (Agent-to-User Interface) is an open protocol for agent-generated interfaces. An agent sends a stream of JSON messages that describe a surface, its components and its data, and the app renders them with its own design system. `@pix-ui/a2ui` makes PIX that design system: it ships a PIX catalog the agent generates against, and a React renderer that turns the message stream into PIX components and reports clicks, approvals and rejections back as A2UI action messages.
+A2UI (Agent-to-User Interface) is an open protocol for agent-generated interfaces. An agent sends a stream of JSON messages that describe a surface, its components and its data, and the app renders them with its own design system. `@pix-ui/a2ui` makes PIX that design system: it ships a PIX catalog the agent generates against, and a React renderer that turns the message stream into PIX components, binds form inputs to the data model, and reports clicks, approvals and rejections back as A2UI action messages.
 
 This package targets A2UI protocol version 1.0 (`"version": "1.0"` on every message).
 
@@ -52,10 +52,61 @@ The catalog's `instructions` field carries PIX guidance for the model: lay out w
 | `ToolCall` | `ToolCall` | `name`, `status`, `description`, `input`, `output`, `error`, `duration`, `child`, `retryAction` |
 | `ApprovalCard` | `ApprovalCard` | `title`, `summary`, `agent`, `target`, `reason`, `changes`, `risk`, `reversible`, `evidence`, `expiresAt`, `status`, `decidedBy`, `decidedAt`, `rejectReason`, `requireRejectReason`, `approveLabel`, `approveAction`, `rejectAction`, `editAction` |
 | `Conversation` | `Conversation` | `messages`, `children`, `label`, `height` |
+| `TextField` | `TextField`; `Textarea` for `longText` | `label`, `value`, `placeholder`, `variant` (`shortText`, `longText`, `number`, `obscured`), `@checks` |
+| `CheckBox` | `Checkbox` | `label`, `value`, `@checks` |
+| `ChoicePicker` | `RadioGroup`, `Select` or `MultiSelect` (see below) | `label`, `variant` (`mutuallyExclusive`, `multipleSelection`), `options`, `value`, `displayStyle` (`checkbox`, `chips`, `dropdown`), `filterable`, `@checks` |
+| `Slider` | `Slider` | `label`, `min`, `max`, `value`, `steps`, `@checks` |
+| `DateTimeInput` | `DateField` | `label`, `value`, `enableDate`, `enableTime`, `min`, `max`, `@checks` |
+| `Image` | `<img>` | `url`, `description`, `fit`, `variant` |
+| `Tabs` | `Tabs` | `tabs` (each `title` and `child`) |
+| `Modal` | `Dialog` | `trigger`, `content`, `title` |
+| `List` | List of items | `children`, `direction`, `align` |
 
 Most text, number and boolean properties accept a literal, a data binding such as `{"@path": "/order/id"}` or a function call such as `{"@call": "formatString", ...}`. Paths are JSON Pointers, as defined in RFC (Request for Comments) 6901. Inside a list template (`children` set to `componentId` and `path`), a path without a leading slash is relative to the current item, and `@index` gives its position.
 
-`ApprovalCard` calls the proposed action `summary`, because in A2UI the name `action` is reserved for what a press does. The catalog also provides `formatString`, `formatNumber`, `formatCurrency`, `required`, `and`, `or` and `not`.
+`ApprovalCard` calls the proposed action `summary`, because in A2UI the name `action` is reserved for what a press does. The catalog also provides `formatString`, `formatNumber`, `formatCurrency`, the validation functions `required`, `regex`, `length`, `numeric` and `email`, and `and`, `or` and `not`.
+
+The inputs, `Image`, `Tabs`, `Modal` and `List` take the property names of the A2UI basic catalog, so a surface written for the basic catalog renders with PIX once its `catalogId` is the PIX catalog. Two properties are PIX extensions: `displayStyle: "dropdown"` on `ChoicePicker` and `title` on `Modal`.
+
+## Forms and validation
+
+Input components are two-way bound. Bind `value` to the data model with `{"@path": "/form/email"}`, and what a person types, ticks, picks or drags is written to that path at once, so every component bound to the same path updates with it. Nothing is sent to the agent while they type: the values travel with the next action, for example a `Button` whose event context reads the same paths. If the surface was created with `sendDataModel: true`, the whole data model also rides along as metadata. A literal `value` still works; the field then keeps what the person enters to itself.
+
+| Input | Writes to the data model |
+| --- | --- |
+| `TextField` | A string, also for the `number` variant |
+| `CheckBox` | `true` or `false` |
+| `ChoicePicker` | An array of the selected option values, also for a single choice |
+| `Slider` | A number between `min` and `max` |
+| `DateTimeInput` | An ISO (International Organization for Standardization) 8601 string in local time without a time zone: `2026-12-04`, `14:30` or `2026-12-04T14:30` |
+
+Put validation in `@checks`. Each check has a `condition`, a data binding or a function call, and a `message`. When a check fails, its message shows under the field and the field is marked `aria-invalid`; don't add separate `Text` components for errors. Messages appear once the field holds a value or the person has edited or left it, so an empty form does not open covered in errors. A `required` check also adds the required marker to the label. Repeat the checks on the submit `Button`, which stays disabled while any of its checks fails:
+
+```json
+{"id": "email", "component": "TextField", "label": "Email", "value": {"@path": "/form/email"},
+ "@checks": [
+   {"condition": {"@call": "required", "args": {"value": {"@path": "/form/email"}}}, "message": "Enter an email address"},
+   {"condition": {"@call": "email", "args": {"value": {"@path": "/form/email"}}}, "message": "Enter a valid email address"}
+ ]}
+```
+
+`ChoicePicker` picks its PIX component from `variant`, `displayStyle` and `filterable`:
+
+| `variant` | `displayStyle` | PIX component |
+| --- | --- | --- |
+| `mutuallyExclusive` (default) | `checkbox` (default) | `RadioGroup` |
+| `mutuallyExclusive` | `chips` or `dropdown`, or `filterable: true` | `Select`, with a search box when `filterable` |
+| `multipleSelection` | `checkbox` or `chips` | `MultiSelect` as selectable tiles |
+| `multipleSelection` | `dropdown`, or `filterable: true` | `MultiSelect` as a dropdown, with a search box when `filterable` |
+
+`Slider` divides the range from `min` to `max` into `steps` equal intervals and snaps to them; without `steps` it is continuous. `DateTimeInput` shows a date picker for `enableDate`, a time picker for `enableTime`, and both when both are set. With neither set, PIX shows a date picker.
+
+## Images, tabs, dialogs and lists
+
+- `Image` shows `description` as the alternative text. Its `variant` sets the size, from a 24px `icon` and a 40px round `avatar` to a full-width `header` banner, and `fit` maps to the CSS (Cascading Style Sheets) `object-fit` property. Only `http`, `https`, relative and base64 raster image addresses are shown.
+- `Tabs` starts on the first tab and renders only the selected tab's child.
+- `Modal` renders its `trigger`; pressing it opens a PIX `Dialog` with the `content` child. Escape, the close button or a click on the backdrop closes it. Give it a `title`, or an `@accessibility` label, so the dialog has a name for screen readers. A trigger `Button` still dispatches its own action when pressed.
+- `List` stacks its children vertically, or with `direction: "horizontal"` puts them in a row that scrolls sideways. Use a template to repeat one component for every item of a data model list.
 
 ## A minimal agent message stream
 
@@ -139,11 +190,12 @@ A surface can mix catalogs: a component with `@catalogId` resolves against that 
 
 ## What is not supported yet
 
-- The basic catalog's input components (`TextField`, `CheckBox`, `ChoicePicker`, `Slider`, `DateTimeInput`) and its `Image`, `Icon`, `Video`, `AudioPlayer`, `List`, `Tabs` and `Modal`. The PIX catalog does not claim the basic catalog id.
+- The basic catalog's `Icon`, `Video` and `AudioPlayer`, and the `weight` property for sizing children of a `Row` or `Column`. The PIX catalog does not claim the basic catalog id.
+- The basic catalog functions `formatDate`, `pluralize` and `openUrl`.
 - Agent-side functions. A function call the renderer cannot run resolves to `null` and reports `EXPRESSION_ERROR`, instead of being sent to the agent as `callAgentFunction`.
 - Agent calls to renderer functions. Every PIX catalog function is renderer-only, so `callRendererFunction` gets an `INVALID_FUNCTION_CALL` reply through `onFunctionResponse`.
 - `allowedParents` and `allowedChildren` checks. The PIX catalog sets none.
 
 ## Security
 
-Agent output is untrusted. The renderer only renders components from catalogs you pass, never raw HTML; Markdown is rendered without HTML; and links in `citations` and `evidence` are limited to `http`, `https`, `mailto` and relative addresses.
+Agent output is untrusted. The renderer only renders components from catalogs you pass, never raw HTML; Markdown is rendered without HTML; links in `citations` and `evidence` are limited to `http`, `https`, `mailto` and relative addresses; and `Image` addresses are limited to `http`, `https`, relative addresses and base64 image data in common raster formats (never SVG, Scalable Vector Graphics). A `regex` check runs the agent's pattern with the browser's regular expression engine, so keep patterns short.
