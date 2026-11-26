@@ -32,6 +32,7 @@ export * from "./components/Layout/Stack.jsx";
 export * from "./components/LicenseBanner/LicenseBanner.jsx";
 export * from "./components/Markdown/Markdown.jsx";
 export * from "./components/Menu/Menu.jsx";
+export * from "./components/MessageActions/MessageActions.jsx";
 export * from "./components/MetricCard/MetricCard.jsx";
 export * from "./components/MultiSelect/MultiSelect.jsx";
 export * from "./components/NextSteps/NextSteps.jsx";
