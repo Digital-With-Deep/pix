@@ -17,7 +17,7 @@ pnpm changeset      # add a changeset with your PR (required for release)
 ```
 
 - **Build one package:** `pnpm --filter @pix-ui/tokens run build` (same for `css`, `react`, `react-native`).
-- **Mostly one smoke script.** `pnpm test` runs `scripts/smoke-test.mjs`, then the `node --test` unit tests of `@pix-ui/adapters` (`pnpm --filter @pix-ui/adapters test`). The smoke script loads every package (ESM + CJS), server-renders every React component with minimal props, checks `window.PIX` from the `<script>` bundle, verifies no legacy product names (`PACT`, `ReconBench`, etc.) leaked into `dist/`, and asserts token invariants (resolved aliases, unitless RN numbers). It reads from `dist/`, so **run `pnpm build` first** or it will fail on missing files.
+- **Mostly one smoke script.** `pnpm test` runs `scripts/smoke-test.mjs`, then `scripts/contrast-test.mjs` (WCAG contrast of text, field borders and the focus ring on every surface, computed from the built tokens), then the `node --test` unit tests of `@pix-ui/adapters` (`pnpm --filter @pix-ui/adapters test`). The smoke script loads every package (ESM + CJS), server-renders every React component with minimal props, checks `window.PIX` from the `<script>` bundle, verifies no legacy product names (`PACT`, `ReconBench`, etc.) leaked into `dist/`, and asserts token invariants (resolved aliases, unitless RN numbers). It reads from `dist/`, so **run `pnpm build` first** or it will fail on missing files.
 
 ## Build pipeline (order matters)
 
@@ -40,7 +40,7 @@ The packages form a strict chain — building out of order produces stale output
 
 - **Claim ≠ truth:** a model's claim (`--claim`, red) and the verified answer (`--truth`, emerald) never share a color; authored faults are amber (`--fault`).
 - Identifiers, IDs, amounts, model and tool names are monospace.
-- 4.5:1 text contrast in light **and** dark; controls/focus rings 3:1; keyboard-reachable with accessible names; reduced-motion respected.
+- 4.5:1 text contrast in light **and** dark; controls/focus rings 3:1 (form fields use `--border-field`, focus uses `--focus-ring`; `--border` is for decorative edges only); keyboard-reachable with accessible names; reduced-motion respected.
 - Sentence case, no exclamation marks, no emoji in product chrome.
 
 ## Releasing
