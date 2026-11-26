@@ -7,7 +7,7 @@
   "scripts": {
     "build": "pnpm -r --filter \"./packages/*\" run build",
     "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
-    "test": "node scripts/smoke-test.mjs && pnpm --filter @pix-ui/adapters test && pnpm --filter @pix-ui/a2ui run test",
+    "test": "node scripts/smoke-test.mjs && node scripts/contrast-test.mjs && pnpm --filter @pix-ui/adapters test && pnpm --filter @pix-ui/a2ui run test",
     "changeset": "changeset",
     "release": "pnpm build && changeset publish",
     "screenshots": "node scripts/screenshots.mjs"
