@@ -5,8 +5,7 @@
 
 ## Purpose & intent
 
-Build a public, adoption-driving documentation site for PIX — in the spirit of
-[ui.shadcn.com](https://ui.shadcn.com/docs/installation) — that makes it dead-simple to drop
+Build a public, adoption-driving documentation site for PIX that makes it dead-simple to drop
 `@pix-ui/*` into a web app, with copy-pasteable installation steps per framework, browsable
 component references with live previews, and API-accurate prop tables. Alongside it, ship
 runnable starter projects for the three target frameworks.
@@ -117,7 +116,7 @@ Each unit has one job and a clear interface, so it can be built and tested on it
 
 ## Content / information architecture
 
-Sidebar groups (mirrors shadcn's shape):
+Sidebar groups:
 
 - **Getting started** — Introduction · Installation (overview) · Dark mode · Design principles ·
   Tokens
