@@ -1,0 +1,65 @@
+---
+title: Pattern alert settings
+description: Where pattern alerts go, which severities send one, and who is asked to investigate.
+---
+
+PatternAlertSettings sets up alerts for the findings pattern discovery produces: the destinations, the lowest severity that sends an alert, and an optional mention that asks an agent or a teammate to investigate each one. A preview shows the alert a real pattern would send and says whether it would be sent at all.
+
+<Preview name="pattern-alert-settings-overview" />
+
+## When to use
+
+- On a project settings page, next to the [PatternRuleEditor](/docs/components/pattern-rule-editor) that decides what is discovered.
+- For alerts about findings. For a condition you already know how to detect, such as an error rate over a threshold, use a monitor and an [Alert](/docs/components/alert).
+
+## Destinations
+
+A project can have one Slack channel alongside any number of webhooks and PagerDuty services. Every destination receives every alert: one alert per pattern, not a report of the run. With no destination the component says plainly that alerts are off.
+
+Destination pills never show a secret. A webhook URL is cut to its host and a PagerDuty integration key to its last four characters, and the key field is a password input. `patternDestinationLabel` returns the same text for your own lists.
+
+Pass `channels` to choose the Slack channel from a list. Without it the channel is typed in.
+
+## Which patterns alert
+
+"Alerts on" sets the lowest severity that sends an alert: low and above, medium and above (the default), or high. Informational patterns have their own switch and alert whichever minimum is chosen. A pattern recorded without a severity counts as low.
+
+`patternAlerts(severity, config)` applies the same rule, so the list can show which findings were announced.
+
+## Mention an agent or teammate
+
+With a Slack destination, a mention replies to each alert and tags someone with instructions. The prompt must include `{{pattern}}`, which becomes the pattern link, and can be up to 2,000 characters. Turning the mention off keeps the alerts. Without a Slack destination the switch is disabled and says why.
+
+## Empty
+
+<Preview title="NO DESTINATIONS" name="pattern-alert-settings-empty" />
+
+## Loading
+
+<Preview title="LOADING" name="pattern-alert-settings-loading" />
+
+## Anatomy
+
+```tsx
+<PatternAlertSettings
+  value={config}
+  onChange={setConfig}
+  channels={slackChannels}
+  members={workspaceMembers}
+  previewPattern={latestPattern}
+/>
+```
+
+Use `value` with `onChange` to save each change as it is made, or `defaultValue` with `onSave` for an explicit Save button. Save is refused while the mention prompt is invalid.
+
+## Accessibility
+
+- Each destination's remove button is named for the destination it removes.
+- "Alerts on" is a radio group with a label and a description.
+- The mention switch is a checkbox with `role="switch"`.
+- Errors appear in text under the field with `role="alert"`.
+- The preview states in words whether the pattern would alert; the dashed outline only reinforces it.
+
+## Props
+
+<PropsTable component="PatternAlertSettings" />

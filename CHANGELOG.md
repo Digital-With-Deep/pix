@@ -14,6 +14,23 @@ with PIX from AI coding tools and agent frameworks. Each entry names its pull re
 
 ### Added
 
+- **Pattern discovery components** in `@pix-ui/react`, for the screens where an agent finds
+  recurring problems in traces and a person reviews and acts on them:
+  - `PatternList`, the triage list: severity, impact in traces, users or sessions, a trend, last
+    seen and status, with search, filters, grouping and closed patterns hidden by default.
+  - `PatternDetail`, one finding in full: summary, a suggested fix labelled confirmed or
+    hypothesis, impact over time, a per-model comparison, trace evidence with the passage that
+    matters highlighted, code references, editable status, severity and categories with a reason,
+    a usefulness rating and activity. **Copy as prompt** builds a Markdown brief for a coding
+    agent (`patternPrompt`).
+  - `PatternRuleEditor`, the discovery rule: trace scope, concerns to watch for, custom
+    instructions and look-back window, with **Run now** and the last run's coverage and gaps.
+  - `PatternAlertSettings`: one Slack channel alongside webhooks and PagerDuty, the lowest
+    severity that alerts, an informational switch, and a Slack mention that asks an agent or
+    teammate to investigate. Secrets are never rendered; `patternAlerts` applies the same rule in
+    your own code.
+  - **Motif**, a new block: pattern discovery over a support agent's traces, with evidence that
+    opens in `AuditLog` filtered to the trace.
 - **Agent interface components** in `@pix-ui/react` ([#32](https://github.com/Digital-With-Deep/pix/pull/32)):
   - `ApprovalCard`, the human-in-the-loop (HITL) step: what an agent wants to do, the risk,
     whether it can be undone, a before and after table, evidence chips and an optional countdown.
