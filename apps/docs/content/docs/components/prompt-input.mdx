@@ -1,6 +1,6 @@
 ---
 title: Prompt input
-description: The composer for asking an AI product a question — model picker, attachments, and tool toggles included.
+description: The composer for asking an AI product a question — model picker, attachments, screenshots and tool toggles included.
 ---
 
 Prompt input is the composer at the bottom of a chat or agent surface. It bundles a growable textarea with a "+" context menu for attachments, a model selector, toggleable tool pills, and a send button, so most products only need to wire up `onSubmit`.
@@ -24,6 +24,48 @@ Pass `tools` as a list of capability names to render them as pills next to the s
 
 <Preview title="WITH TOOLS" name="prompt-input-tools" />
 
+## Attachments
+
+Files come in four ways: the paperclip button (`showAttachButton`), the "+" menu's Upload files item, dropping files onto the composer, and pasting an image or file into the text field. When the clipboard also holds text, as it does when copying cells from a spreadsheet, the text is pasted instead.
+
+Control the list with `attachments` and `onAttachmentsChange`, the same pairing as `value` and `onChange`. `onAttach` is called with only the new files, each with its `File` in `file`, so it's the place to start uploads; `onRemoveAttachment` is the place to cancel one. Without `attachments`, the composer keeps its own list, starting from `defaultAttachments`.
+
+`accept` takes the same format as the native attribute (`"image/*,.pdf,text/csv"`) and applies to drops and pastes as well as the picker. A file that doesn't match, or is bigger than `maxFileSize` bytes, still appears, as a red chip with the reason, so the person sees why it was left out. Set `multiple={false}` to keep one attachment at a time.
+
+<Preview title="ATTACHMENTS WITH UPLOADS" name="prompt-input-attachments" />
+
+### Upload states
+
+Each attachment carries its own `status`. While it's `"uploading"`, the chip shows a progress bar (from `progress`, 0 to 100, or an indeterminate bar without it) and Send waits until every upload has finished. `"error"`, or an `error` message, turns the chip red and shows the message in place of the size. Images get a thumbnail from `preview`, which the composer fills in for image files; pass your own for server-made thumbnails.
+
+<Preview title="UPLOADING, FAILED AND READY" name="prompt-input-states" />
+
+### Screenshots
+
+Pass `onAddScreenshot` to add a camera button. PIX doesn't capture the screen itself: your function does, and resolves to a `File`, a `Blob`, a ready-made attachment, or `null` when the person cancels. The button is busy until it settles, and a rejection shows `screenshotError` under the composer. A "+" menu item with `action: "screenshot"` calls the same function.
+
+<Preview title="ADD SCREENSHOT" name="prompt-input-screenshot" />
+
+In a browser, one way to capture is the Screen Capture API:
+
+```tsx
+async function captureScreen() {
+  const stream = await navigator.mediaDevices.getDisplayMedia({ video: true }).catch(() => null);
+  if (!stream) return null; // the person cancelled
+  const video = document.createElement("video");
+  video.srcObject = stream;
+  await video.play();
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d")!.drawImage(video, 0, 0);
+  stream.getTracks().forEach((t) => t.stop());
+  return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+}
+
+<PromptInput onAddScreenshot={captureScreen} />;
+```
+
 ## Disabled and loading
 
 Set `disabled` while a message is in flight or the composer is temporarily unavailable — the textarea, plus menu, tool pills, model selector, and send button all stop responding, and the field dims slightly.
@@ -40,7 +82,10 @@ Set `loading` to render the component's skeleton in its own footprint instead of
 - `value` / `onChange` — controlled text. Omit both to let the composer manage its own draft.
 - `tools` — capability names rendered as toggle pills; pair with `activeTools` and `onToggleTool` to control which are on.
 - `models` / `model` / `onModelChange` — the model picker's options and controlled selection. Set `showModelSelector={false}` to hide it entirely.
-- `allowFiles` / `attachments` / `onAttach` / `onRemoveAttachment` — the attachment chips and hidden file input. The "+" menu's "Upload files" item opens the same picker.
+- `allowFiles` / `attachments` / `onAttachmentsChange` / `onAttach` / `onRemoveAttachment` — the attachment chips, the hidden file input, drag and drop and paste. The "+" menu's "Upload files" item opens the same picker.
+- `accept` / `multiple` / `maxFileSize` — which files are taken; the rest become error chips.
+- `showAttachButton` — a paperclip button for the picker, useful when the "+" menu is hidden.
+- `onAddScreenshot` — a camera button that attaches whatever your capture function returns.
 - `onSubmit` — fired on `Enter` or a click on send with `{ text, model, attachments }`.
 - `disabled` — blocks every control in the composer.
 - `loading` — swaps the whole component for a skeleton sized to `rows` and `width`.
@@ -52,6 +97,10 @@ Set `loading` to render the component's skeleton in its own footprint instead of
 - `Enter` submits and `Shift+Enter` inserts a new line; the default `hint` text states this so the behavior isn't only discoverable by trial.
 - Send is a disabled native `<button>` until there's text to submit, which keeps assistive technology from announcing an action that would do nothing.
 - Tool pills and the model selector are buttons, not checkboxes or a native `<select>` — if a tool's on/off state needs to be announced explicitly, pair `onToggleTool` with your own `aria-pressed` wrapper.
+- The text field is named by `label` ("Message" by default) and described by the hint or error line under it.
+- Attachments are a list named "Attachments". Each remove button is named "Remove" plus the file name; after a removal, focus moves to the next chip's remove button, or back to the text field when none are left.
+- Uploads are `progressbar`s named "Uploading" plus the file name. Added files, rejected files with their reason and removals are announced in a polite live region.
+- Dragging and dropping has keyboard equivalents: the paperclip button, the "+" menu and pasting.
 - `disabled` removes every control from the tab order; show a visible reason nearby (such as the `hint` or `error` line) rather than relying on the disabled state alone.
 
 ## Props

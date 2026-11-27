@@ -45,7 +45,7 @@ const metaText = { font: `400 11px ${rFont}`, color: "var(--fg3, #71717a)" };
 function AIResponseBase({
   status = "done", text, children, thinking, thinkingLabel = "Show thinking",
   model, duration, tokens, error, stage = "Thinking…", stages = [], citations = [],
-  onStop, onRetry, onCopy, onFeedback, onReplayThinking, showActions = true, defaultThinkingOpen = false, markdown = true, style,
+  onStop, onRetry, onCopy, onFeedback, onReplayThinking, showActions = true, actions, defaultThinkingOpen = false, markdown = true, style,
 }) {
   const streaming = status === "streaming";
   const [vote, setVote] = useRespState(null);
@@ -167,7 +167,11 @@ function AIResponseBase({
         </div>
       )}
 
-      {!streaming && showActions && (onCopy || onRetry || onFeedback) && (
+      {!streaming && showActions && actions && (
+        <div style={{ padding: "0 14px 10px" }}>{actions}</div>
+      )}
+
+      {!streaming && showActions && !actions && (onCopy || onRetry || onFeedback) && (
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, padding: "0 14px 12px" }}>
           {onCopy && (
             <button onClick={onCopy} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 8px", border: "1px solid var(--border, #e4e4e7)",

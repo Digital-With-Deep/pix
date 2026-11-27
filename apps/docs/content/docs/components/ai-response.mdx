@@ -57,6 +57,7 @@ Set `status="error"` to show the failure card in place of the answer — a red-t
 - **Citations** — numbered source chips rendered under the answer when `citations` is set.
 - **Thinking** — the reasoning trace, rendered via `ThinkingTrace` when `thinking` is set. `thinkingLabel` overrides the disclosure's label, `defaultThinkingOpen` controls its initial state, and `onReplayThinking` adds a replay control.
 - **Actions** — a row of Copy (`onCopy`), Regenerate/Retry (`onRetry`), and thumbs up / down feedback (`onFeedback`), hidden entirely when `showActions={false}`.
+- **Custom actions** — pass a node to `actions`, usually a [`MessageActions`](/docs/components/message-actions), to replace the built-in row with copy feedback, a reason picker after a thumbs down and a branch button.
 
 ## Accessibility
 

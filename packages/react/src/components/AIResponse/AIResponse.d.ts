@@ -57,6 +57,9 @@ export interface AIResponseProps {
   onFeedback?: (vote: "up" | "down" | null) => void;
   /** Hide the Copy/Regenerate row. Default true (shown). @default true */
   showActions?: boolean;
+  /** Your own action row under the answer, usually a MessageActions. Replaces the built-in Copy, Regenerate and feedback buttons
+   *  and, like them, is hidden while streaming and when `showActions` is false. */
+  actions?: React.ReactNode;
   style?: React.CSSProperties;
 }
 export declare function AIResponse(props: AIResponseProps): React.JSX.Element;

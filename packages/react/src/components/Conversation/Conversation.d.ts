@@ -14,6 +14,8 @@ export interface ConversationMessage {
   avatar?: string | React.ReactNode;
   /** For string assistant content still arriving: hides half-written Markdown syntax. */
   streaming?: boolean;
+  /** A row under the turn, usually a MessageActions. Hidden while `streaming` is set. */
+  actions?: React.ReactNode;
 }
 export interface ConversationProps {
   /** Render the skeleton for this component in its footprint (see Skeleton). */
