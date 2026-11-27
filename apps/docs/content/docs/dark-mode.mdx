@@ -9,4 +9,20 @@ PIX ships light and dark values for every colour token. On the web, dark mode ac
 <html data-theme="dark">
 ```
 
-Every component reads tokens (`var(--accent)`, `var(--fg1)`), so the whole tree flips at once. Contrast stays ≥4.5:1 for text in both themes.
+Every component reads tokens (`var(--accent)`, `var(--fg1)`), so the whole tree flips at once.
+
+## Accessibility
+
+Both themes meet the contrast that WCAG (Web Content Accessibility Guidelines) 2.1 level AA asks for, on every surface (`--bg`, `--bg-subtle`, `--bg-muted`, `--surface`, `--surface-alt`):
+
+| What | Tokens | Minimum | Lowest today (light / dark) |
+| --- | --- | --- | --- |
+| Body and secondary text | `--fg1`, `--fg2` | 4.5:1 | 6.99:1 / 6.01:1 |
+| Form field borders, at rest and on hover | `--border-field`, `--border-field-hover` | 3:1 | 3.34:1 / 3.40:1 |
+| Invalid field border | `--danger` | 3:1 | 3.45:1 / 4.03:1 |
+| Focus ring | `--focus-ring` | 3:1 | 5.03:1 / 7.89:1 |
+
+Text fields, selects, checkboxes, radios, the off switch track and the prompt box draw their outline with `--border-field`, so each control is visible without relying on its fill (success criterion 1.4.11, non-text contrast). Cards, tables and dividers keep the lighter `--border`, which is decorative. Disabled fields step back to `--border-strong`; WCAG exempts inactive controls, and their text stays at 4.5:1 or more.
+
+`pnpm test` recomputes every pair above from the built tokens and fails if a change drops one below its minimum. If you override these tokens with your own brand colours, keep the same minimums.
+

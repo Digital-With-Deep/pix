@@ -20,7 +20,7 @@ function CheckboxBase({ checked, defaultChecked = false, indeterminate = false, 
     <span style={{ position: "relative", display: "inline-flex", width: 16, height: 16, flexShrink: 0, marginTop: label ? 1 : 0 }}>
       <span aria-hidden="true" style={{
         position: "absolute", inset: 0, boxSizing: "border-box", borderRadius: 3, display: "inline-flex", alignItems: "center", justifyContent: "center",
-        border: `1.5px solid ${filled ? "var(--emerald-600, #059669)" : error ? "var(--red-500, #ef4444)" : "var(--fg3, #78716c)"}`,
+        border: `1.5px solid ${filled ? "var(--emerald-600, #059669)" : error ? "var(--danger, #ef4444)" : "var(--border-field, #8b8580)"}`,
         background: filled ? "var(--emerald-600, #059669)" : "var(--surface, #fff)", transition: "background 150ms, border-color 150ms",
         outline: ring ? focusOutline : "none", outlineOffset: 2, pointerEvents: "none",
       }}>
