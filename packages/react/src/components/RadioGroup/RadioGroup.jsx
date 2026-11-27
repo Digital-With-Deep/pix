@@ -19,8 +19,8 @@ function RadioGroupBase({ options = [], value, onChange, label, name, disabled =
               <input type="radio" name={gid} value={o.value} checked={on} disabled={off} onChange={() => onChange && onChange(o.value, o)}
                 onFocus={() => setFocus(o.value)} onBlur={() => setFocus(null)} style={{ position: "absolute", opacity: 0, width: 1, height: 1 }} />
               <span aria-hidden="true" style={{ width: 16, height: 16, marginTop: 1, flexShrink: 0, borderRadius: 999, boxSizing: "border-box", background: "var(--surface, #fff)",
-                border: on ? "5px solid var(--zinc-900, #18181b)" : "1.5px solid var(--border-strong, #d4d4d8)", transition: "border 120ms",
-                outline: focus === o.value ? "2px solid var(--emerald-500, #10b981)" : "none", outlineOffset: 2 }} />
+                border: on ? "5px solid var(--zinc-900, #18181b)" : "1.5px solid var(--border-field, #8b8580)", transition: "border 120ms",
+                outline: focus === o.value ? "2px solid var(--focus-ring, #047857)" : "none", outlineOffset: 2 }} />
               <span style={{ minWidth: 0 }}>
                 <span style={{ display: "block", font: `500 13px/1.4 ${rgSans}`, color: "var(--fg1, #18181b)" }}>{o.label}</span>
                 {o.description && <span style={{ display: "block", marginTop: 1, font: `400 12px/1.5 ${rgSans}`, color: "var(--fg3, #71717a)" }}>{o.description}</span>}

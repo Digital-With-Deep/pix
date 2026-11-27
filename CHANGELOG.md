@@ -34,8 +34,30 @@ PIX 0.3 work in progress. Each entry names its issue or pull request.
     and removed files, and focus that stays put after a chip is removed.
 - `@pix-ui/css` gains `pix-attachment*`, `pix-message-action*` and `pix-prompt--dragging`
   classes.
+- `pnpm test` runs a token contrast test (`scripts/contrast-test.mjs`) that recomputes body and
+  secondary text (4.5:1), field borders, the invalid border and the focus ring (3:1) on every
+  surface from the built tokens, and lists any pair that falls short.
+- The screenshot workflow also checks every live example on the component pages for form
+  controls and buttons without an accessible name and images without alt text
+  (`scripts/a11y-pages.mjs`).
 
-## Unreleased
+### Fixed
+
+- Form field borders now meet the 3:1 non-text contrast of WCAG (Web Content Accessibility
+  Guidelines) 2.1 success criterion 1.4.11 on every surface, in light and dark ([#45](https://github.com/Digital-With-Deep/pix/issues/45)). Most had been
+  1.2:1 to 1.5:1. New colour tokens in `@pix-ui/tokens`: `border-field` (3.34:1 or more in
+  light, 3.40:1 or more in dark), `border-field-hover` and `focus-ring` (5.03:1 and 7.89:1 or more).
+  `TextField`, `Textarea`, `Select`, `MultiSelect`, `SearchField`, `Checkbox`, `RadioGroup`, the
+  off `Switch` track and `PromptInput` use them in `@pix-ui/react`, as do the matching `pix-*`
+  classes in `@pix-ui/css` and `TextInput`, `PromptInput` and `Switch` in
+  `@pix-ui/react-native`. Cards, tables and dividers keep the lighter `border`. The focus border
+  and the global `:focus-visible` outline move from `accent` (2.54:1 on white) to `focus-ring`.
+  `PromptInput` now shows a focus border, and CSS fields gain a hover border.
+- `Switch` without a `label` dropped its `aria-label`, so a bare switch had no accessible name. It
+  now passes `aria-label` and `aria-labelledby` to the track. `AuditLog` histogram bars are
+  labelled with their time bucket and event count ([#45](https://github.com/Digital-With-Deep/pix/issues/45)).
+
+## Unreleased — PIX 0.2
 
 PIX 0.2: components for agent interfaces, the everyday basics around them, and new ways to build
 with PIX from AI coding tools and agent frameworks. Each entry names its pull request.

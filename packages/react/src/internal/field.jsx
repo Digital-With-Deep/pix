@@ -4,12 +4,13 @@ import { Skeleton } from "../components/Skeleton/Skeleton.jsx";
 import { pixSans, pixMono, srOnly, ensureBasicsStyle, usePixId, useControllable, chain } from "./basics.jsx";
 
 export function FieldBase({ multiline = false, label, hint, error, required = false, disabled = false, readOnly = false, value, defaultValue, onChange,
-  maxLength, showCount, id: idProp, rows = 4, resize = "vertical", type = "text", inputStyle, style, onFocus, onBlur, ...rest }) {
+  maxLength, showCount, id: idProp, rows = 4, resize = "vertical", type = "text", inputStyle, style, onFocus, onBlur, onMouseEnter, onMouseLeave, ...rest }) {
   React.useEffect(ensureBasicsStyle, []);
   const id = usePixId("pix-field-", idProp);
   const controlledValue = value === undefined ? undefined : value == null ? "" : String(value);
   const [current, setValue] = useControllable(controlledValue, defaultValue == null ? "" : String(defaultValue), onChange);
   const [focus, setFocus] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
 
   const text = current == null ? "" : current;
   const counting = maxLength != null && showCount !== false;
@@ -17,7 +18,9 @@ export function FieldBase({ multiline = false, label, hint, error, required = fa
   const hintId = id + "-hint", errorId = id + "-error", countId = id + "-count";
   const describedBy = [error ? errorId : hint ? hintId : null, counting ? countId : null, rest["aria-describedby"]].filter(Boolean).join(" ") || undefined;
 
-  const border = error ? "var(--red-500, #ef4444)" : focus ? "var(--accent-fg, #047857)" : "var(--border-strong, #d6d3d1)";
+  // Rest and hover borders reach 3:1 on every surface (WCAG 1.4.11); disabled is exempt and steps back to border-strong.
+  const border = error ? "var(--danger, #ef4444)" : focus ? "var(--focus-ring, #047857)" : disabled ? "var(--border-strong, #d6d3d1)"
+    : hover && !readOnly ? "var(--border-field-hover, #57534e)" : "var(--border-field, #8b8580)";
   const control = {
     display: "block", width: "100%", boxSizing: "border-box", margin: 0, padding: "8px 10px", borderRadius: 3,
     border: `1px solid ${border}`, boxShadow: focus ? `0 0 0 1px ${border}` : "none", outline: "none",
@@ -32,6 +35,7 @@ export function FieldBase({ multiline = false, label, hint, error, required = fa
     "aria-invalid": error ? true : undefined, "aria-describedby": describedBy,
     onChange: (e) => setValue(e.target.value, e),
     onFocus: chain(onFocus, () => setFocus(true)), onBlur: chain(onBlur, () => setFocus(false)),
+    onMouseEnter: chain(onMouseEnter, () => setHover(true)), onMouseLeave: chain(onMouseLeave, () => setHover(false)),
     style: control,
   };
 
