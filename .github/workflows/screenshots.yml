@@ -4,6 +4,9 @@ name: Screenshots
 # block layouts from the static docs build (scripts/screenshots.mjs), then
 # publishes them as a single commit on the orphan branch `pix-screenshots`
 # so they can be reviewed without running a browser locally.
+# The same job then checks every live example on the component pages for form
+# controls and buttons without an accessible name and images without alt text
+# (scripts/a11y-pages.mjs), and fails on any it finds.
 
 on:
   pull_request:
@@ -68,3 +71,7 @@ jobs:
             echo ""
             echo "$(ls ./*.png | wc -l) PNGs for $SOURCE_REF published to [\`pix-screenshots\`](https://github.com/${GITHUB_REPOSITORY}/tree/pix-screenshots)."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # Runs last so a failure here never holds back the screenshots above.
+      - name: Check accessible names and alt text
+        run: node scripts/a11y-pages.mjs

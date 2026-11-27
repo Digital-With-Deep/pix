@@ -28,7 +28,7 @@ function SearchFieldBase({
   return (
     <div style={{ position: "relative", width, font: `400 13px ${searchFont}`, ...style }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 9px", background: "var(--surface, #fff)",
-        border: `1px solid ${open ? "var(--emerald-500, #10b981)" : "var(--border, #e4e4e7)"}`, borderRadius: 3,
+        border: `1px solid ${open ? "var(--focus-ring, #047857)" : "var(--border-field, #8b8580)"}`, borderRadius: 3,
         boxShadow: open ? "0 0 0 3px rgba(16,185,129,0.12)" : "none", transition: "border-color 150ms, box-shadow 150ms" }}>
         <span style={{ color: "var(--fg-muted, #a1a1aa)", display: "flex" }}><SIcon path={SEARCH_ICON} /></span>
         <input ref={inputRef} value={q} placeholder={placeholder}

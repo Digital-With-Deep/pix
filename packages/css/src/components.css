@@ -58,11 +58,13 @@
 .pix-field__label { font: 500 13px var(--font-sans); color: var(--fg1); }
 .pix-field__hint { font: 400 12px var(--font-sans); color: var(--fg3); }
 .pix-field__error { font: 500 12px var(--font-sans); color: var(--red-700); }
-.pix-input, .pix-select, .pix-textarea { width: 100%; font: 400 14px/1.4 var(--font-sans); color: var(--fg1); background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 8px 10px; transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
+.pix-input, .pix-select, .pix-textarea { width: 100%; font: 400 14px/1.4 var(--font-sans); color: var(--fg1); background: var(--surface); border: 1px solid var(--border-field); border-radius: 3px; padding: 8px 10px; transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
 .pix-input::placeholder, .pix-textarea::placeholder { color: var(--fg-muted); }
-.pix-input:focus, .pix-select:focus, .pix-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
-.pix-input[aria-invalid="true"], .pix-textarea[aria-invalid="true"] { border-color: var(--red-500); }
-.pix-input:disabled, .pix-textarea:disabled { background: var(--bg-subtle); color: var(--fg2); cursor: not-allowed; }
+.pix-input:hover, .pix-select:hover, .pix-textarea:hover { border-color: var(--border-field-hover); }
+.pix-input:focus, .pix-select:focus, .pix-textarea:focus { outline: none; border-color: var(--focus-ring); box-shadow: 0 0 0 1px var(--focus-ring), 0 0 0 4px var(--accent-bg); }
+.pix-input[aria-invalid="true"], .pix-select[aria-invalid="true"], .pix-textarea[aria-invalid="true"] { border-color: var(--danger); }
+.pix-input[aria-invalid="true"]:focus, .pix-select[aria-invalid="true"]:focus, .pix-textarea[aria-invalid="true"]:focus { box-shadow: 0 0 0 1px var(--danger); }
+.pix-input:disabled, .pix-select:disabled, .pix-textarea:disabled { background: var(--bg-subtle); border-color: var(--border-strong); color: var(--fg2); cursor: not-allowed; }
 .pix-textarea { min-height: 88px; line-height: 1.5; resize: vertical; }
 .pix-field__required { margin-left: 2px; color: var(--fg2); }
 .pix-field__meta { display: flex; align-items: flex-start; gap: var(--space-2); }
@@ -72,21 +74,23 @@
 
 /* ---------- Checkbox (use on <input type="checkbox">; set .indeterminate from script for the mixed state) ---------- */
 .pix-checkbox { display: flex; align-items: flex-start; gap: 10px; font-family: var(--font-sans); cursor: pointer; }
-.pix-checkbox__input { appearance: none; -webkit-appearance: none; position: relative; flex-shrink: 0; width: 16px; height: 16px; margin: 1px 0 0; border: 1.5px solid var(--fg3); border-radius: 3px; background: var(--surface); cursor: pointer; transition: background var(--dur-fast), border-color var(--dur-fast); }
+.pix-checkbox__input { appearance: none; -webkit-appearance: none; position: relative; flex-shrink: 0; width: 16px; height: 16px; margin: 1px 0 0; border: 1.5px solid var(--border-field); border-radius: 3px; background: var(--surface); cursor: pointer; transition: background var(--dur-fast), border-color var(--dur-fast); }
 .pix-checkbox__input:checked, .pix-checkbox__input:indeterminate { background: var(--emerald-600); border-color: var(--emerald-600); }
 .pix-checkbox__input:checked::after { content: ""; position: absolute; left: 3.5px; top: 0.5px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .pix-checkbox__input:indeterminate::after { content: ""; position: absolute; left: 2.5px; top: 5px; width: 8px; height: 2px; border: 0; border-radius: 1px; background: #fff; transform: none; }
-.pix-checkbox__input:focus-visible { outline: 2px solid var(--accent-fg); outline-offset: 2px; }
-.pix-checkbox__input[aria-invalid="true"] { border-color: var(--red-500); }
+.pix-checkbox__input:hover:not(:checked):not(:indeterminate):not(:disabled):not([aria-invalid="true"]) { border-color: var(--border-field-hover); }
+.pix-checkbox__input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.pix-checkbox__input[aria-invalid="true"] { border-color: var(--danger); }
 .pix-checkbox__input:disabled, .pix-checkbox__input:disabled ~ * { opacity: .5; cursor: not-allowed; }
 .pix-checkbox__label { display: block; font: 500 13px/1.4 var(--font-sans); color: var(--fg1); }
 .pix-checkbox__description { display: block; margin-top: 2px; font: 400 12px/1.5 var(--font-sans); color: var(--fg2); }
 
 /* ---------- Switch (use on <button role="switch" aria-checked>) ---------- */
-.pix-switch { position: relative; width: 32px; height: 18px; padding: 0; border: 0; border-radius: 999px; background: var(--zinc-300); cursor: pointer; transition: background var(--dur-fast); flex-shrink: 0; }
+.pix-switch { position: relative; width: 32px; height: 18px; padding: 0; border: 0; border-radius: 999px; background: var(--border-field); cursor: pointer; transition: background var(--dur-fast); flex-shrink: 0; }
 .pix-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: left var(--dur-fast); }
 .pix-switch[aria-checked="true"] { background: var(--emerald-600); }
 .pix-switch[aria-checked="true"]::after { left: 16px; }
+.pix-switch:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .pix-switch:disabled { opacity: .5; cursor: default; }
 
 /* ---------- Tabs ---------- */
@@ -119,8 +123,9 @@
 .pix-response__body { white-space: pre-wrap; }
 .pix-citation { display: inline-flex; align-items: center; gap: 4px; font: 500 11px var(--font-mono); color: var(--fg2); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 3px; padding: 2px 6px; }
 .pix-thinking { border-left: 2px solid var(--border); padding: 4px 0 4px 12px; font: 400 12px/1.6 var(--font-mono); color: var(--fg3); white-space: pre-wrap; }
-.pix-prompt { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
-.pix-prompt:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.pix-prompt { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--border-field); border-radius: 6px; padding: 10px 12px; }
+.pix-prompt:hover { border-color: var(--border-field-hover); }
+.pix-prompt:focus-within { border-color: var(--focus-ring); box-shadow: 0 0 0 1px var(--focus-ring), 0 0 0 4px var(--accent-bg); }
 .pix-prompt textarea { border: 0; outline: 0; resize: none; background: transparent; font: 400 14px/1.5 var(--font-sans); color: var(--fg1); }
 .pix-prompt__hint { font: 400 11px var(--font-sans); color: var(--fg3); }
 
