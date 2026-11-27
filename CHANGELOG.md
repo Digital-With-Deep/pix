@@ -59,6 +59,21 @@ PIX 0.3 work in progress. Each entry names its issue or pull request.
   controls and buttons without an accessible name and images without alt text
   (`scripts/a11y-pages.mjs`).
 
+### Changed
+
+- **Relay**, the human-in-the-loop inbox, is rebuilt on the agent components ([#44](https://github.com/Digital-With-Deep/pix/issues/44)).
+  Each request is a `ToolCall` held for approval with an `ApprovalCard` inside: approve, edit the
+  values or reject with a reason. An approved call runs in place, an erasure runs as a `PlanView`,
+  and executed actions keep an Undo button in `ActionHistory` for ten minutes. A new Autonomy
+  folder sets, with `AutonomySetting`, which kinds of action the agent may take without asking,
+  and a `ConfidenceBadge` states how far to trust each proposal. The wait timers, metrics,
+  `AuditLog`, `ExecutionTrace` and `InvariantPanel` stay. Notifications now use `ToastProvider`.
+- **Lumen**, the AI chat assistant, is rebuilt on `Conversation` ([#44](https://github.com/Digital-With-Deep/pix/issues/44)). Each turn shows its
+  tool calls as `ToolCall` rows, then streams its answer token by token as Markdown in
+  `AIResponse`, with Stop and Regenerate. The first answer has numbered `InlineCitation` markers
+  that highlight the matching row in a `SourcePanel`, where each source is checked once the answer
+  lands. Follow-ups are asked in `PromptInput` or picked from suggestions.
+
 ### Fixed
 
 - Form field borders now meet the 3:1 non-text contrast of WCAG (Web Content Accessibility
