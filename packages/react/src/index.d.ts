@@ -32,6 +32,7 @@ export * from "./components/Layout/Stack";
 export * from "./components/LicenseBanner/LicenseBanner";
 export * from "./components/Markdown/Markdown";
 export * from "./components/Menu/Menu";
+export * from "./components/MessageActions/MessageActions";
 export * from "./components/MetricCard/MetricCard";
 export * from "./components/MultiSelect/MultiSelect";
 export * from "./components/NextSteps/NextSteps";

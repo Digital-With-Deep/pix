@@ -9,8 +9,37 @@ on the docs site — edit here, not there.
 
 ## Unreleased — PIX 0.3
 
-PIX 0.3: making 0.2 installable, visible and complete for agents. Each entry names its issue or pull
-request.
+PIX 0.3 work in progress. Each entry names its issue or pull request.
+
+### Added
+
+- **`MessageActions`** in `@pix-ui/react` ([#46](https://github.com/Digital-With-Deep/pix/issues/46)): a compact row of icon
+  buttons under an agent message. Copy writes to the clipboard, with a fallback for browsers
+  that block the Clipboard API, and shows "Copied". Regenerate, thumbs up and down, and Branch
+  from here are each optional. A thumbs down can open a reason picker with chips and a comment
+  box, reported through `onFeedbackReason`. Every button has an accessible name and a tooltip.
+- `AIResponse` takes an `actions` slot and `Conversation` messages take an `actions` node, so a
+  `MessageActions` row can sit under an answer or a chat turn (#46).
+- **`PromptInput` attachments** (#46), all optional and backwards compatible:
+  - A controlled list with `attachments` and `onAttachmentsChange`, or `defaultAttachments`
+    when uncontrolled. `onAttach` gets the new files, with their `File`, for uploading.
+  - Drag and drop onto the composer and pasting files or images into the text field.
+  - `accept`, `multiple` and `maxFileSize`. Files that don't fit appear as red chips with the
+    reason.
+  - Upload states on each chip: `status` (`uploading`, `done`, `error`) and `progress`, with a
+    progress bar. Send waits until uploads finish.
+  - `showAttachButton` for a paperclip button, and `onAddScreenshot` for a camera button that
+    attaches whatever your own capture function returns. PIX doesn't capture the screen.
+  - Accessible names for the text field and remove buttons, a live region for added, rejected
+    and removed files, and focus that stays put after a chip is removed.
+- `@pix-ui/css` gains `pix-attachment*`, `pix-message-action*` and `pix-prompt--dragging`
+  classes.
+- `pnpm test` runs a token contrast test (`scripts/contrast-test.mjs`) that recomputes body and
+  secondary text (4.5:1), field borders, the invalid border and the focus ring (3:1) on every
+  surface from the built tokens, and lists any pair that falls short.
+- The screenshot workflow also checks every live example on the component pages for form
+  controls and buttons without an accessible name and images without alt text
+  (`scripts/a11y-pages.mjs`).
 
 ### Changed
 
@@ -42,15 +71,6 @@ request.
 - `Switch` without a `label` dropped its `aria-label`, so a bare switch had no accessible name. It
   now passes `aria-label` and `aria-labelledby` to the track. `AuditLog` histogram bars are
   labelled with their time bucket and event count ([#45](https://github.com/Digital-With-Deep/pix/issues/45)).
-
-### Added
-
-- `pnpm test` runs a token contrast test (`scripts/contrast-test.mjs`) that recomputes body and
-  secondary text (4.5:1), field borders, the invalid border and the focus ring (3:1) on every
-  surface from the built tokens, and lists any pair that falls short.
-- The screenshot workflow also checks every live example on the component pages for form
-  controls and buttons without an accessible name and images without alt text
-  (`scripts/a11y-pages.mjs`).
 
 ## Unreleased — PIX 0.2
 

@@ -23,6 +23,7 @@ Pass the text received so far as the assistant turn's `content`, with `streaming
 
 - `messages`: turns, oldest first, each with `role`, `content`, and optional `author`, `time` and `avatar`.
 - User turns sit on the right in a bubble. Assistant turns are full width and rendered as Markdown. `system` turns are a small centred note.
+- `actions` on a message: a row under that turn, usually a [`MessageActions`](/docs/components/message-actions) with copy, regenerate, feedback and branch. It is hidden while the turn is `streaming`.
 - `children`: extra content after the last turn, such as a typing indicator.
 - `follow`: turn off to stop the thread scrolling by itself.
 

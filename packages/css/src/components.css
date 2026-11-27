@@ -128,6 +128,29 @@
 .pix-prompt:focus-within { border-color: var(--focus-ring); box-shadow: 0 0 0 1px var(--focus-ring), 0 0 0 4px var(--accent-bg); }
 .pix-prompt textarea { border: 0; outline: 0; resize: none; background: transparent; font: 400 14px/1.5 var(--font-sans); color: var(--fg1); }
 .pix-prompt__hint { font: 400 11px var(--font-sans); color: var(--fg3); }
+.pix-prompt--dragging { border-color: var(--accent); border-style: dashed; background: var(--accent-bg); }
+
+/* ---------- Attachments (chips above a prompt; wrap them in <ul class="pix-attachments">) ---------- */
+.pix-attachments { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.pix-attachment { position: relative; display: inline-flex; align-items: center; gap: 7px; max-width: 260px; padding: 4px 7px 4px 4px; overflow: hidden; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 3px; font-family: var(--font-sans); }
+.pix-attachment__thumb { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex-shrink: 0; overflow: hidden; border-radius: 2px; background: var(--bg-muted); border: 1px solid var(--border); font: 700 8px var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg3); }
+.pix-attachment__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pix-attachment__name { display: block; min-width: 0; font: 500 11px var(--font-sans); color: var(--fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pix-attachment__meta { display: block; font: 400 10px var(--font-sans); color: var(--fg3); }
+.pix-attachment__remove { display: inline-flex; flex-shrink: 0; padding: 2px; margin: -2px; border: 0; border-radius: 2px; background: transparent; color: var(--fg3); cursor: pointer; }
+.pix-attachment__remove:hover { color: var(--fg1); background: var(--bg-muted); }
+.pix-attachment__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--border); }
+.pix-attachment__progress > span { display: block; height: 100%; background: var(--accent); }
+.pix-attachment--error { background: var(--claim-bg); border-color: var(--red-200); }
+.pix-attachment--error .pix-attachment__name, .pix-attachment--error .pix-attachment__meta { color: var(--red-700); }
+
+/* ---------- Message actions (icon buttons under an agent message; set aria-pressed on the thumbs) ---------- */
+.pix-message-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+.pix-message-action { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 3px; background: transparent; color: var(--fg3); cursor: pointer; }
+.pix-message-action:hover { background: var(--bg-muted); color: var(--fg1); }
+.pix-message-action:disabled { opacity: 0.5; cursor: not-allowed; }
+.pix-message-action--up[aria-pressed="true"] { background: var(--truth-bg); color: var(--truth); }
+.pix-message-action--down[aria-pressed="true"] { background: var(--claim-bg); color: var(--claim); }
 
 /* ---------- Verification semantics (AI claim vs ground truth) ---------- */
 .pix-claim { color: var(--claim); background: var(--claim-bg); }
