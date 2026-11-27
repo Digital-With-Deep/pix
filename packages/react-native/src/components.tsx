@@ -132,7 +132,7 @@ export function Avatar({ name = "", src, size = "md", square, style }: AvatarPro
 export interface SwitchProps { value: boolean; onValueChange?: (v: boolean) => void; label?: string; description?: string; disabled?: boolean }
 export function Switch({ value, onValueChange, label, description, disabled }: SwitchProps) {
   const k = usePixTheme().color;
-  const control = <RNSwitch value={value} onValueChange={onValueChange} disabled={disabled} trackColor={{ false: k["zinc-300"], true: k["emerald-600"] }} thumbColor="#ffffff" ios_backgroundColor={k["zinc-300"]} accessibilityLabel={label} />;
+  const control = <RNSwitch value={value} onValueChange={onValueChange} disabled={disabled} trackColor={{ false: k["border-field"], true: k["emerald-600"] }} thumbColor="#ffffff" ios_backgroundColor={k["border-field"]} accessibilityLabel={label} />;
   if (!label) return control;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 16, paddingVertical: 12 }}>
@@ -152,7 +152,7 @@ export function TextField({ label, hint, error, value, onChangeText, placeholder
       {label ? <Text variant="small" style={{ fontWeight: "500", color: k.fg1 }}>{label}</Text> : null}
       <TextInput value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={k["fg-muted"]} multiline={multiline} secureTextEntry={secureTextEntry}
         accessibilityLabel={label} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
-        style={{ minHeight: 44, color: k.fg1, fontSize: 15, backgroundColor: k.surface, borderWidth: 1, borderRadius: 3, paddingHorizontal: 10, paddingVertical: 8, borderColor: error ? k["red-500"] : focus ? k.accent : k.border }} />
+        style={{ minHeight: 44, color: k.fg1, fontSize: 15, backgroundColor: k.surface, borderWidth: 1, borderRadius: 3, paddingHorizontal: 10, paddingVertical: 8, borderColor: error ? k.danger : focus ? k["focus-ring"] : k["border-field"] }} />
       {error ? <RNText style={{ color: k["red-700"], fontSize: 12, fontWeight: "500" }}>{error}</RNText> : hint ? <Text variant="meta">{hint}</Text> : null}
     </View>
   );
@@ -238,7 +238,7 @@ export function PromptInput({ value, onChangeText, onSubmit, placeholder = "Ask 
   const [focus, setFocus] = React.useState(false);
   const send = () => { if (!v.trim() || busy) return; onSubmit?.(v); if (value === undefined) setLocal(""); };
   return (
-    <View style={[{ backgroundColor: k.surface, borderWidth: 1, borderColor: focus ? k.accent : k.border, borderRadius: 6, padding: 10, gap: 8 }, style]}>
+    <View style={[{ backgroundColor: k.surface, borderWidth: 1, borderColor: focus ? k["focus-ring"] : k["border-field"], borderRadius: 6, padding: 10, gap: 8 }, style]}>
       <TextInput value={v} onChangeText={set} placeholder={placeholder} placeholderTextColor={k["fg-muted"]} multiline accessibilityLabel={placeholder}
         onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} style={{ minHeight: 44, color: k.fg1, fontSize: 15, textAlignVertical: "top" }} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 }}>

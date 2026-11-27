@@ -54,7 +54,7 @@ function SelectBase({ options = [], value, onChange, placeholder = "Select…", 
     else if (e.key === "Tab") close(false);
   };
 
-  const borderColor = error ? "var(--red-500, #ef4444)" : open || focus ? "var(--emerald-500, #10b981)" : "var(--border, #e4e4e7)";
+  const borderColor = error ? "var(--danger, #ef4444)" : open || focus ? "var(--focus-ring, #047857)" : disabled ? "var(--border-strong, #d6d3d1)" : "var(--border-field, #8b8580)";
   let lastGroup;
   return (
     <div style={{ fontFamily: selSans, ...style }}>

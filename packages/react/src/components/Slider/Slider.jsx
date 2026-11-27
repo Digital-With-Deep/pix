@@ -13,8 +13,8 @@ const SLIDER_CSS = `.pix-slider{-webkit-appearance:none;appearance:none;margin:0
 .pix-slider::-moz-range-thumb{box-sizing:border-box;width:18px;height:18px;border-radius:999px;border:2px solid var(--emerald-600,#059669);background:var(--surface,#fff);box-shadow:var(--shadow-xs,0 1px 2px 0 rgb(0 0 0 / 0.08));transition:transform 120ms}
 .pix-slider:not(:disabled):hover::-webkit-slider-thumb{transform:scale(1.1)}
 .pix-slider:not(:disabled):hover::-moz-range-thumb{transform:scale(1.1)}
-.pix-slider:focus-visible::-webkit-slider-thumb{outline:2px solid var(--accent-fg,#047857);outline-offset:2px}
-.pix-slider:focus-visible::-moz-range-thumb{outline:2px solid var(--accent-fg,#047857);outline-offset:2px}
+.pix-slider:focus-visible::-webkit-slider-thumb{outline:2px solid var(--focus-ring,#047857);outline-offset:2px}
+.pix-slider:focus-visible::-moz-range-thumb{outline:2px solid var(--focus-ring,#047857);outline-offset:2px}
 .pix-slider[aria-invalid="true"]::-webkit-slider-thumb{border-color:var(--red-500,#ef4444)}
 .pix-slider[aria-invalid="true"]::-moz-range-thumb{border-color:var(--red-500,#ef4444)}
 .pix-slider:disabled::-webkit-slider-thumb{border-color:var(--fg3,#78716c)}
@@ -55,7 +55,7 @@ function SliderBase({ label, hint, error, value, defaultValue, onChange, min = 0
   const shown = format(n);
   const pct = hi > lo ? ((n - lo) / (hi - lo)) * 100 : 0;
   const fill = disabled ? "var(--fg3, #78716c)" : error ? "var(--red-500, #ef4444)" : "var(--emerald-600, #059669)";
-  const rail = "var(--border-strong, #d6d3d1)";
+  const rail = "var(--border-field, #8b8580)";
 
   const hintId = id + "-hint", errorId = id + "-error";
   const describedBy = [error ? errorId : hint ? hintId : null, rest["aria-describedby"]].filter(Boolean).join(" ") || undefined;

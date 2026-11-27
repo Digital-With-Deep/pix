@@ -6,13 +6,13 @@ let msSeq = 0;
 
 const MsCheckBadge = ({ on, size = 18 }) => (
   <span aria-hidden="true" style={{ width: size, height: size, borderRadius: 999, flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center",
-    border: `1.5px solid ${on ? "var(--emerald-600, #059669)" : "var(--border-strong, #d4d4d8)"}`, background: on ? "var(--emerald-600, #059669)" : "var(--surface, #fff)", color: "#fff", transition: "background 120ms, border-color 120ms" }}>
+    border: `1.5px solid ${on ? "var(--emerald-600, #059669)" : "var(--border-field, #8b8580)"}`, background: on ? "var(--emerald-600, #059669)" : "var(--surface, #fff)", color: "#fff", transition: "background 120ms, border-color 120ms" }}>
     <svg viewBox="0 0 24 24" width={size - 7} height={size - 7} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ visibility: on ? "visible" : "hidden" }}><path d="M5 13l4 4L19 7" /></svg>
   </span>
 );
 const MsBox = ({ on, mixed }) => (
   <span aria-hidden="true" style={{ width: 15, height: 15, borderRadius: 3, flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center",
-    border: `1.5px solid ${on || mixed ? "var(--fg1, #18181b)" : "var(--border-strong, #d4d4d8)"}`, background: on || mixed ? "var(--fg1, #18181b)" : "var(--surface, #fff)", color: "var(--fg-inverse, #fff)" }}>
+    border: `1.5px solid ${on || mixed ? "var(--fg1, #18181b)" : "var(--border-field, #8b8580)"}`, background: on || mixed ? "var(--fg1, #18181b)" : "var(--surface, #fff)", color: "var(--fg-inverse, #fff)" }}>
     {mixed && !on ? <span style={{ width: 7, height: 2, background: "currentColor", borderRadius: 1 }} /> :
       <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" style={{ visibility: on ? "visible" : "hidden" }}><path d="M5 13l4 4L19 7" /></svg>}
   </span>
@@ -76,7 +76,7 @@ function Dropdown({ options, value, toggle, setAll, disabled, id, placeholder, s
     else if (e.key === "Backspace" && !q && chosen.length) { toggle(chosen[chosen.length - 1]); }
     else if (e.key === "Tab") close(false);
   };
-  const borderColor = error ? "var(--red-500, #ef4444)" : open || focus ? "var(--emerald-500, #10b981)" : "var(--border, #e4e4e7)";
+  const borderColor = error ? "var(--danger, #ef4444)" : open || focus ? "var(--focus-ring, #047857)" : disabled ? "var(--border-strong, #d6d3d1)" : "var(--border-field, #8b8580)";
   const visibleChips = chosen.slice(0, maxChips); const extra = chosen.length - visibleChips.length;
   const allShownOn = shown.length > 0 && shown.every((o) => o.disabled || value.includes(o.value));
   let lastGroup;

@@ -4,15 +4,15 @@ import * as React from "react";
 
 export const pixSans = "var(--font-sans, ui-sans-serif, system-ui, sans-serif)";
 export const pixMono = "var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)";
-/** Accent ink for focus rings: 5.5:1 on light surfaces, 9:1 on dark. */
-export const focusOutline = "2px solid var(--accent-fg, #047857)";
+/** Focus ring ink: at least 5:1 on every light surface and 7.8:1 on every dark one (the token contrast test keeps it there). */
+export const focusOutline = "2px solid var(--focus-ring, #047857)";
 export const srOnly = { position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 };
 
 const BASICS_CSS = `@keyframes pix-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes pix-rise-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .pix-o-fade{animation:pix-fade-in 140ms var(--ease,cubic-bezier(.4,0,.2,1))}
 .pix-o-rise{animation:pix-rise-in 180ms var(--ease,cubic-bezier(.4,0,.2,1))}
-.pix-o-focus:focus-visible{outline:2px solid var(--accent-fg,#047857);outline-offset:2px}
+.pix-o-focus:focus-visible{outline:2px solid var(--focus-ring,#047857);outline-offset:2px}
 .pix-o-focus:focus:not(:focus-visible){outline:none}
 .pix-f-control::placeholder{color:var(--fg3,#78716c);opacity:1}
 @media (prefers-reduced-motion:reduce){.pix-o-fade,.pix-o-rise{animation:none}}`;

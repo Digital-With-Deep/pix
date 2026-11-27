@@ -70,6 +70,7 @@ function PromptInputBase({
   error, disabled = false, rows = 3, width = "100%", style,
 }) {
   const [text, setText] = usePromptState(defaultValue);
+  const [focused, setFocused] = usePromptState(false);
   const q = value !== undefined ? value : text;
   const setQ = v => { if (value === undefined) setText(v); if (onChange) onChange(v); };
 
@@ -109,8 +110,8 @@ function PromptInputBase({
 
   return (
     <div style={{ width, font: `400 13px ${pFont}`, ...style }}>
-      <div style={{ background: "var(--surface, #fff)", border: `1px solid ${error ? "var(--danger, #ef4444)" : "var(--border, #e4e4e7)"}`, borderRadius: 4,
-        boxShadow: error ? "0 0 0 3px rgba(239,68,68,0.12)" : "var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))", opacity: disabled ? 0.6 : 1 }}>
+      <div style={{ background: "var(--surface, #fff)", border: `1px solid ${error ? "var(--danger, #ef4444)" : focused ? "var(--focus-ring, #047857)" : "var(--border-field, #8b8580)"}`, borderRadius: 4,
+        boxShadow: error ? "0 0 0 3px rgba(239,68,68,0.12)" : focused ? "0 0 0 1px var(--focus-ring, #047857)" : "var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))", opacity: disabled ? 0.6 : 1 }}>
         {allowFiles && files.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6, padding: "10px 12px 0" }}>
             {files.map((f, i) => (
@@ -133,7 +134,7 @@ function PromptInputBase({
         )}
 
         <textarea value={q} rows={rows} placeholder={placeholder} disabled={disabled}
-          onChange={e => setQ(e.target.value)}
+          onChange={e => setQ(e.target.value)} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
           style={{ display: "block", width: "100%", boxSizing: "border-box", border: 0, outline: "none", resize: "none",
             padding: "12px 12px 6px", font: `400 13px ${pFont}`, lineHeight: 1.55, color: "var(--fg1, #18181b)", background: "transparent" }} />

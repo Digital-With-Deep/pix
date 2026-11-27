@@ -2,14 +2,14 @@ import * as React from "react";
 import { Skeleton } from "../Skeleton/Skeleton.jsx";
 const swSans = "var(--font-sans, ui-sans-serif, system-ui, sans-serif)";
 
-function SwitchBase({ checked = false, onChange, label, description, disabled = false, divider = false, style }) {
+function SwitchBase({ checked = false, onChange, label, description, disabled = false, divider = false, style, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledby }) {
   const [focus, setFocus] = React.useState(false);
   const id = React.useMemo(() => "sw" + Math.random().toString(36).slice(2, 8), []);
   const track = (
-    <button type="button" role="switch" aria-checked={checked} aria-labelledby={label ? id : undefined} disabled={disabled}
+    <button type="button" role="switch" aria-checked={checked} aria-labelledby={label ? id : ariaLabelledby} aria-label={label ? undefined : ariaLabel} disabled={disabled}
       onClick={() => onChange && onChange(!checked)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
       style={{ position: "relative", width: 32, height: 18, flexShrink: 0, padding: 0, border: 0, borderRadius: 999, cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.5 : 1,
-        background: checked ? "var(--emerald-600, #059669)" : "var(--zinc-300, #d4d4d8)", transition: "background 150ms", outline: focus ? "2px solid var(--emerald-500, #10b981)" : "none", outlineOffset: 2 }}>
+        background: checked ? "var(--emerald-600, #059669)" : "var(--border-field, #8b8580)", transition: "background 150ms", outline: focus ? "2px solid var(--focus-ring, #047857)" : "none", outlineOffset: 2 }}>
       <span style={{ position: "absolute", top: 2, left: checked ? 16 : 2, width: 14, height: 14, borderRadius: 999, background: "#fff", boxShadow: "0 1px 2px rgba(0,0,0,.25)", transition: "left 150ms" }} />
     </button>
   );
