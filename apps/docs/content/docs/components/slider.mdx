@@ -1,0 +1,46 @@
+---
+title: Slider
+description: Pick a number in a range by dragging or with the arrow keys.
+---
+
+Slider is a native range input with a label, the current value in monospace, optional minimum and maximum labels under the track, and a hint or error. It works controlled or uncontrolled, snaps to a `step` or moves freely, and formats its value display with `formatValue`.
+
+<Preview name="slider-overview" />
+
+## When to use
+
+- For a value where the position in the range matters more than the exact number: a limit, a threshold, a count of reviewers.
+- Prefer TextField with `inputMode="decimal"` when people need to type an exact amount, such as a budget to the cent.
+- Prefer RadioGroup or Select for a handful of named options, even when they map to numbers.
+
+## States
+
+`required` adds an asterisk to the label. `error` replaces the hint, turns the filled part of the track and the thumb border red and sets `aria-invalid`. `disabled` greys the track and thumb and blocks input. `showRange` prints `min` and `max` under the track.
+
+<Preview title="STATES" name="slider-states" />
+
+Set `step` to the distance between allowed values, or to `"any"` for a continuous slider. The value display shows as many decimals as the step has; pass `formatValue` to show a percentage or an amount instead. The same text is announced to screen readers.
+
+<Preview title="DECIMAL STEPS" name="slider-continuous" />
+
+<Preview title="LOADING" name="slider-loading" />
+
+## Anatomy
+
+- `label` — at the left of the label row; clicking it focuses the slider.
+- The value — at the right of the label row, in monospace with tabular figures. Turn it off with `showValue={false}`.
+- The track — filled in emerald up to the thumb. Every native input attribute you pass, such as `name`, reaches the input.
+- The range labels — `min` and `max` under the track when `showRange` is set.
+- `hint` or `error` — one line under the track.
+
+## Accessibility
+
+- It is a native `<input type="range">`, so it has the `slider` role, and Arrow keys, Page Up, Page Down, Home and End work in every browser.
+- The label is a real `<label>` tied to the input. Without a visible `label`, pass `aria-label`.
+- When `formatValue` returns a string, it becomes `aria-valuetext`, so a screen reader announces "$120" rather than "120".
+- The hint or error is linked through `aria-describedby`. Errors set `aria-invalid`.
+- The thumb has a 2px emerald border at 3:1 or more against the surface in both themes, and keyboard focus shows a 2px accent ring around it. The thumb's hover transition is turned off when reduced motion is requested.
+
+## Props
+
+<PropsTable component="Slider" />

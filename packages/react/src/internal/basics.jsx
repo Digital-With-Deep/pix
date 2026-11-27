@@ -26,6 +26,15 @@ export function ensureBasicsStyle() {
   document.head.appendChild(s);
 }
 
+/** Inject a component's own stylesheet once, keyed by `id`. For rules inline styles cannot express (pseudo-elements). No-op on the server. */
+export function ensureStyle(id, css) {
+  if (typeof document === "undefined" || document.getElementById(id)) return;
+  const s = document.createElement("style");
+  s.id = id;
+  s.textContent = css;
+  document.head.appendChild(s);
+}
+
 /** A DOM-safe id from React.useId (strips the colons). */
 export function usePixId(prefix, given) {
   const raw = React.useId();

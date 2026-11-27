@@ -168,6 +168,17 @@ export const pixFunctions = {
     return new Intl.NumberFormat(scope.locale, { style: "currency", currency: String(currency), minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
   },
   required: ({ value }) => ({ valid: !isEmpty(value) }),
+  regex: ({ value, pattern }) => ({ valid: new RegExp(String(pattern)).test(toText(value)) }),
+  length: ({ value, min, max }) => {
+    const n = [...toText(value)].length; // code points, so an emoji counts once
+    return { valid: (min === undefined || min === null || n >= Number(min)) && (max === undefined || max === null || n <= Number(max)) };
+  },
+  numeric: ({ value, min, max }) => {
+    const n = typeof value === "number" ? value : typeof value === "string" && value.trim() !== "" ? Number(value) : NaN;
+    if (!Number.isFinite(n)) return { valid: false };
+    return { valid: (min === undefined || min === null || n >= Number(min)) && (max === undefined || max === null || n <= Number(max)) };
+  },
+  email: ({ value }) => ({ valid: /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(toText(value).trim()) }),
   and: ({ values }) => (values || []).every(toBool),
   or: ({ values }) => (values || []).some(toBool),
   not: ({ value }) => !toBool(value),
