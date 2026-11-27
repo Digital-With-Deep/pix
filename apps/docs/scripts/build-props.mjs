@@ -25,7 +25,7 @@ export const COMPONENTS = [
   // Data and charts
   "BarChart", "RateBars", "UsageMeter", "AuditLog",
   // Inputs
-  "MultiSelect", "RadioGroup", "Switch", "SearchField", "SavedSearch", "FormActions", "ProviderConfig", "Menu", "Sidebar",
+  "MultiSelect", "RadioGroup", "Slider", "DateField", "Switch", "SearchField", "SavedSearch", "FormActions", "ProviderConfig", "Menu", "Sidebar",
   // Feedback, content and onboarding
   "EmptyState", "Skeleton", "Disclosure", "LicenseBanner", "GettingStarted", "NextSteps", "PlanCard", "Stepper", "Page",
   // Basics pack

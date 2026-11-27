@@ -8,6 +8,10 @@ export interface RadioGroupProps {
   onChange?: (value: string, option: RadioOption) => void;
   /** Uppercase group label, wired with aria-labelledby. */
   label?: string;
+  /** Helper text under the options, linked with `aria-describedby`. */
+  hint?: React.ReactNode;
+  /** Replaces the hint in claim red, outlines unselected options in red and sets `aria-invalid` on the group. */
+  error?: React.ReactNode;
   /** Native radio name; generated when omitted. */
   name?: string;
   disabled?: boolean;

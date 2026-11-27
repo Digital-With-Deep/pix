@@ -129,15 +129,21 @@ export interface A2UIRenderContext {
   has(property: string): boolean;
   /** The property with bindings and function calls resolved. */
   get(property: string): unknown;
+  /** Resolve any dynamic value (a literal, a {"@path"} binding or a {"@call"}) in this component's scope, for values nested inside a property, such as option labels. */
+  resolve(value: unknown): unknown;
+  /** The absolute data model pointer a property is bound to, or `undefined` when it holds a literal or a function call. */
+  bound(property: string): string | undefined;
+  /** Render a component by id, in this component's scope (for ids nested inside a property, such as tab children). */
+  render(componentId: unknown): React.ReactNode;
   /** The property coerced to a boolean with the A2UI coercion rules. */
   bool(property: string): boolean;
   /** Render the component whose id is in a ComponentId property. */
   child(property: string): React.ReactNode;
   /** Render a ChildList property, including list templates. */
   children(property: string): React.ReactNode[];
-  /** Evaluate the component's @checks. */
+  /** Evaluate the component's @checks against the data model. Input components show the messages on the field; a Button is disabled while any check fails. */
   checks(): { valid: boolean; messages: string[] };
-  /** Write a value to the data model path a property is bound to. Does nothing for literal properties. */
+  /** Write a value to the data model path a property is bound to (two-way binding). Does nothing for literal properties. */
   setBound(property: string, value: unknown): void;
   /** Write a value to the data model, relative to the current list item. */
   setData(pointer: string, value: unknown): void;
@@ -164,6 +170,8 @@ export declare const pixFunctions: Record<string, A2UIFunctionImplementation>;
 
 /** Keep http, https, mailto and relative links; drop any other scheme. */
 export declare function safeHref(href: unknown): string | undefined;
+/** Keep http, https, relative and base64 raster (PNG, JPEG, GIF, WebP, AVIF) image sources; drop any other. */
+export declare function safeImageSrc(url: unknown): string | undefined;
 export declare function resolveValue(value: unknown, scope: unknown): unknown;
 export declare function formatString(template: unknown, scope: unknown): string;
 export declare function toBool(value: unknown): boolean;

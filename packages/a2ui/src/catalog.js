@@ -22,6 +22,21 @@ const dynamicEnum = (values, description) => ({
   oneOf: [{ type: "string", enum: values }, common("DataBinding"), common("FunctionCall")],
 });
 
+const strList = (description) => ({ ...common("DynamicStringList"), description });
+const childRef = (description) => ({ ...common("Child"), description });
+
+/** A component that takes @checks (the Checkable trait): its validation messages show on the field. */
+function checkable(name, description, properties, required = []) {
+  return {
+    type: "object",
+    description,
+    allOf: [
+      common("Checkable"),
+      { type: "object", properties: { component: { const: name }, ...properties }, required: ["component", ...required] },
+    ],
+  };
+}
+
 function component(name, description, properties, required = []) {
   return {
     type: "object",
@@ -151,6 +166,58 @@ const components = {
     label: str("Accessible name of the thread. Defaults to \"Conversation\"."),
     height: { type: "number", description: "Fixed height in pixels. The thread scrolls inside it." },
   }),
+  TextField: checkable("TextField", "A text input whose value is two-way bound to the data model. Renders the PIX TextField, or Textarea for longText. Put validation in @checks; a failed check's message shows under the field.", {
+    label: str("The field label."),
+    value: str("The text. Bind it to the data model, for example { \"@path\": \"/form/name\" }, so what the person types is written there."),
+    placeholder: str("Example input shown while the field is empty."),
+    variant: literal(["shortText", "longText", "number", "obscured"], "shortText is one line, longText several lines, number a numeric field (the value stays a string), obscured hides what is typed.", "shortText"),
+  }, ["label", "value"]),
+  CheckBox: checkable("CheckBox", "A checkbox whose boolean value is two-way bound to the data model. Renders the PIX Checkbox.", {
+    label: str("The label next to the box."),
+    value: bool("Whether the box is checked. Bind it to the data model so a click writes true or false there."),
+  }, ["label", "value"]),
+  ChoicePicker: checkable("ChoicePicker", "Pick one or several options. The value is an array of the selected option values, two-way bound to the data model. A single choice renders the PIX RadioGroup (or Select when filterable or not in checkbox style); multiple choices render the PIX MultiSelect.", {
+    label: str("The group label."),
+    variant: literal(["multipleSelection", "mutuallyExclusive"], "mutuallyExclusive allows one option, multipleSelection any number.", "mutuallyExclusive"),
+    options: { type: "array", description: "The options, in display order.", items: { $ref: "#/$defs/ChoiceOption" } },
+    value: strList("The selected option values, as an array of strings, even for a single choice. Bind it to the data model."),
+    displayStyle: literal(["checkbox", "chips", "dropdown"], "checkbox shows radio buttons for one choice and selectable tiles for several. chips shows a dropdown for one choice and selectable tiles for several. dropdown is a PIX extension: a compact dropdown in both cases.", "checkbox"),
+    filterable: flag("Add a search box that filters options by label.", false),
+  }, ["options", "value"]),
+  Slider: checkable("Slider", "A slider for a number in a range, two-way bound to the data model. Renders the PIX Slider with the current value and the min and max labels.", {
+    label: str("The slider label."),
+    min: { type: "number", description: "Lowest value.", default: 0 },
+    max: { type: "number", description: "Highest value." },
+    value: num("The current number. Bind it to the data model so dragging writes there."),
+    steps: { type: "integer", minimum: 1, description: "Number of equal intervals between min and max the slider snaps to. Omit for a continuous slider." },
+  }, ["value", "max"]),
+  DateTimeInput: checkable("DateTimeInput", "A date, time, or date and time input on the browser's native picker, two-way bound to the data model as an ISO 8601 string. Renders the PIX DateField.", {
+    label: str("The field label."),
+    value: str("The ISO 8601 value: 2026-12-04, 14:30 or 2026-12-04T14:30. Bind it to the data model; start it as an empty string. The renderer writes local values without a time zone."),
+    enableDate: flag("Show a date picker. With enableTime, show both. With neither, PIX shows a date picker.", false),
+    enableTime: flag("Show a time picker. With enableDate, show both.", false),
+    min: str("Earliest allowed value, ISO 8601."),
+    max: str("Latest allowed value, ISO 8601."),
+  }, ["value"]),
+  Image: component("Image", "An image from a URL. Only http, https, relative and base64 raster data URLs are shown.", {
+    url: str("The image address."),
+    description: str("Alternative text that says what the image shows. Omit only for a decorative image."),
+    fit: literal(["contain", "cover", "fill", "none", "scaleDown"], "How the image fills its box, as CSS object-fit.", "fill"),
+    variant: literal(["icon", "avatar", "smallFeature", "mediumFeature", "largeFeature", "header"], "icon is 24px square, avatar a 40px circle, smallFeature 100px square, mediumFeature up to 300px wide, largeFeature full width up to 400px high, header a full-width 200px banner.", "mediumFeature"),
+  }, ["url"]),
+  Tabs: component("Tabs", "A row of tabs that shows one child at a time. Renders the PIX Tabs.", {
+    tabs: { type: "array", minItems: 1, description: "The tabs, in order. The first is selected at first.", items: { $ref: "#/$defs/TabItem" } },
+  }, ["tabs"]),
+  Modal: component("Modal", "A dialog over the page. Pressing the trigger opens it; Escape, the close button or a click on the backdrop closes it. Renders the PIX Dialog.", {
+    trigger: childRef("The id of the component that opens the modal, usually a Button."),
+    content: childRef("The id of the component shown inside the modal, usually a Column."),
+    title: str("PIX extension: the dialog heading, which also names it for screen readers. Without it, @accessibility.label names the dialog."),
+  }, ["trigger", "content"]),
+  List: component("List", "A list of children, vertical or as a horizontally scrolling row. Use a template to repeat one component for every item of a data model list.", {
+    children: children("The items, as an array of component ids or a template { componentId, path }."),
+    direction: literal(["vertical", "horizontal"], "vertical stacks items; horizontal puts them in a row that scrolls sideways.", "vertical"),
+    align: literal(["start", "center", "end", "stretch"], "Cross-axis alignment of the items.", "stretch"),
+  }, ["children"]),
   Button: {
     type: "object",
     description: "A button that dispatches an action. Give it a label, or a child component id for richer content.",
@@ -193,6 +260,14 @@ const functions = {
     { value: common("DynamicNumber"), currency: common("DynamicString"), decimals: common("DynamicNumber") }, ["value", "currency"]),
   required: fn("required", "Checks that a value is not null, undefined, an empty string or an empty array.", "validationResult",
     { value: common("DynamicValue") }, ["value"]),
+  regex: fn("regex", "Checks that a string matches a regular expression (ECMAScript syntax, unanchored: add ^ and $ to match the whole value).", "validationResult",
+    { value: common("DynamicString"), pattern: { type: "string" } }, ["value", "pattern"]),
+  length: fn("length", "Checks the length of a string in characters. Give min, max or both.", "validationResult",
+    { value: common("DynamicString"), min: { type: "integer", minimum: 0 }, max: { type: "integer", minimum: 0 } }, ["value"]),
+  numeric: fn("numeric", "Checks that a value is a number within a range. Give min, max or both. An empty or non-numeric value fails.", "validationResult",
+    { value: common("DynamicNumber"), min: { type: "number" }, max: { type: "number" } }, ["value"]),
+  email: fn("email", "Checks that a string looks like an email address.", "validationResult",
+    { value: common("DynamicString") }, ["value"]),
   and: fn("and", "True when every value is true. Validation results count as their valid flag.", "boolean",
     { values: { type: "array", items: common("DynamicBoolean"), minItems: 2 } }, ["values"]),
   or: fn("or", "True when at least one value is true.", "boolean",
@@ -210,15 +285,18 @@ const instructions = `PIX (Primitives for Intelligent eXperiences) is a design s
 3. Before any action that spends money, contacts someone or cannot be undone, show an ApprovalCard and wait for its approveAction, rejectAction or editAction event. Never treat the card as approved until that event arrives.
 4. Show each tool call as a ToolCall. Nest the ApprovalCard as the ToolCall child when the call waits on a person.
 5. Bind values that change (streamed answer text, statuses, table rows) to the data model with {"@path": "/..."} and update them with updateDataModel instead of resending components.
-6. To combine text with data, use formatString, for example {"@call": "formatString", "args": {"value": "Order \${/order/id}"}}.
-7. Write in sentence case, without exclamation marks or emoji.`;
+6. Build forms from TextField, CheckBox, ChoicePicker, Slider and DateTimeInput. Bind each value to the data model with {"@path": "/..."} so the person's input is written there, and send it to the agent through a Button whose action context reads the same paths.
+7. Put validation in @checks with a message, for example {"condition": {"@call": "required", "args": {"value": {"@path": "/form/email"}}}, "message": "Enter an email address"}. The message shows on the field; do not add separate Text components for errors. Repeat the checks on the submit Button so it stays disabled until the form is valid.
+8. Use Tabs and Modal to keep secondary detail out of the way, List for a scrolling set of items and Image only with a description.
+9. To combine text with data, use formatString, for example {"@call": "formatString", "args": {"value": "Order \${/order/id}"}}.
+10. Write in sentence case, without exclamation marks or emoji.`;
 
 export const pixCatalog = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
   $id: PIX_CATALOG_ID,
   protocolVersion: A2UI_VERSION,
   title: "PIX catalog",
-  description: "PIX components for agent interfaces: answers, tool calls, approvals, conversations, metrics, tables and layout.",
+  description: "PIX components for agent interfaces: answers, tool calls, approvals, conversations, metrics, tables, forms with validation, images, tabs, dialogs and layout.",
   catalogId: PIX_CATALOG_ID,
   instructions,
   components,
@@ -230,6 +308,26 @@ export const pixCatalog = {
     },
     anyFunction: {
       oneOf: Object.keys(functions).map((name) => ({ $ref: `#/functions/${name}` })),
+    },
+    ChoiceOption: {
+      type: "object",
+      description: "One ChoicePicker option.",
+      properties: {
+        label: str("What the person sees."),
+        value: { type: "string", description: "What is written to the data model when the option is selected." },
+      },
+      required: ["label", "value"],
+      additionalProperties: false,
+    },
+    TabItem: {
+      type: "object",
+      description: "One tab: its title and the component it shows.",
+      properties: {
+        title: str("The tab label."),
+        child: childRef("The id of the component shown while this tab is selected."),
+      },
+      required: ["title", "child"],
+      additionalProperties: false,
     },
     TableColumn: {
       type: "object",

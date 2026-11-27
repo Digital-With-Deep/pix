@@ -1,0 +1,49 @@
+---
+title: DateField
+description: A date, time, or date and time input on the browser's native picker.
+---
+
+DateField puts the PIX label, hint, error and required marker on the browser's own date, time and date-and-time inputs. Values are ISO (International Organization for Standardization) 8601 strings, the international standard format for dates and times, such as `2026-12-04`, `14:30` or `2026-12-04T14:30`. It works controlled or uncontrolled.
+
+<Preview name="date-field-overview" />
+
+## When to use
+
+- For a single date, a time of day, or both: a due date, a daily run time, a maintenance window.
+- Prefer a TextField when people paste free-form dates you will parse, or need a date range in one field.
+- Native pickers keep keyboard entry, screen reader support and mobile date wheels working without extra code.
+
+## Types
+
+`type="date"` (the default) shows a date picker, `type="time"` a time of day, and `type="datetime"` both, on a native `datetime-local` input. For times, `step` is in seconds: `900` moves in 15-minute steps, and `1` adds a seconds field.
+
+<Preview title="TYPES" name="date-field-types" />
+
+## Values and time zones
+
+`value`, `defaultValue`, `min` and `max` take ISO 8601 strings. A longer value is cut to what the field shows, so a date field given `2026-12-04T14:30` shows `2026-12-04`. A value with a time zone, `Z` or an offset such as `+05:30`, is shown in the reader's local time. `onChange` receives the value in the field's own format, without a time zone, or `""` when the field is cleared. Say which time zone you mean in the `hint` when it matters.
+
+## States
+
+`required` adds an asterisk and the native `required` attribute. `min` and `max` limit what the picker offers. `error` replaces the hint, turns the border red and sets `aria-invalid`. `disabled` dims the value and blocks editing.
+
+<Preview title="STATES" name="date-field-states" />
+
+<Preview title="LOADING" name="date-field-loading" />
+
+## Anatomy
+
+- `label` — sits above the input; clicking it focuses the input.
+- The input — a native `date`, `time` or `datetime-local` input with tabular figures. Its picker icon follows the PIX theme in light and dark.
+- `hint` or `error` — one line under the input.
+
+## Accessibility
+
+- Native inputs let people type each part of the date with the keyboard or open the browser's picker, and screen readers announce each part.
+- The label is a real `<label>` tied to the input. Without a visible `label`, pass `aria-label`.
+- The hint or error is linked through `aria-describedby`. Errors set `aria-invalid` and say what to pick, not only what went wrong.
+- Focus shows a 2px accent ring at 3:1 or more in both themes. Label, hint and error text meet 4.5:1.
+
+## Props
+
+<PropsTable component="DateField" />

@@ -34,6 +34,24 @@ PIX 0.3 work in progress. Each entry names its issue or pull request.
     and removed files, and focus that stays put after a chip is removed.
 - `@pix-ui/css` gains `pix-attachment*`, `pix-message-action*` and `pix-prompt--dragging`
   classes.
+- **A2UI basic catalog in `@pix-ui/a2ui`** ([#43](https://github.com/Digital-With-Deep/pix/issues/43)): the PIX catalog now renders the
+  A2UI (Agent-to-User Interface) 1.0 basic catalog's inputs and containers, with the basic catalog's
+  property names, so an agent can ask a person for input on a PIX surface:
+  - `TextField` (PIX `TextField`, or `Textarea` for long text), `CheckBox` (`Checkbox`),
+    `ChoicePicker` (`RadioGroup`, `Select` or `MultiSelect`), `Slider` (`Slider`) and
+    `DateTimeInput` (`DateField`).
+  - Input values are two-way bound to the data model: what a person types, ticks, picks or drags
+    is written to the bound path at once and travels to the agent with the next action.
+  - Failed `@checks` show their message on the field, and a `required` check adds the required
+    marker. New validation functions: `regex`, `length`, `numeric` and `email`.
+  - `Image`, `Tabs` (PIX `Tabs`), `Modal` (PIX `Dialog`) and `List`.
+- **`Slider`** in `@pix-ui/react`: a native range input styled with PIX tokens, with a label, the
+  current value in monospace, optional minimum and maximum labels, a step or a continuous range,
+  a value formatter that screen readers also announce, and a hint or error.
+- **`DateField`** in `@pix-ui/react`: the browser's native date, time and date-and-time inputs with
+  the PIX label, hint, error and required marker. It reads ISO (International Organization for
+  Standardization) 8601 values and shows values with a time zone in local time.
+- `RadioGroup` gains `hint` and `error`.
 - `pnpm test` runs a token contrast test (`scripts/contrast-test.mjs`) that recomputes body and
   secondary text (4.5:1), field borders, the invalid border and the focus ring (3:1) on every
   surface from the built tokens, and lists any pair that falls short.
