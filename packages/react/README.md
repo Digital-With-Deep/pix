@@ -1,6 +1,6 @@
 # @pix-ui/react
 
-React components for **PIX — Primitives for Intelligent eXperiences**. 69 components for AI products: responses, thinking traces, prompt input, plans, citations and sources, confidence, action history with undo, execution traces, data tables, metrics, forms and layout.
+React components for **PIX — Primitives for Intelligent eXperiences**. 70 components for AI products: responses, thinking traces, prompt input, plans, citations and sources, confidence, action history with undo, execution traces, data tables, metrics, forms and layout.
 
 ```sh
 npm i @pix-ui/react

@@ -42,6 +42,7 @@ function Message({ m, showAvatars }) {
           </div>
         )}
         {body}
+        {m.actions && !m.streaming && <div style={{ display: "flex", justifyContent: user ? "flex-end" : "flex-start" }}>{m.actions}</div>}
       </div>
     </article>
   );
